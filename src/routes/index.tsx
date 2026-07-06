@@ -60,6 +60,7 @@ function HomePage() {
   return (
     <>
       <HeroSection />
+      <TrustCards />
       <AboutSection />
       <ServicesSection />
       <ContactSection />
@@ -71,62 +72,227 @@ function HomePage() {
 function HeroSection() {
   const { data: hero } = useSuspenseQuery(heroQuery());
   return (
-    <section id="ballina" className={`container-page pt-16 pb-24 md:pt-24 md:pb-32 ${sectionAnchor}`}>
-      <div className="max-w-4xl">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/60 backdrop-blur px-4 py-1.5 text-xs font-medium text-muted-foreground animate-fade-up">
-          <span className="h-1.5 w-1.5 rounded-full bg-primary-glow animate-pulse" />
-          Kontabilitet · Tatime · Konsulencë
-        </div>
-        <h1
-          className="mt-6 font-display text-5xl leading-[1.05] text-foreground md:text-7xl animate-fade-up"
-          style={{ animationDelay: "80ms" }}
-        >
-          <span className="text-gradient-brand">{hero.title}</span>
-        </h1>
-        <p
-          className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl animate-fade-up"
-          style={{ animationDelay: "160ms" }}
-        >
-          {hero.subtitle}
-        </p>
-        <div className="mt-10 flex flex-wrap gap-3 animate-fade-up" style={{ animationDelay: "240ms" }}>
-          <a
-            href="#kontakti"
-            className="group inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium text-white shadow-elegant transition-all duration-300 hover:shadow-hover hover:-translate-y-0.5"
-            style={{ background: "var(--gradient-brand)" }}
-          >
-            Na Kontaktoni
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </a>
-          <a
-            href="#sherbimet"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-background/70 backdrop-blur px-7 py-3.5 text-sm font-medium text-foreground transition-all duration-300 hover:border-primary/40 hover:bg-background hover:-translate-y-0.5"
-          >
-            Shërbimet
-          </a>
-        </div>
+    <section
+      id="ballina"
+      className={`relative overflow-hidden ${sectionAnchor}`}
+    >
+      {/* Local hero ambience — layered orbs behind the content */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div
+          className="absolute -top-24 right-[-10%] h-[36rem] w-[36rem] rounded-full blur-3xl animate-pulse-glow"
+          style={{ background: "radial-gradient(circle, oklch(0.78 0.18 165 / 0.45), transparent 65%)" }}
+        />
+        <div
+          className="absolute top-1/2 -left-32 h-[28rem] w-[28rem] rounded-full blur-3xl animate-pulse-glow"
+          style={{
+            animationDelay: "2s",
+            background: "radial-gradient(circle, oklch(0.55 0.15 200 / 0.35), transparent 65%)",
+          }}
+        />
+      </div>
 
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl">
-          {[
-            { icon: ShieldCheck, label: "Në përputhje me legjislacionin" },
-            { icon: Award, label: "Kontabilist i Certifikuar" },
-            { icon: CheckCircle2, label: "Partneritete afatgjata" },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/60 backdrop-blur px-4 py-3 shadow-soft animate-fade-up"
-              style={{ animationDelay: `${320 + i * 80}ms` }}
+      <div className="container-page grid gap-12 pt-14 pb-20 md:pt-20 md:pb-28 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16">
+        {/* LEFT — copy */}
+        <div className="relative">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur px-4 py-1.5 text-xs font-medium text-primary shadow-soft animate-fade-up">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span className="uppercase tracking-[0.14em]">Kontabilitet · Tatime · Konsulencë</span>
+          </div>
+
+          <h1
+            className="mt-6 font-display text-[2.75rem] leading-[1.02] text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem] animate-fade-up"
+            style={{ animationDelay: "80ms" }}
+          >
+            <span className="text-gradient-brand">{hero.title}</span>
+          </h1>
+
+          <p
+            className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg animate-fade-up"
+            style={{ animationDelay: "160ms" }}
+          >
+            {hero.subtitle}
+          </p>
+
+          {/* CTA */}
+          <div className="mt-10 flex flex-wrap gap-3 animate-fade-up" style={{ animationDelay: "240ms" }}>
+            <a
+              href="#kontakti"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-8 py-4 text-sm font-semibold text-white shadow-elegant transition-all duration-300 hover:shadow-hover hover:-translate-y-0.5"
+              style={{ background: "var(--gradient-brand-strong)" }}
             >
               <span
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-white"
-                style={{ background: "var(--gradient-brand)" }}
-              >
-                <item.icon className="h-4 w-4" strokeWidth={2} />
-              </span>
-              <span className="text-sm font-medium text-foreground">{item.label}</span>
+                className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                style={{
+                  background:
+                    "linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%)",
+                }}
+              />
+              <span className="relative">Na Kontaktoni</span>
+              <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </a>
+            <a
+              href="#sherbimet"
+              className="group inline-flex items-center gap-2 rounded-full border border-border bg-background/70 backdrop-blur px-8 py-4 text-sm font-semibold text-foreground shadow-soft transition-all duration-300 hover:border-primary/40 hover:bg-background hover:-translate-y-0.5"
+            >
+              Shërbimet
+              <ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-1" />
+            </a>
+          </div>
+
+          {/* Meta strip */}
+          <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 text-xs text-muted-foreground animate-fade-up" style={{ animationDelay: "320ms" }}>
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-0.5">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <Star key={i} className="h-3.5 w-3.5 fill-current" style={{ color: "var(--brand-gold)" }} />
+                ))}
+              </div>
+              <span className="font-medium text-foreground/85">Klientë të kënaqur</span>
             </div>
-          ))}
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-primary" />
+              <span>Në përputhje me legjislacionin</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Award className="h-4 w-4 text-primary" />
+              <span>Kontabilist i Certifikuar</span>
+            </div>
+          </div>
         </div>
+
+        {/* RIGHT — 3D visual */}
+        <div
+          className="relative animate-fade-up"
+          style={{ animationDelay: "200ms" }}
+        >
+          {/* Glow behind image */}
+          <div
+            aria-hidden
+            className="absolute inset-0 -z-10 blur-3xl opacity-70"
+            style={{
+              background:
+                "radial-gradient(60% 60% at 50% 50%, oklch(0.78 0.18 165 / 0.55), transparent 70%)",
+            }}
+          />
+
+          <div className="relative mx-auto max-w-lg lg:max-w-none">
+            <div
+              className="relative overflow-hidden rounded-[2.25rem] border border-white/40 bg-background/40 backdrop-blur-xl shadow-elegant animate-float-slow"
+            >
+              <img
+                src={heroVisual.url}
+                alt="Vizualizim premium — kontabilitet dhe konsulencë biznesi"
+                width={1280}
+                height={1280}
+                className="block h-auto w-full"
+              />
+              {/* Subtle inner highlight */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 30%, transparent 70%, rgba(255,255,255,0.08) 100%)",
+                }}
+              />
+            </div>
+
+            {/* Floating glass stat cards */}
+            <div
+              className="absolute -left-4 top-8 hidden md:flex glass-panel rounded-2xl px-4 py-3 shadow-elegant items-center gap-3 animate-float-slow"
+              style={{ animationDelay: "1s" }}
+            >
+              <span
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-glow"
+                style={{ background: "var(--gradient-brand-strong)" }}
+              >
+                <TrendingUp className="h-5 w-5" />
+              </span>
+              <div className="leading-tight">
+                <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Rritje mesatare</div>
+                <div className="font-display text-lg text-foreground">+34%</div>
+              </div>
+            </div>
+
+            <div
+              className="absolute -right-4 bottom-8 hidden md:flex glass-panel rounded-2xl px-4 py-3 shadow-elegant items-center gap-3 animate-float-slow"
+              style={{ animationDelay: "2.5s" }}
+            >
+              <span
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-glow"
+                style={{ background: "var(--gradient-brand-strong)" }}
+              >
+                <ShieldCheck className="h-5 w-5" />
+              </span>
+              <div className="leading-tight">
+                <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Përputhshmëri</div>
+                <div className="font-display text-lg text-foreground">100%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- TRUST CARDS ---------------- */
+function TrustCards() {
+  const cards = [
+    {
+      icon: Award,
+      emoji: "🏆",
+      title: "Ekspertizë Profesionale",
+      desc: "Shërbime kontabiliteti, tatimore dhe financiare të ofruara me profesionalizëm dhe përkushtim.",
+    },
+    {
+      icon: TrendingUp,
+      emoji: "📈",
+      title: "Rritje dhe Zhvillim",
+      desc: "Zgjidhje financiare që mbështesin rritjen dhe suksesin afatgjatë të biznesit tuaj.",
+    },
+    {
+      icon: ShieldCheck,
+      emoji: "🛡️",
+      title: "Besim dhe Transparencë",
+      desc: "Marrëdhënie të ndërtuara mbi korrektësi, integritet dhe besueshmëri.",
+    },
+    {
+      icon: Handshake,
+      emoji: "🤝",
+      title: "Partneritet Afatgjatë",
+      desc: "Partneri juaj i besueshëm në çdo fazë të zhvillimit të biznesit.",
+    },
+  ];
+  return (
+    <section className="container-page -mt-8 pb-24 md:-mt-14 md:pb-28">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {cards.map((c, i) => (
+          <div
+            key={i}
+            className="group relative overflow-hidden rounded-3xl border border-border/60 bg-background/75 backdrop-blur-xl p-6 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-hover hover:border-primary/40 animate-fade-up"
+            style={{ animationDelay: `${i * 80}ms` }}
+          >
+            <div
+              aria-hidden
+              className="absolute inset-x-0 -top-px h-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              style={{ background: "var(--gradient-brand-strong)" }}
+            />
+            <div
+              className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-glow transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
+              style={{ background: "var(--gradient-brand-strong)" }}
+            >
+              <c.icon className="h-6 w-6" strokeWidth={1.8} />
+            </div>
+            <h3 className="mt-5 font-display text-xl text-foreground">{c.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{c.desc}</p>
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -bottom-16 -right-16 h-40 w-40 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-70"
+              style={{ background: "radial-gradient(circle, oklch(0.78 0.18 165 / 0.6), transparent 70%)" }}
+            />
+          </div>
+        ))}
       </div>
     </section>
   );
