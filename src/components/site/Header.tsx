@@ -91,7 +91,7 @@ export function Header() {
             <span className="text-xl md:text-2xl text-foreground tracking-tight font-semibold" style={{ fontFamily: "'Manrope', sans-serif" }}>
               KPT Consulting
             </span>
-            <span className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-muted-foreground whitespace-nowrap">
+            <span className="text-[8px] md:text-[11px] uppercase tracking-[0.14em] md:tracking-[0.18em] text-muted-foreground whitespace-nowrap">
               {t("brand.tagline")}
             </span>
           </div>
