@@ -2,8 +2,8 @@ import { useI18n, type Lang } from "@/lib/i18n";
 import { KosovoFlag, UsFlag } from "./Flags";
 
 const flags: Record<Lang, { flag: React.ReactNode; label: string; short: string }> = {
-  sq: { flag: <KosovoFlag className="h-4 w-6 rounded-sm" />, label: "Shqip", short: "SHQ" },
-  en: { flag: <UsFlag className="h-4 w-6 rounded-sm" />, label: "English", short: "EN" },
+  sq: { flag: <KosovoFlag className="h-5 w-[28px] rounded-[3px] shadow-sm" />, label: "Shqip", short: "SHQ" },
+  en: { flag: <UsFlag className="h-5 w-[28px] rounded-[3px] shadow-sm" />, label: "English", short: "EN" },
 };
 
 
@@ -25,10 +25,10 @@ export function LanguageSwitcher({ variant = "desktop" }: Props) {
             onClick={() => setLang(code)}
             aria-label={flags[code].label}
             aria-pressed={active}
-            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-300 ${
+            className={`inline-flex items-center gap-2.5 rounded-full border px-3.5 py-2 text-[13px] font-semibold tracking-wide transition-all duration-300 ease-out ${
               active
-                ? "border-primary/50 bg-primary/5 text-primary shadow-soft"
-                : "border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
+                ? "border-primary/40 bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                : "border-border/80 bg-background/60 text-muted-foreground backdrop-blur-sm hover:border-primary/40 hover:text-foreground hover:bg-primary/5"
             }`}
           >
             {flags[code].flag}
