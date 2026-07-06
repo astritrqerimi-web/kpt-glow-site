@@ -311,7 +311,7 @@ function AboutSection() {
           {values.map((v, i) => (
             <div
               key={i}
-              className="rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-5 shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-500"
+              className="flex flex-col items-center text-center rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-5 shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-500"
             >
               <span
                 className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white"
