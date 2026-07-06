@@ -418,6 +418,7 @@ function buildContactSchema(t: (k: string) => string) {
 
 function ContactSection() {
   const { data: company } = useSuspenseQuery(companyQuery());
+  const { t } = useI18n();
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", serviceOther: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -425,7 +426,7 @@ function ContactSection() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
-    const parsed = contactSchema.safeParse(form);
+    const parsed = buildContactSchema(t).safeParse(form);
     if (!parsed.success) {
       const errs: Record<string, string> = {};
       for (const issue of parsed.error.issues) errs[String(issue.path[0])] = issue.message;
@@ -446,10 +447,10 @@ function ContactSection() {
     });
     setSubmitting(false);
     if (error) {
-      toast.error("Dërgimi dështoi. Ju lutemi provoni përsëri.");
+      toast.error(t("form.error"));
       return;
     }
-    toast.success("Mesazhi u dërgua me sukses. Do t'ju kontaktojmë së shpejti.");
+    toast.success(t("form.success"));
     setForm({ name: "", email: "", phone: "", service: "", serviceOther: "", message: "" });
   };
 
@@ -459,14 +460,15 @@ function ContactSection() {
   return (
     <section id="kontakti" className={`container-page pb-24 ${sectionAnchor}`}>
       <div className="max-w-3xl">
-        <div className="text-xs uppercase tracking-[0.2em] text-primary">Kontakti</div>
+        <div className="text-xs uppercase tracking-[0.2em] text-primary">{t("contact.eyebrow")}</div>
         <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-foreground">
-          Le të <span className="text-gradient-brand">bisedojmë</span>
+          {t("contact.title.a")} <span className="text-gradient-brand">{t("contact.title.b")}</span>
         </h2>
         <p className="mt-5 text-lg text-muted-foreground max-w-2xl">
-          Kontaktoni ekipin tonë për një konsultim ose plotësoni formularin dhe do t'ju përgjigjemi sa më shpejt.
+          {t("contact.subtitle")}
         </p>
       </div>
+
 
       <div className="mt-12 grid gap-8 lg:grid-cols-5">
         <div className="lg:col-span-2 space-y-4">
