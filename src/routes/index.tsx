@@ -246,7 +246,7 @@ function TrustCards() {
         {cards.map((c, i) => (
           <div
             key={i}
-            className="group relative overflow-hidden rounded-3xl border border-border/60 bg-background/75 backdrop-blur-xl p-6 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-hover hover:border-primary/40 animate-fade-up"
+            className="group relative flex flex-col items-center text-center overflow-hidden rounded-3xl border border-border/60 bg-background/75 backdrop-blur-xl p-6 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-hover hover:border-primary/40 animate-fade-up"
             style={{ animationDelay: `${i * 80}ms` }}
           >
             <div
