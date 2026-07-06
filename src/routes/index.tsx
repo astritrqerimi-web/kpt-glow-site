@@ -73,6 +73,8 @@ function HomePage() {
 /* ---------------- HERO / BALLINA ---------------- */
 function HeroSection() {
   const { data: hero } = useSuspenseQuery(heroQuery());
+  const { t } = useI18n();
+
   return (
     <section
       id="ballina"
