@@ -234,10 +234,10 @@ function HeroSection() {
 function TrustCards() {
   const { t } = useI18n();
   const cards = [
-    { icon: Award, title: t("trust.1.title"), desc: t("trust.1.desc") },
-    { icon: TrendingUp, title: t("trust.2.title"), desc: t("trust.2.desc") },
-    { icon: ShieldCheck, title: t("trust.3.title"), desc: t("trust.3.desc") },
-    { icon: Handshake, title: t("trust.4.title"), desc: t("trust.4.desc") },
+    { icon: Award, title: t("trust.1.title"), desc: t("trust.1.desc"), color: "#0F8B8D" },
+    { icon: TrendingUp, title: t("trust.2.title"), desc: t("trust.2.desc"), color: "#1F3A5F" },
+    { icon: ShieldCheck, title: t("trust.3.title"), desc: t("trust.3.desc"), color: "#5B6C7D" },
+    { icon: Handshake, title: t("trust.4.title"), desc: t("trust.4.desc"), color: "#C9A227" },
   ];
 
   return (
@@ -255,8 +255,8 @@ function TrustCards() {
               style={{ background: "var(--gradient-brand-strong)" }}
             />
             <div
-              className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-glow transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
-              style={{ background: "var(--gradient-brand-strong)" }}
+              className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-soft transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
+              style={{ background: c.color }}
             >
               <c.icon className="h-6 w-6" strokeWidth={1.8} />
             </div>
@@ -265,7 +265,7 @@ function TrustCards() {
             <div
               aria-hidden
               className="pointer-events-none absolute -bottom-16 -right-16 h-40 w-40 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-70"
-              style={{ background: "radial-gradient(circle, oklch(0.78 0.18 165 / 0.6), transparent 70%)" }}
+              style={{ background: `radial-gradient(circle, ${c.color}33, transparent 70%)` }}
             />
           </div>
         ))}
