@@ -1,11 +1,11 @@
 import { useI18n, type Lang } from "@/lib/i18n";
-import { KosovoFlag, UsFlag } from "./Flags";
 
-const flags: Record<Lang, { flag: React.ReactNode; label: string; short: string }> = {
-  sq: { flag: <KosovoFlag className="h-5 w-[28px] rounded-[3px] shadow-sm" />, label: "Shqip", short: "SHQ" },
-  en: { flag: <UsFlag className="h-5 w-[28px] rounded-[3px] shadow-sm" />, label: "English", short: "EN" },
+const langs: Record<Lang, { label: string; short: string }> = {
+  sq: { label: "Shqip", short: "AL" },
+  en: { label: "English", short: "EN" },
 };
 
+const order: Lang[] = ["sq", "en"];
 
 interface Props {
   variant?: "desktop" | "mobile";
@@ -15,27 +15,28 @@ export function LanguageSwitcher({ variant = "desktop" }: Props) {
   const { lang, setLang } = useI18n();
 
   return (
-    <div className={`flex items-center gap-2 ${variant === "mobile" ? "mt-3 px-3" : "ml-3"}`}>
-      {(Object.keys(flags) as Lang[]).map((code) => {
-        const active = lang === code;
-        return (
-          <button
-            key={code}
-            type="button"
-            onClick={() => setLang(code)}
-            aria-label={flags[code].label}
-            aria-pressed={active}
-            className={`inline-flex items-center gap-2.5 rounded-full border px-3.5 py-2 text-[13px] font-semibold tracking-wide transition-all duration-300 ease-out ${
-              active
-                ? "border-primary/40 bg-primary text-primary-foreground shadow-md shadow-primary/20"
-                : "border-border/80 bg-background/60 text-muted-foreground backdrop-blur-sm hover:border-primary/40 hover:text-foreground hover:bg-primary/5"
-            }`}
-          >
-            {flags[code].flag}
-            <span>{flags[code].short}</span>
-          </button>
-        );
-      })}
+    <div className={`flex items-center ${variant === "mobile" ? "mt-3 px-3" : "ml-3"}`}>
+      <div className="inline-flex items-center rounded-full border border-border/60 bg-background/50 p-[3px] backdrop-blur-sm">
+        {order.map((code, i) => {
+          const active = lang === code;
+          return (
+            <button
+              key={code}
+              type="button"
+              onClick={() => setLang(code)}
+              aria-label={langs[code].label}
+              aria-pressed={active}
+              className={`relative px-3 py-[5px] text-[12px] font-semibold tracking-wider uppercase transition-all duration-300 ease-out ${
+                active
+                  ? "rounded-full bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              } ${i === 0 ? "mr-[1px]" : ""}`}
+            >
+              {langs[code].short}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
