@@ -29,8 +29,8 @@ const items: Item[] = [
 
 function StarCard({ title, desc }: { title: string; desc: string }) {
   return (
-    <div className="shrink-0 w-[200px] sm:w-[240px] rounded-xl border border-border/60 bg-background/60 backdrop-blur-sm px-4 py-3 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elegant hover:border-primary/25">
-      <div className="flex items-center gap-0.5 mb-1.5">
+    <div className="shrink-0 flex flex-col items-center text-center w-[200px] sm:w-[240px] rounded-xl border border-border/60 bg-background/60 backdrop-blur-sm px-4 py-3 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elegant hover:border-primary/25">
+      <div className="flex items-center justify-center gap-0.5 mb-1.5">
         {[0, 1, 2, 3, 4].map((i) => (
           <Star key={i} className="h-3 w-3 fill-current" style={{ color: "var(--brand-gold)" }} />
         ))}
