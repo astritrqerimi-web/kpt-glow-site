@@ -1,5 +1,15 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import type { Lang } from "@/lib/i18n";
+
+export type Bilingual = string | { al?: string; en?: string } | null | undefined;
+
+/** Pick the correct language from a bilingual value; falls back gracefully. */
+export function pick(value: Bilingual, lang: Lang, fallback = ""): string {
+  if (value == null) return fallback;
+  if (typeof value === "string") return value || fallback;
+  return value[lang] || value.al || value.en || fallback;
+}
 
 export interface CompanyInfo {
   name: string;
@@ -14,20 +24,35 @@ export interface CompanyInfo {
 }
 
 export interface HeroContent {
-  title: string;
-  subtitle: string;
+  title: Bilingual;
+  subtitle: Bilingual;
+  badge?: Bilingual;
+  ctaContact?: Bilingual;
+  ctaServices?: Bilingual;
+  image?: string; // optional custom hero image URL
 }
 
 export interface AboutContent {
-  intro: string;
-  services: string;
-  leader: string;
+  intro: Bilingual;
+  services: Bilingual;
+  leader: Bilingual;
 }
 
 export interface SeoContent {
   title: string;
   description: string;
   keywords: string;
+}
+
+export interface TrustItem {
+  type: "stars" | "icon";
+  icon?: string;
+  color?: string;
+  title_al: string;
+  title_en: string;
+}
+export interface TrustContent {
+  items: TrustItem[];
 }
 
 export interface Service {
@@ -52,20 +77,26 @@ const DEFAULTS = {
     linkedin: "",
   } as CompanyInfo,
   hero: {
-    title: "Zgjidhje financiare për biznesin tuaj",
-    subtitle:
-      "KPT Consulting ofron shërbime profesionale të kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve, programeve financiare dhe trajnimeve për biznese.",
+    title: { al: "Zgjidhje financiare për biznesin tuaj", en: "Financial solutions for your business" },
+    subtitle: {
+      al: "KPT Consulting ofron shërbime profesionale të kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve, programeve financiare dhe trajnimeve për biznese.",
+      en: "KPT Consulting delivers professional accounting, tax filing, business registration, financial software and training services for businesses.",
+    },
+    badge: { al: "Kontabilitet • Program • Trajnime", en: "Accounting • Software • Training" },
+    ctaContact: { al: "Na Kontaktoni", en: "Contact Us" },
+    ctaServices: { al: "Shërbimet", en: "Services" },
   } as HeroContent,
   about: {
-    intro: "",
-    services: "",
-    leader: "",
+    intro: { al: "", en: "" },
+    services: { al: "", en: "" },
+    leader: { al: "", en: "" },
   } as AboutContent,
   seo: {
     title: "KPT Consulting",
     description: "Kontabilitet, tatime dhe konsulencë biznesi.",
     keywords: "",
   } as SeoContent,
+  trust: { items: [] } as TrustContent,
 };
 
 async function fetchContent<T>(key: string, fallback: T): Promise<T> {
@@ -98,6 +129,13 @@ export const seoQuery = () =>
   queryOptions({
     queryKey: ["site_content", "seo"],
     queryFn: () => fetchContent<SeoContent>("seo", DEFAULTS.seo),
+    staleTime: 60_000,
+  });
+
+export const trustQuery = () =>
+  queryOptions({
+    queryKey: ["site_content", "trust"],
+    queryFn: () => fetchContent<TrustContent>("trust", DEFAULTS.trust),
     staleTime: 60_000,
   });
 
