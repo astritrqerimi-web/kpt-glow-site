@@ -50,6 +50,8 @@ const translations: Record<Lang, Dict> = {
 
     // Hero
     "hero.badge": "Kontabilitet • Program • Trajnime",
+    "hero.title": "Zgjidhje financiare për biznesin tuaj",
+    "hero.subtitle": "KPT Consulting ofron shërbime profesionale të kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve, programeve financiare dhe trajnimeve për biznese.",
     "hero.ctaContact": "Na Kontaktoni",
     "hero.ctaServices": "Shërbimet",
     "hero.happyClients": "Klientë të kënaqur",
@@ -57,6 +59,7 @@ const translations: Record<Lang, Dict> = {
     "hero.certified": "Kontabilist i Certifikuar",
     "hero.stat.growth": "Rritje mesatare",
     "hero.stat.compliance": "Përputhshmëri",
+
 
     // Trust cards
     "trust.1.title": "Ekspertizë Profesionale",
