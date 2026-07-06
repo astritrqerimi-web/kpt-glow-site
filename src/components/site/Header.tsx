@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import logoAsset from "@/assets/kpt-logo.png.asset.json";
+import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 
 const nav = [
   { to: "/", label: "Ballina" },
