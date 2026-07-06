@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { servicesQuery, companyQuery, heroQuery, aboutQuery, seoQuery, trustQuery, type Bilingual, type TrustItem } from "@/lib/site-content";
 import { ServiceIcon, ICON_NAMES } from "@/components/site/ServiceIcon";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 import { LogOut, Plus, Trash2, Save, Mail, Home, FileEdit, Settings2, Loader2, ShieldAlert, Star } from "lucide-react";
 import { toast } from "sonner";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
