@@ -29,17 +29,17 @@ export function Header() {
           : "bg-transparent"
       }`}
     >
-      <div className="container-page flex h-20 items-center justify-between">
-        <Link to="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)}>
+      <div className="container-page flex h-24 items-center justify-between md:h-28">
+        <Link to="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)} aria-label="KPT Consulting — Ballina">
           <img
             src={logoAsset.url}
             alt="KPT Consulting"
-            className="h-11 w-11 object-contain transition-transform duration-500 group-hover:scale-105"
+            className="h-14 w-14 md:h-16 md:w-16 object-contain transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="hidden sm:flex flex-col leading-tight">
-            <span className="font-display text-lg text-foreground tracking-tight">KPT Consulting</span>
-            <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-              Kontabilitet · Tatime · Konsulencë
+          <div className="flex flex-col leading-tight">
+            <span className="font-display text-xl md:text-2xl text-foreground tracking-tight">KPT Consulting</span>
+            <span className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              Kontabilitet | Program | Trajnime
             </span>
           </div>
         </Link>
