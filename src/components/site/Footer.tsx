@@ -14,7 +14,10 @@ export function Footer({ company }: { company: CompanyInfo }) {
           <div className="flex items-center gap-3">
             <img src={logoAsset.url} alt="KPT Consulting" className="h-11 w-11 object-contain" />
             <div>
-              <div className="font-display text-lg text-foreground">KPT Consulting</div>
+              <div className="text-lg text-foreground" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                <span className="font-extrabold">KPT</span>{" "}
+                <span className="font-medium">Consulting</span>
+              </div>
               <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                 {t("brand.taglineDot")}
               </div>
