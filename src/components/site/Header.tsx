@@ -50,19 +50,10 @@ export function Header() {
               key={item.to}
               to={item.to}
               activeOptions={{ exact: true }}
-              className="relative px-4 py-2 text-sm font-medium text-foreground/75 hover:text-foreground transition-colors"
-              activeProps={{ className: "text-primary" }}
+              className="group relative px-4 py-2 text-sm font-medium text-foreground/75 hover:text-foreground transition-colors [&.active]:text-primary"
             >
-              {({ isActive }) => (
-                <>
-                  {item.label}
-                  <span
-                    className={`absolute left-4 right-4 -bottom-0.5 h-px origin-left transition-transform duration-300 bg-[image:var(--gradient-brand)] ${
-                      isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                    }`}
-                  />
-                </>
-              )}
+              {item.label}
+              <span className="absolute left-4 right-4 -bottom-0.5 h-px origin-left scale-x-0 transition-transform duration-300 bg-[image:var(--gradient-brand)] group-hover:scale-x-100 group-[.active]:scale-x-100" />
             </Link>
           ))}
           <Link
