@@ -10,9 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as SherbimetRouteImport } from './routes/sherbimet'
-import { Route as RrethNeshRouteImport } from './routes/rreth-nesh'
-import { Route as KontaktiRouteImport } from './routes/kontakti'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -21,21 +18,6 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SherbimetRoute = SherbimetRouteImport.update({
-  id: '/sherbimet',
-  path: '/sherbimet',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RrethNeshRoute = RrethNeshRouteImport.update({
-  id: '/rreth-nesh',
-  path: '/rreth-nesh',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const KontaktiRoute = KontaktiRouteImport.update({
-  id: '/kontakti',
-  path: '/kontakti',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -61,18 +43,12 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/kontakti': typeof KontaktiRoute
-  '/rreth-nesh': typeof RrethNeshRoute
-  '/sherbimet': typeof SherbimetRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/kontakti': typeof KontaktiRoute
-  '/rreth-nesh': typeof RrethNeshRoute
-  '/sherbimet': typeof SherbimetRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
 }
@@ -81,39 +57,19 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/kontakti': typeof KontaktiRoute
-  '/rreth-nesh': typeof RrethNeshRoute
-  '/sherbimet': typeof SherbimetRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/auth'
-    | '/kontakti'
-    | '/rreth-nesh'
-    | '/sherbimet'
-    | '/sitemap.xml'
-    | '/admin'
+  fullPaths: '/' | '/auth' | '/sitemap.xml' | '/admin'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/auth'
-    | '/kontakti'
-    | '/rreth-nesh'
-    | '/sherbimet'
-    | '/sitemap.xml'
-    | '/admin'
+  to: '/' | '/auth' | '/sitemap.xml' | '/admin'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
-    | '/kontakti'
-    | '/rreth-nesh'
-    | '/sherbimet'
     | '/sitemap.xml'
     | '/_authenticated/admin'
   fileRoutesById: FileRoutesById
@@ -122,9 +78,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
-  KontaktiRoute: typeof KontaktiRoute
-  RrethNeshRoute: typeof RrethNeshRoute
-  SherbimetRoute: typeof SherbimetRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -135,27 +88,6 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sherbimet': {
-      id: '/sherbimet'
-      path: '/sherbimet'
-      fullPath: '/sherbimet'
-      preLoaderRoute: typeof SherbimetRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/rreth-nesh': {
-      id: '/rreth-nesh'
-      path: '/rreth-nesh'
-      fullPath: '/rreth-nesh'
-      preLoaderRoute: typeof RrethNeshRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/kontakti': {
-      id: '/kontakti'
-      path: '/kontakti'
-      fullPath: '/kontakti'
-      preLoaderRoute: typeof KontaktiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -204,9 +136,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
-  KontaktiRoute: KontaktiRoute,
-  RrethNeshRoute: RrethNeshRoute,
-  SherbimetRoute: SherbimetRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
