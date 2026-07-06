@@ -28,6 +28,7 @@ import {
   companyQuery,
 } from "@/lib/site-content";
 import { ServiceIcon } from "@/components/site/ServiceIcon";
+import { TrustMarquee } from "@/components/site/TrustMarquee";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import heroVisual from "@/assets/hero-visual.jpg.asset.json";
