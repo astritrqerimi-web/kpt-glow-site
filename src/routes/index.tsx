@@ -354,7 +354,7 @@ function ServicesSection() {
           return (
             <div
               key={s.id}
-              className="group relative overflow-hidden rounded-3xl border border-border/60 bg-background/70 backdrop-blur p-7 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-hover hover:border-primary/30"
+              className="group relative flex flex-col items-center text-center overflow-hidden rounded-3xl border border-border/60 bg-background/70 backdrop-blur p-7 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-hover hover:border-primary/30"
               style={{ animationDelay: `${i * 40}ms` }}
             >
               <div
