@@ -88,9 +88,8 @@ export function Header() {
             className="h-14 w-14 md:h-16 md:w-16 object-contain transition-transform duration-500 group-hover:scale-105"
           />
           <div className="flex flex-col leading-tight">
-            <span className="text-xl md:text-2xl text-foreground tracking-tight" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-              <span className="font-extrabold">KPT</span>{" "}
-              <span className="font-medium">Consulting</span>
+            <span className="text-xl md:text-2xl text-foreground tracking-tight font-semibold" style={{ fontFamily: "'Manrope', sans-serif" }}>
+              KPT Consulting
             </span>
             <span className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-muted-foreground whitespace-nowrap">
               {t("brand.tagline")}
