@@ -52,13 +52,14 @@ export function LanguageSwitcher({ variant = "desktop" }: Props) {
             aria-label={flags[code].label}
             aria-pressed={active}
             title={flags[code].label}
-            className={`inline-flex h-8 w-8 items-center justify-center rounded-full text-base transition-all duration-300 hover:scale-110 ${
+            className={`inline-flex h-8 items-center gap-1 rounded-full px-2.5 text-sm font-medium transition-all duration-300 hover:scale-105 ${
               active
-                ? "bg-primary/10 shadow-soft ring-1 ring-primary/30"
-                : "opacity-55 hover:opacity-100"
+                ? "bg-primary/10 text-primary shadow-soft ring-1 ring-primary/30"
+                : "text-muted-foreground opacity-70 hover:opacity-100"
             }`}
           >
-            <span className="leading-none">{flags[code].emoji}</span>
+            <span className="text-base leading-none">{flags[code].emoji}</span>
+            <span>{flags[code].short}</span>
           </button>
         );
       })}
