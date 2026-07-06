@@ -31,7 +31,7 @@ export function LanguageSwitcher({ variant = "desktop" }: Props) {
                 : "border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
             }`}
           >
-            <span className="text-base leading-none">{flags[code].emoji}</span>
+            {flags[code].flag}
             <span>{flags[code].short}</span>
           </button>
         );
