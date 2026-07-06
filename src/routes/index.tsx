@@ -292,7 +292,10 @@ function TrustCards() {
 /* ---------------- RRETH NESH ---------------- */
 function AboutSection() {
   const { data: about } = useSuspenseQuery(aboutQuery());
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const intro = lang === "en" ? t("about.intro") : about.intro || t("about.intro");
+  const servicesText = lang === "en" ? t("about.services.text") : about.services || t("about.services.text");
+  const leader = lang === "en" ? t("about.leader") : about.leader || t("about.leader");
   const values = [
     { icon: ShieldCheck, title: t("about.value.1.title"), desc: t("about.value.1.desc") },
     { icon: Target, title: t("about.value.2.title"), desc: t("about.value.2.desc") },
@@ -310,13 +313,14 @@ function AboutSection() {
 
       <div className="mt-12 grid gap-10 md:grid-cols-5">
         <div className="md:col-span-3 space-y-6">
-          <p className="text-lg leading-relaxed text-foreground/85">{about.intro}</p>
-          <p className="text-base leading-relaxed text-muted-foreground">{about.services}</p>
+          <p className="text-lg leading-relaxed text-foreground/85">{intro}</p>
+          <p className="text-base leading-relaxed text-muted-foreground">{servicesText}</p>
           <div className="rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-6 shadow-soft">
             <div className="text-xs uppercase tracking-[0.18em] text-primary">{t("about.leadership")}</div>
-            <p className="mt-3 text-base leading-relaxed text-foreground/85">{about.leader}</p>
+            <p className="mt-3 text-base leading-relaxed text-foreground/85">{leader}</p>
           </div>
         </div>
+
 
         <div className="md:col-span-2 grid grid-cols-2 gap-4 content-start">
           {values.map((v, i) => (
