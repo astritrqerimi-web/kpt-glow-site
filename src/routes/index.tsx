@@ -240,10 +240,10 @@ function HeroSection() {
 function TrustCards() {
   const { t } = useI18n();
   const cards = [
-    { icon: Award, title: t("trust.1.title"), desc: t("trust.1.desc"), color: "#0F8B8D" },
-    { icon: TrendingUp, title: t("trust.2.title"), desc: t("trust.2.desc"), color: "#1F3A5F" },
-    { icon: ShieldCheck, title: t("trust.3.title"), desc: t("trust.3.desc"), color: "#5B6C7D" },
-    { icon: Handshake, title: t("trust.4.title"), desc: t("trust.4.desc"), color: "#C9A227" },
+    { icon: Award, title: t("trust.1.title"), desc: t("trust.1.desc") },
+    { icon: TrendingUp, title: t("trust.2.title"), desc: t("trust.2.desc") },
+    { icon: ShieldCheck, title: t("trust.3.title"), desc: t("trust.3.desc") },
+    { icon: Handshake, title: t("trust.4.title"), desc: t("trust.4.desc") },
   ];
 
   return (
