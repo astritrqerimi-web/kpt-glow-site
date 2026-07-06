@@ -25,7 +25,7 @@ export function TrustMarquee() {
   const loop = [...items, ...items];
   return (
     <div
-      className="relative mt-10 w-full overflow-hidden"
+      className="relative mt-14 md:mt-16 mb-4 md:mb-6 w-full overflow-hidden"
       style={{
         maskImage:
           "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
