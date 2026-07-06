@@ -379,6 +379,13 @@ function ContentAdmin() {
             <BilingualField label="Butoni 1 (CTA primar)" value={heroDraft.ctaContact} onChange={(v) => setHeroDraft({ ...heroDraft, ctaContact: v })} />
             <BilingualField label="Butoni 2 (CTA sekondar)" value={heroDraft.ctaServices} onChange={(v) => setHeroDraft({ ...heroDraft, ctaServices: v })} />
           </div>
+          <ImageUpload
+            label="Imazhi i Hero-s (opsional — zëvendëson vizualin standard)"
+            value={heroDraft.image}
+            folder="hero"
+            hint="PNG/JPG deri 5 MB"
+            onChange={(url) => setHeroDraft({ ...heroDraft, image: url })}
+          />
           <button onClick={() => save("hero", heroDraft)} className="self-start inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
             <Save className="h-4 w-4" /> Ruaj Hero
           </button>
