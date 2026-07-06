@@ -1,8 +1,9 @@
 import { useI18n, type Lang } from "@/lib/i18n";
+import { KosovoFlag, UsFlag } from "./Flags";
 
-const flags: Record<Lang, { emoji: string; label: string; short: string }> = {
-  sq: { emoji: "🇽🇰", label: "Shqip", short: "SHQ" },
-  en: { emoji: "🇺🇸", label: "English", short: "EN" },
+const flags: Record<Lang, { flag: React.ReactNode; label: string; short: string }> = {
+  sq: { flag: <KosovoFlag className="h-4 w-6 rounded-sm" />, label: "Shqip", short: "SHQ" },
+  en: { flag: <UsFlag className="h-4 w-6 rounded-sm" />, label: "English", short: "EN" },
 };
 
 
@@ -30,7 +31,7 @@ export function LanguageSwitcher({ variant = "desktop" }: Props) {
                 : "border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
             }`}
           >
-            <span className="text-base leading-none">{flags[code].emoji}</span>
+            {flags[code].flag}
             <span>{flags[code].short}</span>
           </button>
         );
