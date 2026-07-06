@@ -36,7 +36,7 @@ export function TrustMarquee() {
       {/* Desktop: marquee */}
       <div className="hidden md:block group">
         <div
-          className="flex gap-4 w-max animate-trust-marquee group-hover:[animation-play-state:paused]"
+          className="flex gap-3 w-max animate-trust-marquee group-hover:[animation-play-state:paused]"
         >
           {loop.map((it, idx) => (
             <Card key={idx} {...it} />
