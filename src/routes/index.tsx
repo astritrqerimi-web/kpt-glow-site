@@ -244,32 +244,14 @@ function HeroSection() {
 
 /* ---------------- TRUST CARDS ---------------- */
 function TrustCards() {
+  const { t } = useI18n();
   const cards = [
-    {
-      icon: Award,
-      emoji: "🏆",
-      title: "Ekspertizë Profesionale",
-      desc: "Shërbime kontabiliteti, tatimore dhe financiare të ofruara me profesionalizëm dhe përkushtim.",
-    },
-    {
-      icon: TrendingUp,
-      emoji: "📈",
-      title: "Rritje dhe Zhvillim",
-      desc: "Zgjidhje financiare që mbështesin rritjen dhe suksesin afatgjatë të biznesit tuaj.",
-    },
-    {
-      icon: ShieldCheck,
-      emoji: "🛡️",
-      title: "Besim dhe Transparencë",
-      desc: "Marrëdhënie të ndërtuara mbi korrektësi, integritet dhe besueshmëri.",
-    },
-    {
-      icon: Handshake,
-      emoji: "🤝",
-      title: "Partneritet Afatgjatë",
-      desc: "Partneri juaj i besueshëm në çdo fazë të zhvillimit të biznesit.",
-    },
+    { icon: Award, title: t("trust.1.title"), desc: t("trust.1.desc") },
+    { icon: TrendingUp, title: t("trust.2.title"), desc: t("trust.2.desc") },
+    { icon: ShieldCheck, title: t("trust.3.title"), desc: t("trust.3.desc") },
+    { icon: Handshake, title: t("trust.4.title"), desc: t("trust.4.desc") },
   ];
+
   return (
     <section className="container-page -mt-8 pb-24 md:-mt-14 md:pb-28">
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
