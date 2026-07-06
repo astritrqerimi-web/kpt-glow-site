@@ -26,6 +26,7 @@ import {
   aboutQuery,
   servicesQuery,
   companyQuery,
+  trustQuery,
   pick,
 } from "@/lib/site-content";
 import { ServiceIcon } from "@/components/site/ServiceIcon";
@@ -54,6 +55,7 @@ export const Route = createFileRoute("/")({
     context.queryClient.ensureQueryData(aboutQuery());
     context.queryClient.ensureQueryData(servicesQuery());
     context.queryClient.ensureQueryData(companyQuery());
+    context.queryClient.ensureQueryData(trustQuery());
   },
   component: HomePage,
 });
