@@ -2,8 +2,8 @@ import { useI18n, type Lang } from "@/lib/i18n";
 import { KosovoFlag, UsFlag } from "./Flags";
 
 const flags: Record<Lang, { flag: React.ReactNode; label: string; short: string }> = {
-  sq: { flag: <KosovoFlag className="h-[18px] w-[26px] rounded-[3px] shadow-sm" />, label: "Shqip", short: "SHQ" },
-  en: { flag: <UsFlag className="h-[18px] w-[26px] rounded-[3px] shadow-sm" />, label: "English", short: "EN" },
+  sq: { flag: <KosovoFlag className="h-5 w-[28px] rounded-[3px] shadow-sm" />, label: "Shqip", short: "SHQ" },
+  en: { flag: <UsFlag className="h-5 w-[28px] rounded-[3px] shadow-sm" />, label: "English", short: "EN" },
 };
 
 
