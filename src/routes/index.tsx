@@ -474,20 +474,21 @@ function ContactSection() {
         <div className="lg:col-span-2 space-y-4">
           <ContactCard
             icon={<Phone className="h-5 w-5" />}
-            title="Telefoni"
+            title={t("contact.phone")}
             value={company.phone}
             href={`tel:${company.phone.replace(/\s/g, "")}`}
           />
           <ContactCard
             icon={<Mail className="h-5 w-5" />}
-            title="Email"
+            title={t("contact.email")}
             value={company.email}
             href={`mailto:${company.email}`}
           />
-          <ContactCard icon={<MapPin className="h-5 w-5" />} title="Adresa" value={company.address} />
+          <ContactCard icon={<MapPin className="h-5 w-5" />} title={t("contact.address")} value={company.address} />
 
           <div className="rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-5 shadow-soft">
-            <div className="text-xs uppercase tracking-[0.18em] text-primary mb-3">Na Ndiqni</div>
+            <div className="text-xs uppercase tracking-[0.18em] text-primary mb-3">{t("contact.follow")}</div>
+
             <div className="flex items-center gap-2">
               {company.facebook && (
                 <SocialIcon href={company.facebook} label="Facebook">
