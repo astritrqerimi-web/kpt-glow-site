@@ -2,12 +2,14 @@ import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
+import { useI18n } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 
-const nav = [
-  { hash: "#ballina", label: "Ballina" },
-  { hash: "#rreth-nesh", label: "Rreth Nesh" },
-  { hash: "#sherbimet", label: "Shërbimet" },
-  { hash: "#kontakti", label: "Kontakti" },
+const NAV = [
+  { hash: "#ballina", key: "nav.home" },
+  { hash: "#rreth-nesh", key: "nav.about" },
+  { hash: "#sherbimet", key: "nav.services" },
+  { hash: "#kontakti", key: "nav.contact" },
 ] as const;
 
 function scrollToHash(hash: string) {
@@ -20,6 +22,7 @@ function scrollToHash(hash: string) {
 }
 
 export function Header() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>("#ballina");
@@ -32,7 +35,7 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    const ids = nav.map((n) => n.hash.replace("#", ""));
+    const ids = NAV.map((n) => n.hash.replace("#", ""));
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
@@ -77,7 +80,7 @@ export function Header() {
             }
             setOpen(false);
           }}
-          aria-label="KPT Consulting — Ballina"
+          aria-label="KPT Consulting"
         >
           <img
             src={logoAsset.url}
@@ -89,13 +92,13 @@ export function Header() {
               KPT Consulting
             </span>
             <span className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-muted-foreground whitespace-nowrap">
-              Kontabilitet | Program | Trajnime
+              {t("brand.tagline")}
             </span>
           </div>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1">
-          {nav.map((item) => (
+          {NAV.map((item) => (
             <a
               key={item.hash}
               href={`/${item.hash}`}
@@ -104,7 +107,7 @@ export function Header() {
                 active === item.hash ? "text-primary" : "text-foreground/75 hover:text-foreground"
               }`}
             >
-              {item.label}
+              {t(item.key)}
             </a>
           ))}
           <a
@@ -113,14 +116,15 @@ export function Header() {
             className="ml-4 inline-flex items-center rounded-full px-5 py-2.5 text-sm font-medium text-white shadow-soft transition-all duration-300 hover:shadow-elegant hover:-translate-y-0.5"
             style={{ background: "var(--gradient-brand)" }}
           >
-            Na Kontaktoni
+            {t("nav.contactUs")}
           </a>
+          <LanguageSwitcher variant="desktop" />
         </nav>
 
         <button
           className="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur"
           onClick={() => setOpen((v) => !v)}
-          aria-label="Menu"
+          aria-label={t("nav.menu")}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
@@ -129,7 +133,7 @@ export function Header() {
       {open && (
         <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-up">
           <nav className="container-page py-4 flex flex-col gap-1">
-            {nav.map((item) => (
+            {NAV.map((item) => (
               <a
                 key={item.hash}
                 href={`/${item.hash}`}
@@ -138,7 +142,7 @@ export function Header() {
                   active === item.hash ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
                 }`}
               >
-                {item.label}
+                {t(item.key)}
               </a>
             ))}
             <a
@@ -147,8 +151,9 @@ export function Header() {
               className="mt-2 inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium text-white"
               style={{ background: "var(--gradient-brand)" }}
             >
-              Na Kontaktoni
+              {t("nav.contactUs")}
             </a>
+            <LanguageSwitcher variant="mobile" />
           </nav>
         </div>
       )}

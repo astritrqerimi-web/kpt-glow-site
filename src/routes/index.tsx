@@ -31,6 +31,8 @@ import { ServiceIcon } from "@/components/site/ServiceIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import heroVisual from "@/assets/hero-visual.jpg.asset.json";
+import { useI18n } from "@/lib/i18n";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -71,6 +73,8 @@ function HomePage() {
 /* ---------------- HERO / BALLINA ---------------- */
 function HeroSection() {
   const { data: hero } = useSuspenseQuery(heroQuery());
+  const { t } = useI18n();
+
   return (
     <section
       id="ballina"
@@ -96,7 +100,7 @@ function HeroSection() {
         <div className="relative">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur px-4 py-1.5 text-xs font-medium text-primary shadow-soft animate-fade-up">
             <Sparkles className="h-3.5 w-3.5" />
-            <span className="uppercase tracking-[0.14em]">Kontabilitet • Program • Trajnime</span>
+            <span className="uppercase tracking-[0.14em]">{t("hero.badge")}</span>
           </div>
 
           <h1
@@ -127,16 +131,17 @@ function HeroSection() {
                     "linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%)",
                 }}
               />
-              <span className="relative">Na Kontaktoni</span>
+              <span className="relative">{t("hero.ctaContact")}</span>
               <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-1" />
             </a>
             <a
               href="#sherbimet"
               className="group inline-flex items-center gap-2 rounded-full border border-border bg-background/70 backdrop-blur px-8 py-4 text-sm font-semibold text-foreground shadow-soft transition-all duration-300 hover:border-primary/40 hover:bg-background hover:-translate-y-0.5"
             >
-              Shërbimet
+              {t("hero.ctaServices")}
               <ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-1" />
             </a>
+
           </div>
 
           {/* Meta strip */}
@@ -147,16 +152,17 @@ function HeroSection() {
                   <Star key={i} className="h-3.5 w-3.5 fill-current" style={{ color: "var(--brand-gold)" }} />
                 ))}
               </div>
-              <span className="font-medium text-foreground/85">Klientë të kënaqur</span>
+              <span className="font-medium text-foreground/85">{t("hero.happyClients")}</span>
             </div>
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-primary" />
-              <span>Në përputhje me legjislacionin</span>
+              <span>{t("hero.compliance")}</span>
             </div>
             <div className="flex items-center gap-2">
               <Award className="h-4 w-4 text-primary" />
-              <span>Kontabilist i Certifikuar</span>
+              <span>{t("hero.certified")}</span>
             </div>
+
           </div>
         </div>
 
@@ -209,7 +215,7 @@ function HeroSection() {
                 <TrendingUp className="h-5 w-5" />
               </span>
               <div className="leading-tight">
-                <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Rritje mesatare</div>
+                <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{t("hero.stat.growth")}</div>
                 <div className="font-display text-lg text-foreground">+34%</div>
               </div>
             </div>
@@ -225,7 +231,7 @@ function HeroSection() {
                 <ShieldCheck className="h-5 w-5" />
               </span>
               <div className="leading-tight">
-                <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Përputhshmëri</div>
+                <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{t("hero.stat.compliance")}</div>
                 <div className="font-display text-lg text-foreground">100%</div>
               </div>
             </div>
@@ -238,32 +244,14 @@ function HeroSection() {
 
 /* ---------------- TRUST CARDS ---------------- */
 function TrustCards() {
+  const { t } = useI18n();
   const cards = [
-    {
-      icon: Award,
-      emoji: "🏆",
-      title: "Ekspertizë Profesionale",
-      desc: "Shërbime kontabiliteti, tatimore dhe financiare të ofruara me profesionalizëm dhe përkushtim.",
-    },
-    {
-      icon: TrendingUp,
-      emoji: "📈",
-      title: "Rritje dhe Zhvillim",
-      desc: "Zgjidhje financiare që mbështesin rritjen dhe suksesin afatgjatë të biznesit tuaj.",
-    },
-    {
-      icon: ShieldCheck,
-      emoji: "🛡️",
-      title: "Besim dhe Transparencë",
-      desc: "Marrëdhënie të ndërtuara mbi korrektësi, integritet dhe besueshmëri.",
-    },
-    {
-      icon: Handshake,
-      emoji: "🤝",
-      title: "Partneritet Afatgjatë",
-      desc: "Partneri juaj i besueshëm në çdo fazë të zhvillimit të biznesit.",
-    },
+    { icon: Award, title: t("trust.1.title"), desc: t("trust.1.desc") },
+    { icon: TrendingUp, title: t("trust.2.title"), desc: t("trust.2.desc") },
+    { icon: ShieldCheck, title: t("trust.3.title"), desc: t("trust.3.desc") },
+    { icon: Handshake, title: t("trust.4.title"), desc: t("trust.4.desc") },
   ];
+
   return (
     <section className="container-page -mt-8 pb-24 md:-mt-14 md:pb-28">
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -301,18 +289,19 @@ function TrustCards() {
 /* ---------------- RRETH NESH ---------------- */
 function AboutSection() {
   const { data: about } = useSuspenseQuery(aboutQuery());
+  const { t } = useI18n();
   const values = [
-    { icon: ShieldCheck, title: "Besueshmëri", desc: "Punojmë me integritet dhe transparencë të plotë." },
-    { icon: Target, title: "Saktësi", desc: "Standarde të larta profesionale në çdo detyrë." },
-    { icon: Users2, title: "Partneritet", desc: "Marrëdhënie afatgjata të bazuara në rezultate." },
-    { icon: CheckCircle2, title: "Përputhshmëri", desc: "Në përputhje të plotë me legjislacionin." },
+    { icon: ShieldCheck, title: t("about.value.1.title"), desc: t("about.value.1.desc") },
+    { icon: Target, title: t("about.value.2.title"), desc: t("about.value.2.desc") },
+    { icon: Users2, title: t("about.value.3.title"), desc: t("about.value.3.desc") },
+    { icon: CheckCircle2, title: t("about.value.4.title"), desc: t("about.value.4.desc") },
   ];
   return (
     <section id="rreth-nesh" className={`container-page pt-8 pb-24 ${sectionAnchor}`}>
       <div className="max-w-3xl">
-        <div className="text-xs uppercase tracking-[0.2em] text-primary">Rreth Nesh</div>
+        <div className="text-xs uppercase tracking-[0.2em] text-primary">{t("about.eyebrow")}</div>
         <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-foreground">
-          Partneri juaj për <span className="text-gradient-brand">zgjidhje financiare</span>
+          {t("about.title.a")} <span className="text-gradient-brand">{t("about.title.b")}</span>
         </h2>
       </div>
 
@@ -321,10 +310,11 @@ function AboutSection() {
           <p className="text-lg leading-relaxed text-foreground/85">{about.intro}</p>
           <p className="text-base leading-relaxed text-muted-foreground">{about.services}</p>
           <div className="rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-6 shadow-soft">
-            <div className="text-xs uppercase tracking-[0.18em] text-primary">Udhëheqja</div>
+            <div className="text-xs uppercase tracking-[0.18em] text-primary">{t("about.leadership")}</div>
             <p className="mt-3 text-base leading-relaxed text-foreground/85">{about.leader}</p>
           </div>
         </div>
+
         <div className="md:col-span-2 grid grid-cols-2 gap-4 content-start">
           {values.map((v, i) => (
             <div
@@ -350,17 +340,19 @@ function AboutSection() {
 /* ---------------- SHËRBIMET ---------------- */
 function ServicesSection() {
   const { data: services } = useSuspenseQuery(servicesQuery());
+  const { t } = useI18n();
   return (
     <section id="sherbimet" className={`container-page pb-24 ${sectionAnchor}`}>
       <div className="max-w-3xl">
-        <div className="text-xs uppercase tracking-[0.2em] text-primary">Shërbimet</div>
+        <div className="text-xs uppercase tracking-[0.2em] text-primary">{t("services.eyebrow")}</div>
         <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-foreground">
-          Gjithçka që biznesi juaj <span className="text-gradient-brand">ka nevojë</span>
+          {t("services.title.a")} <span className="text-gradient-brand">{t("services.title.b")}</span>
         </h2>
         <p className="mt-5 text-lg text-muted-foreground max-w-2xl">
-          Nga themelimi i biznesit deri te menaxhimi financiar i përditshëm — mbulojmë çdo aspekt profesional.
+          {t("services.subtitle")}
         </p>
       </div>
+
 
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {services.map((s, i) => (
@@ -398,22 +390,35 @@ const SERVICE_OPTIONS = [
   "Tjetër",
 ] as const;
 
-const contactSchema = z
-  .object({
-    name: z.string().trim().min(2, "Emri është i detyrueshëm").max(100),
-    email: z.string().trim().email("Email-i nuk është valid").max(255),
-    phone: z.string().trim().max(30).optional().or(z.literal("")),
-    service: z.enum(SERVICE_OPTIONS, { message: "Ju lutem zgjidhni një shërbim" }),
-    serviceOther: z.string().trim().max(150).optional().or(z.literal("")),
-    message: z.string().trim().min(10, "Mesazhi është shumë i shkurtër").max(5000),
-  })
-  .refine((d) => d.service !== "Tjetër" || (d.serviceOther && d.serviceOther.length >= 2), {
-    path: ["serviceOther"],
-    message: "Ju lutem përshkruani kërkesën tuaj",
-  });
+const SERVICE_LABEL_KEYS: Record<(typeof SERVICE_OPTIONS)[number], string> = {
+  "Regjistrimi i Biznesit": "svc.registration",
+  "Kontabiliteti dhe Mbajtja e Librave": "svc.bookkeeping",
+  "Përgatitja e Pasqyrave Financiare": "svc.financial",
+  "Konsulencë Tatimore dhe Financiare": "svc.tax",
+  "Aplikim për Grante dhe Subvencione": "svc.grants",
+  "Tjetër": "svc.other",
+};
+
+function buildContactSchema(t: (k: string) => string) {
+  return z
+    .object({
+      name: z.string().trim().min(2, t("form.err.name")).max(100),
+      email: z.string().trim().email(t("form.err.email")).max(255),
+      phone: z.string().trim().max(30).optional().or(z.literal("")),
+      service: z.enum(SERVICE_OPTIONS, { message: t("form.err.service") }),
+      serviceOther: z.string().trim().max(150).optional().or(z.literal("")),
+      message: z.string().trim().min(10, t("form.err.message")).max(5000),
+    })
+    .refine((d) => d.service !== "Tjetër" || (d.serviceOther && d.serviceOther.length >= 2), {
+      path: ["serviceOther"],
+      message: t("form.err.serviceOther"),
+    });
+}
+
 
 function ContactSection() {
   const { data: company } = useSuspenseQuery(companyQuery());
+  const { t } = useI18n();
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", serviceOther: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -421,7 +426,7 @@ function ContactSection() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
-    const parsed = contactSchema.safeParse(form);
+    const parsed = buildContactSchema(t).safeParse(form);
     if (!parsed.success) {
       const errs: Record<string, string> = {};
       for (const issue of parsed.error.issues) errs[String(issue.path[0])] = issue.message;
@@ -442,10 +447,10 @@ function ContactSection() {
     });
     setSubmitting(false);
     if (error) {
-      toast.error("Dërgimi dështoi. Ju lutemi provoni përsëri.");
+      toast.error(t("form.error"));
       return;
     }
-    toast.success("Mesazhi u dërgua me sukses. Do t'ju kontaktojmë së shpejti.");
+    toast.success(t("form.success"));
     setForm({ name: "", email: "", phone: "", service: "", serviceOther: "", message: "" });
   };
 
@@ -455,33 +460,35 @@ function ContactSection() {
   return (
     <section id="kontakti" className={`container-page pb-24 ${sectionAnchor}`}>
       <div className="max-w-3xl">
-        <div className="text-xs uppercase tracking-[0.2em] text-primary">Kontakti</div>
+        <div className="text-xs uppercase tracking-[0.2em] text-primary">{t("contact.eyebrow")}</div>
         <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-foreground">
-          Le të <span className="text-gradient-brand">bisedojmë</span>
+          {t("contact.title.a")} <span className="text-gradient-brand">{t("contact.title.b")}</span>
         </h2>
         <p className="mt-5 text-lg text-muted-foreground max-w-2xl">
-          Kontaktoni ekipin tonë për një konsultim ose plotësoni formularin dhe do t'ju përgjigjemi sa më shpejt.
+          {t("contact.subtitle")}
         </p>
       </div>
+
 
       <div className="mt-12 grid gap-8 lg:grid-cols-5">
         <div className="lg:col-span-2 space-y-4">
           <ContactCard
             icon={<Phone className="h-5 w-5" />}
-            title="Telefoni"
+            title={t("contact.phone")}
             value={company.phone}
             href={`tel:${company.phone.replace(/\s/g, "")}`}
           />
           <ContactCard
             icon={<Mail className="h-5 w-5" />}
-            title="Email"
+            title={t("contact.email")}
             value={company.email}
             href={`mailto:${company.email}`}
           />
-          <ContactCard icon={<MapPin className="h-5 w-5" />} title="Adresa" value={company.address} />
+          <ContactCard icon={<MapPin className="h-5 w-5" />} title={t("contact.address")} value={company.address} />
 
           <div className="rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-5 shadow-soft">
-            <div className="text-xs uppercase tracking-[0.18em] text-primary mb-3">Na Ndiqni</div>
+            <div className="text-xs uppercase tracking-[0.18em] text-primary mb-3">{t("contact.follow")}</div>
+
             <div className="flex items-center gap-2">
               {company.facebook && (
                 <SocialIcon href={company.facebook} label="Facebook">
@@ -507,14 +514,14 @@ function ContactSection() {
           className="lg:col-span-3 rounded-3xl border border-border/60 bg-background/80 backdrop-blur p-6 md:p-8 shadow-elegant space-y-5"
         >
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Emri i plotë *" error={errors.name}>
+            <Field label={t("form.name")} error={errors.name}>
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </Field>
-            <Field label="Email *" error={errors.email}>
+            <Field label={t("form.email")} error={errors.email}>
               <input
                 type="email"
                 value={form.email}
@@ -522,7 +529,7 @@ function ContactSection() {
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </Field>
-            <Field label="Telefoni" error={errors.phone}>
+            <Field label={t("form.phone")} error={errors.phone}>
               <input
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -530,29 +537,29 @@ function ContactSection() {
               />
             </Field>
           </div>
-          <Field label="Shërbimi që ju intereson *" error={errors.service}>
+          <Field label={t("form.service")} error={errors.service}>
             <select
               value={form.service}
               onChange={(e) => setForm({ ...form, service: e.target.value, serviceOther: e.target.value === "Tjetër" ? form.serviceOther : "" })}
               className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             >
-              <option value="" disabled>Zgjidhni një shërbim</option>
+              <option value="" disabled>{t("form.servicePlaceholder")}</option>
               {SERVICE_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
+                <option key={opt} value={opt}>{t(SERVICE_LABEL_KEYS[opt])}</option>
               ))}
             </select>
           </Field>
           {form.service === "Tjetër" && (
-            <Field label="Përshkruani kërkesën tuaj *" error={errors.serviceOther}>
+            <Field label={t("form.serviceOther")} error={errors.serviceOther}>
               <input
                 value={form.serviceOther}
                 onChange={(e) => setForm({ ...form, serviceOther: e.target.value })}
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-                placeholder="Shkruani shërbimin që ju intereson"
+                placeholder={t("form.serviceOtherPlaceholder")}
               />
             </Field>
           )}
-          <Field label="Mesazhi *" error={errors.message}>
+          <Field label={t("form.message")} error={errors.message}>
             <textarea
               rows={6}
               value={form.message}
@@ -567,13 +574,14 @@ function ContactSection() {
             style={{ background: "var(--gradient-brand)" }}
           >
             {submitting ? (
-              "Duke dërguar..."
+              t("form.submitting")
             ) : (
               <>
-                Dërgo mesazhin <Send className="h-4 w-4" />
+                {t("form.submit")} <Send className="h-4 w-4" />
               </>
             )}
           </button>
+
         </form>
       </div>
 

@@ -2,8 +2,10 @@
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 import type { CompanyInfo } from "@/lib/site-content";
+import { useI18n } from "@/lib/i18n";
 
 export function Footer({ company }: { company: CompanyInfo }) {
+  const { t } = useI18n();
   const year = new Date().getFullYear();
   return (
     <footer className="mt-24 border-t border-border/60 bg-background/60 backdrop-blur">
@@ -14,12 +16,12 @@ export function Footer({ company }: { company: CompanyInfo }) {
             <div>
               <div className="font-display text-lg text-foreground">KPT Consulting</div>
               <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                Kontabilitet • Program • Trajnime
+                {t("brand.taglineDot")}
               </div>
             </div>
           </div>
           <p className="mt-4 max-w-md text-sm text-muted-foreground leading-relaxed">
-            Zgjidhje profesionale të kontabilitetit, deklarimeve tatimore dhe konsulencës për biznese në Kosovë.
+            {t("footer.desc")}
           </p>
           <div className="mt-5 flex items-center gap-2">
             {company.facebook && (
@@ -44,17 +46,17 @@ export function Footer({ company }: { company: CompanyInfo }) {
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold text-foreground">Menuja</h4>
+          <h4 className="text-sm font-semibold text-foreground">{t("footer.menu")}</h4>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><a href="/#ballina" className="text-muted-foreground hover:text-primary transition">Ballina</a></li>
-            <li><a href="/#rreth-nesh" className="text-muted-foreground hover:text-primary transition">Rreth Nesh</a></li>
-            <li><a href="/#sherbimet" className="text-muted-foreground hover:text-primary transition">Shërbimet</a></li>
-            <li><a href="/#kontakti" className="text-muted-foreground hover:text-primary transition">Kontakti</a></li>
+            <li><a href="/#ballina" className="text-muted-foreground hover:text-primary transition">{t("nav.home")}</a></li>
+            <li><a href="/#rreth-nesh" className="text-muted-foreground hover:text-primary transition">{t("nav.about")}</a></li>
+            <li><a href="/#sherbimet" className="text-muted-foreground hover:text-primary transition">{t("nav.services")}</a></li>
+            <li><a href="/#kontakti" className="text-muted-foreground hover:text-primary transition">{t("nav.contact")}</a></li>
           </ul>
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold text-foreground">Kontakti</h4>
+          <h4 className="text-sm font-semibold text-foreground">{t("footer.contact")}</h4>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
             <li className="flex gap-2"><Phone className="h-4 w-4 mt-0.5 text-primary" /><a href={`tel:${company.phone.replace(/\s/g,'')}`} className="hover:text-primary transition">{company.phone}</a></li>
             <li className="flex gap-2"><Mail className="h-4 w-4 mt-0.5 text-primary" /><a href={`mailto:${company.email}`} className="hover:text-primary transition">{company.email}</a></li>
@@ -64,10 +66,11 @@ export function Footer({ company }: { company: CompanyInfo }) {
       </div>
       <div className="border-t border-border/60">
         <div className="container-page py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-          <span>© {year} KPT Consulting. Të gjitha të drejtat e rezervuara.</span>
+          <span>© {year} KPT Consulting. {t("footer.rights")}</span>
           <span>kptconsulting.al</span>
         </div>
       </div>
     </footer>
   );
 }
+
