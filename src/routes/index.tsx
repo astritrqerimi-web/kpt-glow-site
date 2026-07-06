@@ -147,25 +147,9 @@ function HeroSection() {
 
           </div>
 
-          {/* Meta strip */}
-          <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 text-xs text-muted-foreground animate-fade-up" style={{ animationDelay: "320ms" }}>
-            <div className="flex items-center gap-2">
-              <div className="flex -space-x-0.5">
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <Star key={i} className="h-3.5 w-3.5 fill-current" style={{ color: "var(--brand-gold)" }} />
-                ))}
-              </div>
-              <span className="font-medium text-foreground/85">{t("hero.happyClients")}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-primary" />
-              <span>{t("hero.compliance")}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Award className="h-4 w-4 text-primary" />
-              <span>{t("hero.certified")}</span>
-            </div>
-
+          {/* Trust marquee */}
+          <div className="animate-fade-up" style={{ animationDelay: "320ms" }}>
+            <TrustMarquee />
           </div>
         </div>
 
