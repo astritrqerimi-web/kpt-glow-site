@@ -51,37 +51,41 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.03 200);
 
-  /* Brand from logo */
-  --brand-deep: oklch(0.42 0.07 210);   /* deep teal */
-  --brand-mid: oklch(0.58 0.11 190);    /* teal */
-  --brand-light: oklch(0.78 0.14 170);  /* mint-green */
+  /* Brand from logo — richer, more vivid greens */
+  --brand-deep: oklch(0.40 0.09 210);   /* deep teal */
+  --brand-mid: oklch(0.60 0.14 185);    /* teal */
+  --brand-light: oklch(0.75 0.17 165);  /* vivid mint */
+  --brand-gold: oklch(0.82 0.13 85);    /* accent gold */
 
-  --primary: oklch(0.45 0.08 205);
+  --primary: oklch(0.44 0.10 200);
   --primary-foreground: oklch(0.99 0.005 200);
-  --primary-glow: oklch(0.78 0.14 170);
+  --primary-glow: oklch(0.75 0.17 165);
 
-  --secondary: oklch(0.97 0.008 200);
-  --secondary-foreground: oklch(0.28 0.04 205);
+  --secondary: oklch(0.97 0.010 195);
+  --secondary-foreground: oklch(0.28 0.05 205);
 
-  --muted: oklch(0.97 0.005 200);
-  --muted-foreground: oklch(0.52 0.02 210);
+  --muted: oklch(0.97 0.008 195);
+  --muted-foreground: oklch(0.50 0.03 210);
 
-  --accent: oklch(0.94 0.03 175);
-  --accent-foreground: oklch(0.28 0.06 200);
+  --accent: oklch(0.93 0.05 170);
+  --accent-foreground: oklch(0.28 0.07 200);
 
   --destructive: oklch(0.6 0.22 25);
   --destructive-foreground: oklch(0.99 0.005 200);
 
-  --border: oklch(0.93 0.008 210);
-  --input: oklch(0.94 0.008 210);
-  --ring: oklch(0.58 0.11 190);
+  --border: oklch(0.92 0.012 200);
+  --input: oklch(0.94 0.012 200);
+  --ring: oklch(0.60 0.14 185);
 
   /* Design tokens */
-  --gradient-brand: linear-gradient(135deg, oklch(0.42 0.07 210) 0%, oklch(0.58 0.11 190) 45%, oklch(0.78 0.14 170) 100%);
-  --gradient-soft: linear-gradient(180deg, oklch(0.99 0.005 195) 0%, oklch(0.97 0.01 175) 100%);
-  --shadow-elegant: 0 20px 60px -30px oklch(0.42 0.07 210 / 0.25), 0 8px 24px -12px oklch(0.42 0.07 210 / 0.12);
-  --shadow-soft: 0 2px 12px -4px oklch(0.42 0.07 210 / 0.08);
-  --shadow-hover: 0 30px 80px -30px oklch(0.42 0.07 210 / 0.35), 0 12px 32px -12px oklch(0.42 0.07 210 / 0.18);
+  --gradient-brand: linear-gradient(135deg, oklch(0.40 0.09 210) 0%, oklch(0.55 0.15 190) 45%, oklch(0.75 0.17 165) 100%);
+  --gradient-brand-strong: linear-gradient(135deg, oklch(0.38 0.10 210) 0%, oklch(0.52 0.17 185) 50%, oklch(0.72 0.19 160) 100%);
+  --gradient-soft: linear-gradient(180deg, oklch(0.995 0.004 195) 0%, oklch(0.97 0.014 175) 100%);
+  --gradient-mesh: radial-gradient(1000px 700px at 85% -10%, oklch(0.90 0.12 175 / 0.55), transparent 60%), radial-gradient(800px 600px at -10% 110%, oklch(0.86 0.14 200 / 0.45), transparent 60%);
+  --shadow-elegant: 0 20px 60px -30px oklch(0.40 0.09 210 / 0.35), 0 8px 24px -12px oklch(0.40 0.09 210 / 0.15);
+  --shadow-soft: 0 2px 12px -4px oklch(0.40 0.09 210 / 0.10);
+  --shadow-hover: 0 30px 80px -30px oklch(0.40 0.09 210 / 0.45), 0 12px 32px -12px oklch(0.40 0.09 210 / 0.22);
+  --shadow-glow: 0 0 60px -10px oklch(0.75 0.17 165 / 0.55);
 }
 
 .dark {
@@ -142,6 +146,13 @@
 @utility shadow-elegant { box-shadow: var(--shadow-elegant); }
 @utility shadow-soft { box-shadow: var(--shadow-soft); }
 @utility shadow-hover { box-shadow: var(--shadow-hover); }
+@utility shadow-glow { box-shadow: var(--shadow-glow); }
+
+@utility glass-panel {
+  background: color-mix(in oklab, var(--color-background) 65%, transparent);
+  backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid color-mix(in oklab, var(--color-border) 90%, transparent);
+}
 
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(20px); }
@@ -153,7 +164,23 @@
 }
 
 @keyframes float-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(0.4deg); }
 }
-@utility animate-float-slow { animation: float-slow 4s ease-in-out infinite; }
+@utility animate-float-slow { animation: float-slow 9s ease-in-out infinite; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@utility animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.05); }
+}
+@utility animate-pulse-glow { animation: pulse-glow 6s ease-in-out infinite; }
+
