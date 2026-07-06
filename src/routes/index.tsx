@@ -16,6 +16,10 @@ import {
   Facebook,
   Instagram,
   Linkedin,
+  Sparkles,
+  TrendingUp,
+  Handshake,
+  Star,
 } from "lucide-react";
 import {
   heroQuery,
@@ -26,6 +30,7 @@ import {
 import { ServiceIcon } from "@/components/site/ServiceIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import heroVisual from "@/assets/hero-visual.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
