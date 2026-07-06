@@ -514,14 +514,14 @@ function ContactSection() {
           className="lg:col-span-3 rounded-3xl border border-border/60 bg-background/80 backdrop-blur p-6 md:p-8 shadow-elegant space-y-5"
         >
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Emri i plotë *" error={errors.name}>
+            <Field label={t("form.name")} error={errors.name}>
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </Field>
-            <Field label="Email *" error={errors.email}>
+            <Field label={t("form.email")} error={errors.email}>
               <input
                 type="email"
                 value={form.email}
@@ -529,7 +529,7 @@ function ContactSection() {
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </Field>
-            <Field label="Telefoni" error={errors.phone}>
+            <Field label={t("form.phone")} error={errors.phone}>
               <input
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -537,29 +537,29 @@ function ContactSection() {
               />
             </Field>
           </div>
-          <Field label="Shërbimi që ju intereson *" error={errors.service}>
+          <Field label={t("form.service")} error={errors.service}>
             <select
               value={form.service}
               onChange={(e) => setForm({ ...form, service: e.target.value, serviceOther: e.target.value === "Tjetër" ? form.serviceOther : "" })}
               className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             >
-              <option value="" disabled>Zgjidhni një shërbim</option>
+              <option value="" disabled>{t("form.servicePlaceholder")}</option>
               {SERVICE_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
+                <option key={opt} value={opt}>{t(SERVICE_LABEL_KEYS[opt])}</option>
               ))}
             </select>
           </Field>
           {form.service === "Tjetër" && (
-            <Field label="Përshkruani kërkesën tuaj *" error={errors.serviceOther}>
+            <Field label={t("form.serviceOther")} error={errors.serviceOther}>
               <input
                 value={form.serviceOther}
                 onChange={(e) => setForm({ ...form, serviceOther: e.target.value })}
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-                placeholder="Shkruani shërbimin që ju intereson"
+                placeholder={t("form.serviceOtherPlaceholder")}
               />
             </Field>
           )}
-          <Field label="Mesazhi *" error={errors.message}>
+          <Field label={t("form.message")} error={errors.message}>
             <textarea
               rows={6}
               value={form.message}
@@ -574,13 +574,14 @@ function ContactSection() {
             style={{ background: "var(--gradient-brand)" }}
           >
             {submitting ? (
-              "Duke dërguar..."
+              t("form.submitting")
             ) : (
               <>
-                Dërgo mesazhin <Send className="h-4 w-4" />
+                {t("form.submit")} <Send className="h-4 w-4" />
               </>
             )}
           </button>
+
         </form>
       </div>
 
