@@ -130,11 +130,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SiteChrome>
-        <Outlet />
-      </SiteChrome>
-      <Toaster position="top-right" />
+      <I18nProvider>
+        <SiteChrome>
+          <Outlet />
+        </SiteChrome>
+        <Toaster position="top-right" />
+      </I18nProvider>
     </QueryClientProvider>
+
   );
 }
 
