@@ -340,17 +340,19 @@ function AboutSection() {
 /* ---------------- SHËRBIMET ---------------- */
 function ServicesSection() {
   const { data: services } = useSuspenseQuery(servicesQuery());
+  const { t } = useI18n();
   return (
     <section id="sherbimet" className={`container-page pb-24 ${sectionAnchor}`}>
       <div className="max-w-3xl">
-        <div className="text-xs uppercase tracking-[0.2em] text-primary">Shërbimet</div>
+        <div className="text-xs uppercase tracking-[0.2em] text-primary">{t("services.eyebrow")}</div>
         <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-foreground">
-          Gjithçka që biznesi juaj <span className="text-gradient-brand">ka nevojë</span>
+          {t("services.title.a")} <span className="text-gradient-brand">{t("services.title.b")}</span>
         </h2>
         <p className="mt-5 text-lg text-muted-foreground max-w-2xl">
-          Nga themelimi i biznesit deri te menaxhimi financiar i përditshëm — mbulojmë çdo aspekt profesional.
+          {t("services.subtitle")}
         </p>
       </div>
+
 
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {services.map((s, i) => (
