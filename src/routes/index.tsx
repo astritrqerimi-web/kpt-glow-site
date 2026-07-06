@@ -35,13 +35,13 @@ import heroVisual from "@/assets/hero-visual.jpg.asset.json";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "KPT Consulting — Kontabilitet, Tatime dhe Konsulencë Biznesi" },
+      { title: "KPT Consulting — Kontabilitet, Program dhe Trajnime" },
       {
         name: "description",
         content:
           "Shërbime profesionale të kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve dhe konsulencës financiare në Kosovë.",
       },
-      { property: "og:title", content: "KPT Consulting — Kontabilitet, Tatime dhe Konsulencë" },
+      { property: "og:title", content: "KPT Consulting — Kontabilitet, Program dhe Trajnime" },
       { property: "og:description", content: "Zgjidhje financiare profesionale për biznesin tuaj në Kosovë." },
     ],
   }),
@@ -96,7 +96,7 @@ function HeroSection() {
         <div className="relative">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur px-4 py-1.5 text-xs font-medium text-primary shadow-soft animate-fade-up">
             <Sparkles className="h-3.5 w-3.5" />
-            <span className="uppercase tracking-[0.14em]">Kontabilitet · Tatime · Konsulencë</span>
+            <span className="uppercase tracking-[0.14em]">Kontabilitet • Program • Trajnime</span>
           </div>
 
           <h1

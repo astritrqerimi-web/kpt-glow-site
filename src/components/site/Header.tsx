@@ -88,7 +88,7 @@ export function Header() {
             <span className="font-display text-xl md:text-2xl text-foreground tracking-tight">
               KPT Consulting
             </span>
-            <span className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+            <span className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-muted-foreground whitespace-nowrap">
               Kontabilitet | Program | Trajnime
             </span>
           </div>
