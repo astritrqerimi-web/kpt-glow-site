@@ -4,7 +4,36 @@ export type Lang = "sq" | "en";
 
 type Dict = Record<string, string>;
 
+/** Translations for services keyed by database service ID. */
+export const SERVICE_TRANSLATIONS: Record<Lang, Record<string, { title: string; description: string }>> = {
+  sq: {
+    "23a43269-f122-4574-bc4a-ac43c563fe07": { title: "Regjistrimi i Bizneseve", description: "Ndihmojmë në themelimin dhe regjistrimin e bizneseve tuaja sipas legjislacionit në fuqi, nga hapat e parë deri në aktivizimin e plotë." },
+    "5c718b1a-ca30-4546-8d31-d2b8f478c09c": { title: "Kontabilitet dhe Mbajtje e Librave", description: "Mbajtje profesionale e librave kontabël, evidencave financiare dhe raportimeve mujore për biznesin tuaj." },
+    "cdcca70a-8347-4379-8791-eb2b8ac9c1f4": { title: "Deklarime Tatimore dhe TVSH", description: "Përgatitje dhe dorëzim i të gjitha deklarimeve tatimore, TVSH-së dhe raporteve për ATK në kohë dhe me saktësi." },
+    "f537375d-1d9a-44f2-98a7-ec419abcd7ba": { title: "Përgatitja e Pasqyrave Financiare", description: "Hartimi i pasqyrave financiare vjetore në përputhje me standardet ndërkombëtare të raportimit financiar." },
+    "94151bbc-5441-4545-88f3-11cea2f5b04a": { title: "Menaxhimi i Pagave", description: "Administrim i pagave, kontributeve dhe të gjitha detyrimeve që lidhen me punonjësit tuaj." },
+    "d026d0df-eafd-492b-8011-0b4ce924e80c": { title: "Konsulencë Tatimore dhe Financiare", description: "Këshillim strategjik për optimizim tatimor, planifikim financiar dhe zgjidhje të problemeve komplekse." },
+    "807ac63e-1b0d-4994-a902-54228ac190f6": { title: "Program Financiar dhe Digjitalizim", description: "Implementim i programeve moderne financiare dhe digjitalizim i proceseve të biznesit tuaj." },
+    "9db178d6-7e78-459a-9aad-c2cafc84fa10": { title: "Trajnime Profesionale", description: "Trajnime të specializuara në kontabilitet, tatime dhe menaxhim financiar për ekipin tuaj." },
+    "1cc6b0f4-d526-4590-a6cc-9bd3c133543b": { title: "Aplikime për Grante dhe Subvencione", description: "Përgatitje profesionale e aplikimeve për grante dhe subvencione nga institucionet vendore dhe ndërkombëtare." },
+    "29a67d92-472c-4c24-9215-d1cfdd5c17ae": { title: "Konsulencë për Zhvillim Biznesi", description: "Mbështetje strategjike për rritjen, zgjerimin dhe zhvillimin afatgjatë të biznesit tuaj." },
+  },
+  en: {
+    "23a43269-f122-4574-bc4a-ac43c563fe07": { title: "Business Registration", description: "We help you establish and register your business in line with current legislation — from the first steps all the way to full activation." },
+    "5c718b1a-ca30-4546-8d31-d2b8f478c09c": { title: "Accounting & Bookkeeping", description: "Professional bookkeeping, financial record-keeping and monthly reporting for your business." },
+    "cdcca70a-8347-4379-8791-eb2b8ac9c1f4": { title: "Tax & VAT Filings", description: "Timely and accurate preparation and submission of all tax filings, VAT and reports to the Kosovo Tax Administration." },
+    "f537375d-1d9a-44f2-98a7-ec419abcd7ba": { title: "Financial Statement Preparation", description: "Preparation of annual financial statements in accordance with international financial reporting standards." },
+    "94151bbc-5441-4545-88f3-11cea2f5b04a": { title: "Payroll Management", description: "Administration of payroll, contributions and all obligations related to your employees." },
+    "d026d0df-eafd-492b-8011-0b4ce924e80c": { title: "Tax & Financial Consulting", description: "Strategic advice for tax optimization, financial planning and solving complex issues." },
+    "807ac63e-1b0d-4994-a902-54228ac190f6": { title: "Financial Software & Digitalization", description: "Implementation of modern financial software and digitalization of your business processes." },
+    "9db178d6-7e78-459a-9aad-c2cafc84fa10": { title: "Professional Training", description: "Specialized training in accounting, taxation and financial management for your team." },
+    "1cc6b0f4-d526-4590-a6cc-9bd3c133543b": { title: "Grant & Subsidy Applications", description: "Professional preparation of grant and subsidy applications for local and international institutions." },
+    "29a67d92-472c-4c24-9215-d1cfdd5c17ae": { title: "Business Development Consulting", description: "Strategic support for the growth, expansion and long-term development of your business." },
+  },
+};
+
 const translations: Record<Lang, Dict> = {
+
   sq: {
     // Nav
     "nav.home": "Ballina",
