@@ -108,7 +108,7 @@ function HeroSection() {
         <div className="relative">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur px-4 py-1.5 text-xs font-medium text-primary shadow-soft animate-fade-up">
             <Sparkles className="h-3.5 w-3.5" />
-            <span className="uppercase tracking-[0.14em]">{t("hero.badge")}</span>
+            <span className="uppercase tracking-[0.14em]">{badge}</span>
           </div>
 
           <h1
@@ -139,14 +139,14 @@ function HeroSection() {
                     "linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%)",
                 }}
               />
-              <span className="relative">{t("hero.ctaContact")}</span>
+              <span className="relative">{ctaContact}</span>
               <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-1" />
             </a>
             <a
               href="#sherbimet"
               className="group inline-flex items-center gap-2 rounded-full border border-border bg-background/70 backdrop-blur px-8 py-4 text-sm font-semibold text-foreground shadow-soft transition-all duration-300 hover:border-primary/40 hover:bg-background hover:-translate-y-0.5"
             >
-              {t("hero.ctaServices")}
+              {ctaServices}
               <ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-1" />
             </a>
 
@@ -282,9 +282,9 @@ function TrustCards() {
 function AboutSection() {
   const { data: about } = useSuspenseQuery(aboutQuery());
   const { t, lang } = useI18n();
-  const intro = lang === "en" ? t("about.intro") : about.intro || t("about.intro");
-  const servicesText = lang === "en" ? t("about.services.text") : about.services || t("about.services.text");
-  const leader = lang === "en" ? t("about.leader") : about.leader || t("about.leader");
+  const intro = pick(about.intro, lang, t("about.intro"));
+  const servicesText = pick(about.services, lang, t("about.services.text"));
+  const leader = pick(about.leader, lang, t("about.leader"));
   const values = [
     { icon: ShieldCheck, title: t("about.value.1.title"), desc: t("about.value.1.desc") },
     { icon: Target, title: t("about.value.2.title"), desc: t("about.value.2.desc") },
