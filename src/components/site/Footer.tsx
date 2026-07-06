@@ -1,4 +1,4 @@
-import type {} from "@tanstack/react-router";
+
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 import type { CompanyInfo } from "@/lib/site-content";
