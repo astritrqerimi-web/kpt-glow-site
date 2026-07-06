@@ -262,7 +262,7 @@ function TrustCards() {
             />
             <div
               className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-soft transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
-              style={{ background: c.color }}
+              style={{ background: "var(--gradient-brand)" }}
             >
               <c.icon className="h-6 w-6" strokeWidth={1.8} />
             </div>
@@ -271,7 +271,7 @@ function TrustCards() {
             <div
               aria-hidden
               className="pointer-events-none absolute -bottom-16 -right-16 h-40 w-40 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-70"
-              style={{ background: `radial-gradient(circle, ${c.color}33, transparent 70%)` }}
+              style={{ background: "radial-gradient(circle, oklch(0.55 0.14 175 / 0.25), transparent 70%)" }}
             />
           </div>
         ))}
