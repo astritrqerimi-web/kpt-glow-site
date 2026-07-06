@@ -151,6 +151,8 @@ const translations: Record<Lang, Dict> = {
     "brand.taglineDot": "Accounting • Software • Training",
 
     "hero.badge": "Accounting • Software • Training",
+    "hero.title": "Financial solutions for your business",
+    "hero.subtitle": "KPT Consulting delivers professional accounting, tax filing, business registration, financial software and training services for businesses.",
     "hero.ctaContact": "Contact Us",
     "hero.ctaServices": "Services",
     "hero.happyClients": "Satisfied clients",
@@ -158,6 +160,7 @@ const translations: Record<Lang, Dict> = {
     "hero.certified": "Certified Accountant",
     "hero.stat.growth": "Average growth",
     "hero.stat.compliance": "Compliance",
+
 
     "trust.1.title": "Professional Expertise",
     "trust.1.desc": "Accounting, tax and financial services delivered with professionalism and dedication.",
