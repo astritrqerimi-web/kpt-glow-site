@@ -43,8 +43,8 @@ function StarCard({ title, desc }: { title: string; desc: string }) {
 
 function IconCard({ icon: Icon, title, desc }: { icon: LucideIcon; title: string; desc: string }) {
   return (
-    <div className="shrink-0 w-[200px] sm:w-[240px] rounded-xl border border-border/60 bg-background/60 backdrop-blur-sm px-4 py-3 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elegant hover:border-primary/25">
-      <div className="flex items-center mb-1.5">
+    <div className="shrink-0 flex flex-col items-center text-center w-[200px] sm:w-[240px] rounded-xl border border-border/60 bg-background/60 backdrop-blur-sm px-4 py-3 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elegant hover:border-primary/25">
+      <div className="flex items-center justify-center mb-1.5">
         <span
           className="inline-flex h-5 w-5 items-center justify-center rounded-md text-white"
           style={{ background: "var(--gradient-brand-strong)" }}
