@@ -175,7 +175,7 @@ function HeroSection() {
               className="relative overflow-hidden rounded-[2.25rem] border border-white/40 bg-background/40 backdrop-blur-xl shadow-elegant animate-float-slow"
             >
               <img
-                src={heroVisual.url}
+                src={hero.image || heroVisual.url}
                 alt="Vizualizim premium — kontabilitet dhe konsulencë biznesi"
                 width={1280}
                 height={1280}
