@@ -268,15 +268,65 @@ function MessagesAdmin() {
   );
 }
 
+// ---------- Bilingual helpers ----------
+function bg(value: Bilingual): { al: string; en: string } {
+  if (value == null) return { al: "", en: "" };
+  if (typeof value === "string") return { al: value, en: value };
+  return { al: value.al ?? "", en: value.en ?? "" };
+}
+
+function BilingualField({
+  label,
+  value,
+  onChange,
+  rows = 1,
+}: {
+  label: string;
+  value: Bilingual;
+  onChange: (v: { al: string; en: string }) => void;
+  rows?: number;
+}) {
+  const v = bg(value);
+  const Input = rows > 1 ? "textarea" : "input";
+  return (
+    <div className="rounded-xl border border-border/60 bg-background/60 p-3">
+      <div className="mb-2 text-xs font-medium text-foreground">{label}</div>
+      <div className="grid gap-2 md:grid-cols-2">
+        <label className="block">
+          <span className="mb-1 flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">🇦🇱 Shqip</span>
+          <Input
+            {...(rows > 1 ? { rows } : { type: "text" })}
+            value={v.al}
+            onChange={(e: any) => onChange({ ...v, al: e.target.value })}
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+          />
+        </label>
+        <label className="block">
+          <span className="mb-1 flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">🇬🇧 English</span>
+          <Input
+            {...(rows > 1 ? { rows } : { type: "text" })}
+            value={v.en}
+            onChange={(e: any) => onChange({ ...v, en: e.target.value })}
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+          />
+        </label>
+      </div>
+    </div>
+  );
+}
+
 // ---------- Content ----------
 function ContentAdmin() {
   const qc = useQueryClient();
   const { data: hero } = useQuery(heroQuery());
   const { data: about } = useQuery(aboutQuery());
+  const { data: trust } = useQuery(trustQuery());
   const [heroDraft, setHeroDraft] = useState<any>(null);
   const [aboutDraft, setAboutDraft] = useState<any>(null);
+  const [trustDraft, setTrustDraft] = useState<{ items: TrustItem[] } | null>(null);
   useEffect(() => { if (hero && !heroDraft) setHeroDraft(hero); }, [hero]); // eslint-disable-line
   useEffect(() => { if (about && !aboutDraft) setAboutDraft(about); }, [about]); // eslint-disable-line
+  useEffect(() => { if (trust && !trustDraft) setTrustDraft({ items: trust.items ?? [] }); }, [trust]); // eslint-disable-line
 
   const save = async (key: string, value: any) => {
     const { error } = await supabase.from("site_content").upsert({ key, value });
@@ -285,39 +335,131 @@ function ContentAdmin() {
     qc.invalidateQueries({ queryKey: ["site_content"] });
   };
 
-  if (!heroDraft || !aboutDraft) return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
+  if (!heroDraft || !aboutDraft || !trustDraft) return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
+
+  const iconOptions = ["BadgeCheck", "ShieldCheck", "Briefcase", "TrendingUp", "Award", "Handshake", "Users2", "CheckCircle2", "Target"];
+
+  const updateTrustItem = (idx: number, patch: Partial<TrustItem>) => {
+    const items = [...trustDraft.items];
+    items[idx] = { ...items[idx], ...patch };
+    setTrustDraft({ items });
+  };
+  const addTrustItem = (type: "stars" | "icon") => {
+    setTrustDraft({
+      items: [
+        ...trustDraft.items,
+        type === "stars"
+          ? { type: "stars", title_al: "Titull", title_en: "Title" }
+          : { type: "icon", icon: "BadgeCheck", color: "#0F8B8D", title_al: "Titull", title_en: "Title" },
+      ],
+    });
+  };
+  const removeTrustItem = (idx: number) => {
+    setTrustDraft({ items: trustDraft.items.filter((_, i) => i !== idx) });
+  };
+  const moveTrustItem = (idx: number, dir: -1 | 1) => {
+    const items = [...trustDraft.items];
+    const j = idx + dir;
+    if (j < 0 || j >= items.length) return;
+    [items[idx], items[j]] = [items[j], items[idx]];
+    setTrustDraft({ items });
+  };
 
   return (
     <div className="grid gap-6">
+      {/* HERO */}
       <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
-        <h3 className="font-display text-xl mb-3">Ballina — Hero</h3>
+        <h3 className="font-display text-xl mb-4">Ballina — Hero</h3>
         <div className="grid gap-3">
-          <TextInput label="Titulli" value={heroDraft.title} onChange={(v) => setHeroDraft({ ...heroDraft, title: v })} />
-          <label className="block">
-            <span className="mb-1.5 block text-xs font-medium">Nëntitulli</span>
-            <textarea rows={3} value={heroDraft.subtitle} onChange={(e) => setHeroDraft({ ...heroDraft, subtitle: e.target.value })}
-              className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm" />
-          </label>
+          <BilingualField label="Titulli kryesor" value={heroDraft.title} onChange={(v) => setHeroDraft({ ...heroDraft, title: v })} />
+          <BilingualField label="Nëntitulli / përshkrimi" value={heroDraft.subtitle} onChange={(v) => setHeroDraft({ ...heroDraft, subtitle: v })} rows={3} />
+          <BilingualField label='Badge sipër titullit ("Kontabilitet • Program • Trajnime")' value={heroDraft.badge} onChange={(v) => setHeroDraft({ ...heroDraft, badge: v })} />
+          <div className="grid md:grid-cols-2 gap-3">
+            <BilingualField label="Butoni 1 (CTA primar)" value={heroDraft.ctaContact} onChange={(v) => setHeroDraft({ ...heroDraft, ctaContact: v })} />
+            <BilingualField label="Butoni 2 (CTA sekondar)" value={heroDraft.ctaServices} onChange={(v) => setHeroDraft({ ...heroDraft, ctaServices: v })} />
+          </div>
           <button onClick={() => save("hero", heroDraft)} className="self-start inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
-            <Save className="h-4 w-4" /> Ruaj
+            <Save className="h-4 w-4" /> Ruaj Hero
           </button>
         </div>
       </section>
 
+      {/* ABOUT */}
       <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
-        <h3 className="font-display text-xl mb-3">Rreth Nesh</h3>
+        <h3 className="font-display text-xl mb-4">Rreth Nesh</h3>
         <div className="grid gap-3">
-          {(["intro", "services", "leader"] as const).map((k) => (
-            <label key={k} className="block">
-              <span className="mb-1.5 block text-xs font-medium capitalize">{k === "intro" ? "Hyrje" : k === "services" ? "Shërbimet (paragraf)" : "Udhëheqja"}</span>
-              <textarea rows={4} value={aboutDraft[k]} onChange={(e) => setAboutDraft({ ...aboutDraft, [k]: e.target.value })}
-                className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm" />
-            </label>
-          ))}
+          <BilingualField label="Hyrje" value={aboutDraft.intro} onChange={(v) => setAboutDraft({ ...aboutDraft, intro: v })} rows={4} />
+          <BilingualField label="Shërbimet (paragraf)" value={aboutDraft.services} onChange={(v) => setAboutDraft({ ...aboutDraft, services: v })} rows={4} />
+          <BilingualField label="Udhëheqja (Astrit Qerimi)" value={aboutDraft.leader} onChange={(v) => setAboutDraft({ ...aboutDraft, leader: v })} rows={4} />
           <button onClick={() => save("about", aboutDraft)} className="self-start inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
-            <Save className="h-4 w-4" /> Ruaj
+            <Save className="h-4 w-4" /> Ruaj Rreth Nesh
           </button>
         </div>
+      </section>
+
+      {/* TRUST STRIP */}
+      <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-display text-xl">Trust Strip (shiriti lëvizës nën Hero)</h3>
+          <div className="flex gap-2">
+            <button onClick={() => addTrustItem("stars")} className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:bg-muted">
+              <Star className="h-3 w-3" /> Shto Yje
+            </button>
+            <button onClick={() => addTrustItem("icon")} className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:bg-muted">
+              <Plus className="h-3 w-3" /> Shto Ikonë
+            </button>
+          </div>
+        </div>
+        <div className="grid gap-3">
+          {trustDraft.items.map((item, idx) => (
+            <div key={idx} className="rounded-xl border border-border/60 bg-background/60 p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  #{idx + 1} — {item.type === "stars" ? "⭐⭐⭐⭐⭐ (5 yje)" : "Ikonë"}
+                </div>
+                <div className="flex gap-1">
+                  <button onClick={() => moveTrustItem(idx, -1)} className="rounded-full border border-border px-2 py-0.5 text-xs hover:bg-muted">↑</button>
+                  <button onClick={() => moveTrustItem(idx, 1)} className="rounded-full border border-border px-2 py-0.5 text-xs hover:bg-muted">↓</button>
+                  <button onClick={() => removeTrustItem(idx)} className="rounded-full border border-border p-1 hover:bg-destructive/10 hover:text-destructive"><Trash2 className="h-3 w-3" /></button>
+                </div>
+              </div>
+              {item.type === "icon" && (
+                <div className="mb-3 grid md:grid-cols-2 gap-2">
+                  <label className="block">
+                    <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">Ikona</span>
+                    <select value={item.icon ?? "BadgeCheck"} onChange={(e) => updateTrustItem(idx, { icon: e.target.value })}
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
+                      {iconOptions.map((n) => <option key={n} value={n}>{n}</option>)}
+                    </select>
+                  </label>
+                  <label className="block">
+                    <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">Ngjyra</span>
+                    <input type="color" value={item.color ?? "#0F8B8D"} onChange={(e) => updateTrustItem(idx, { color: e.target.value })}
+                      className="h-10 w-full rounded-lg border border-input bg-background px-2" />
+                  </label>
+                </div>
+              )}
+              <div className="grid md:grid-cols-2 gap-2">
+                <label className="block">
+                  <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">🇦🇱 Titulli (AL)</span>
+                  <input type="text" value={item.title_al} onChange={(e) => updateTrustItem(idx, { title_al: e.target.value })}
+                    className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+                </label>
+                <label className="block">
+                  <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">🇬🇧 Title (EN)</span>
+                  <input type="text" value={item.title_en} onChange={(e) => updateTrustItem(idx, { title_en: e.target.value })}
+                    className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+                </label>
+              </div>
+            </div>
+          ))}
+          {trustDraft.items.length === 0 && (
+            <div className="text-sm text-muted-foreground text-center py-6">Asnjë badge. Klikoni "Shto Yje" ose "Shto Ikonë".</div>
+          )}
+        </div>
+        <button onClick={() => save("trust", trustDraft)} className="mt-4 inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
+          <Save className="h-4 w-4" /> Ruaj Trust Strip
+        </button>
       </section>
     </div>
   );
