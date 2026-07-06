@@ -31,6 +31,8 @@ import { ServiceIcon } from "@/components/site/ServiceIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import heroVisual from "@/assets/hero-visual.jpg.asset.json";
+import { useI18n } from "@/lib/i18n";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
