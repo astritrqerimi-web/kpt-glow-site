@@ -131,16 +131,17 @@ function HeroSection() {
                     "linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%)",
                 }}
               />
-              <span className="relative">Na Kontaktoni</span>
+              <span className="relative">{t("hero.ctaContact")}</span>
               <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-1" />
             </a>
             <a
               href="#sherbimet"
               className="group inline-flex items-center gap-2 rounded-full border border-border bg-background/70 backdrop-blur px-8 py-4 text-sm font-semibold text-foreground shadow-soft transition-all duration-300 hover:border-primary/40 hover:bg-background hover:-translate-y-0.5"
             >
-              Shërbimet
+              {t("hero.ctaServices")}
               <ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-1" />
             </a>
+
           </div>
 
           {/* Meta strip */}
