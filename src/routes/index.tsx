@@ -347,7 +347,7 @@ function AboutSection() {
 /* ---------------- SHËRBIMET ---------------- */
 function ServicesSection() {
   const { data: services } = useSuspenseQuery(servicesQuery());
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   return (
     <section id="sherbimet" className={`container-page pb-24 ${sectionAnchor}`}>
       <div className="max-w-3xl">
@@ -362,26 +362,32 @@ function ServicesSection() {
 
 
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {services.map((s, i) => (
-          <div
-            key={s.id}
-            className="group relative overflow-hidden rounded-3xl border border-border/60 bg-background/70 backdrop-blur p-7 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-hover hover:border-primary/30"
-            style={{ animationDelay: `${i * 40}ms` }}
-          >
+        {services.map((s, i) => {
+          const tr = SERVICE_TRANSLATIONS[lang]?.[s.id];
+          const title = tr?.title ?? s.title;
+          const description = tr?.description ?? s.description;
+          return (
             <div
-              className="absolute inset-x-0 -top-px h-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-              style={{ background: "var(--gradient-brand)" }}
-            />
-            <div
-              className="inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-soft transition-transform duration-500 group-hover:scale-110"
-              style={{ background: "var(--gradient-brand)" }}
+              key={s.id}
+              className="group relative overflow-hidden rounded-3xl border border-border/60 bg-background/70 backdrop-blur p-7 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-hover hover:border-primary/30"
+              style={{ animationDelay: `${i * 40}ms` }}
             >
-              <ServiceIcon name={s.icon} className="h-6 w-6" />
+              <div
+                className="absolute inset-x-0 -top-px h-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                style={{ background: "var(--gradient-brand)" }}
+              />
+              <div
+                className="inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-soft transition-transform duration-500 group-hover:scale-110"
+                style={{ background: "var(--gradient-brand)" }}
+              >
+                <ServiceIcon name={s.icon} className="h-6 w-6" />
+              </div>
+              <h3 className="mt-5 text-lg font-semibold text-foreground">{title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
             </div>
-            <h3 className="mt-5 text-lg font-semibold text-foreground">{s.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.description}</p>
-          </div>
-        ))}
+          );
+        })}
+
       </div>
     </section>
   );
