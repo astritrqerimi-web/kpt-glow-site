@@ -347,7 +347,7 @@ function ServicesSection() {
 
 
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {services.map((s, i) => {
+        {services.filter((s) => s.id !== "29a67d92-472c-4c24-9215-d1cfdd5c17ae").map((s, i) => {
           const tr = SERVICE_TRANSLATIONS[lang]?.[s.id];
           const title = tr?.title ?? s.title;
           const description = tr?.description ?? s.description;
