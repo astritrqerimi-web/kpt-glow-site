@@ -231,7 +231,7 @@ function HeroSection() {
                 <ShieldCheck className="h-5 w-5" />
               </span>
               <div className="leading-tight">
-                <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Përputhshmëri</div>
+                <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{t("hero.stat.compliance")}</div>
                 <div className="font-display text-lg text-foreground">100%</div>
               </div>
             </div>
