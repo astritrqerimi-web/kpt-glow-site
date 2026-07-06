@@ -1,68 +1,62 @@
-import { Star, Users, ShieldCheck, Briefcase, TrendingUp } from "lucide-react";
+import { Star, BadgeCheck, ShieldCheck, Briefcase, TrendingUp } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 interface StarItem {
   type: "stars";
   title: string;
-  desc: string;
 }
 
 interface IconItem {
   type: "icon";
   icon: LucideIcon;
   title: string;
-  desc: string;
+  color: string;
 }
 
 type Item = StarItem | IconItem;
 
 const items: Item[] = [
-  { type: "stars", title: "Klientë të kënaqur", desc: "Besim nga klientët tanë" },
-  { type: "icon", icon: Users, title: "Staf i Certifikuar", desc: "Ekspertizë profesionale në kontabilitet dhe këshillim tatimor." },
-  { type: "stars", title: "Besueshmëri dhe Profesionalizëm", desc: "Shërbime të sakta dhe korrekte." },
-  { type: "icon", icon: ShieldCheck, title: "Në Përputhje me Legjislacionin", desc: "Shërbime të sakta dhe në përputhje me rregullat ligjore." },
-  { type: "stars", title: "Shërbim me Cilësi të Lartë", desc: "Përkushtim në çdo detaj." },
-  { type: "icon", icon: Briefcase, title: "Biznese të Asistuara", desc: "Mbështetje profesionale për shumë biznese në zhvillimin e tyre." },
-  { type: "stars", title: "Standarde të Larta Profesionale", desc: "Punë serioze dhe transparente." },
-  { type: "icon", icon: TrendingUp, title: "Përvojë Profesionale", desc: "Vite përvoje në kontabilitet, tatime dhe konsulencë financiare." },
+  { type: "stars", title: "Klientë të kënaqur" },
+  { type: "icon", icon: BadgeCheck, title: "Staf i Certifikuar", color: "#0F8B8D" },
+  { type: "stars", title: "Besueshmëri dhe Profesionalizëm" },
+  { type: "icon", icon: ShieldCheck, title: "Në Përputhje me Legjislacionin", color: "#1F3A5F" },
+  { type: "stars", title: "Shërbim me Cilësi të Lartë" },
+  { type: "icon", icon: Briefcase, title: "Biznese të Asistuara", color: "#5B6C7D" },
+  { type: "stars", title: "Standarde të Larta Profesionale" },
+  { type: "icon", icon: TrendingUp, title: "Përvojë Profesionale", color: "#F2C94C" },
 ];
 
-function StarCard({ title, desc }: { title: string; desc: string }) {
+function StarBadge({ title }: { title: string }) {
   return (
-    <div className="shrink-0 flex flex-col items-center text-center w-[200px] sm:w-[240px] rounded-xl border border-border/60 bg-background/60 backdrop-blur-sm px-4 py-3 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elegant hover:border-primary/25">
-      <div className="flex items-center justify-center gap-0.5 mb-1.5">
+    <div className="shrink-0 flex flex-col items-center text-center w-[230px] sm:w-[280px] px-5 py-2">
+      <div className="flex items-center justify-center gap-0.5">
         {[0, 1, 2, 3, 4].map((i) => (
-          <Star key={i} className="h-3 w-3 fill-current" style={{ color: "var(--brand-gold)" }} />
+          <Star key={i} className="h-3.5 w-3.5 fill-current" style={{ color: "#C9A227" }} />
         ))}
       </div>
-      <div className="text-xs font-semibold text-foreground leading-snug">{title}</div>
-      <div className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{desc}</div>
-    </div>
-  );
-}
-
-function IconCard({ icon: Icon, title, desc }: { icon: LucideIcon; title: string; desc: string }) {
-  return (
-    <div className="shrink-0 flex flex-col items-center text-center w-[200px] sm:w-[240px] rounded-xl border border-border/60 bg-background/60 backdrop-blur-sm px-4 py-3 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elegant hover:border-primary/25">
-      <div className="flex items-center justify-center mb-1.5">
-        <span
-          className="inline-flex h-5 w-5 items-center justify-center rounded-md text-white"
-          style={{ background: "var(--gradient-brand-strong)" }}
-        >
-          <Icon className="h-3 w-3" strokeWidth={2.5} />
-        </span>
+      <div className="mt-2 text-sm font-semibold text-foreground tracking-tight leading-snug">
+        {title}
       </div>
-      <div className="text-xs font-semibold text-foreground leading-snug">{title}</div>
-      <div className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{desc}</div>
     </div>
   );
 }
 
-function Card({ item }: { item: Item }) {
+function IconBadge({ icon: Icon, title, color }: { icon: LucideIcon; title: string; color: string }) {
+  return (
+    <div className="shrink-0 flex flex-col items-center text-center w-[230px] sm:w-[280px] px-5 py-2">
+      <Icon className="h-5 w-5" style={{ color }} strokeWidth={1.5} />
+      <div className="mt-2 text-sm font-semibold text-foreground tracking-tight leading-snug">
+        {title}
+      </div>
+    </div>
+  );
+}
+
+function Badge({ item }: { item: Item }) {
   if (item.type === "stars") {
-    return <StarCard title={item.title} desc={item.desc} />;
+    return <StarBadge title={item.title} />;
   }
-  return <IconCard icon={item.icon} title={item.title} desc={item.desc} />;
+  return <IconBadge icon={item.icon} title={item.title} color={item.color} />;
 }
 
 export function TrustMarquee() {
@@ -79,9 +73,9 @@ export function TrustMarquee() {
       }}
     >
       <div className="group">
-        <div className="flex gap-3 w-max animate-trust-marquee">
+        <div className="flex items-center gap-6 sm:gap-8 w-max animate-trust-marquee">
           {loop.map((it, idx) => (
-            <Card key={idx} item={it} />
+            <Badge key={idx} item={it} />
           ))}
         </div>
       </div>
