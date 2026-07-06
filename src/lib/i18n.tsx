@@ -75,6 +75,9 @@ const translations: Record<Lang, Dict> = {
     "about.eyebrow": "Rreth Nesh",
     "about.title.a": "Partneri juaj për",
     "about.title.b": "zgjidhje financiare",
+    "about.intro": "KPT Consulting është një kompani e specializuar në kontabilitet, shërbime tatimore dhe konsulencë për biznese. Misioni ynë është të ofrojmë zgjidhje profesionale që ndihmojnë bizneset të menaxhojnë financat me saktësi, transparencë dhe efikasitet.",
+    "about.services.text": "Ne ofrojmë shërbime në fushën e kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve, administrimit të pagave, përgatitjes së pasqyrave financiare dhe konsulencës financiare, duke ndërtuar partneritete afatgjata me klientët tanë.",
+    "about.leader": "KPT Consulting udhëhiqet nga Mr. Sc Astrit Qerimi, Kontabilist i Certifikuar dhe Këshilltar Tatimor i Certifikuar, me përvojë në ofrimin e zgjidhjeve profesionale financiare dhe tatimore për biznese. Përkushtimi ynë është të ofrojmë shërbime të sakta, të besueshme dhe në përputhje me legjislacionin në fuqi.",
     "about.leadership": "Udhëheqja",
     "about.value.1.title": "Besueshmëri",
     "about.value.1.desc": "Punojmë me integritet dhe transparencë të plotë.",
@@ -84,6 +87,7 @@ const translations: Record<Lang, Dict> = {
     "about.value.3.desc": "Marrëdhënie afatgjata të bazuara në rezultate.",
     "about.value.4.title": "Përputhshmëri",
     "about.value.4.desc": "Në përputhje të plotë me legjislacionin.",
+
 
     // Services
     "services.eyebrow": "Shërbimet",
