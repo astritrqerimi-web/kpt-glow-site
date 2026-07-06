@@ -73,7 +73,10 @@ function HomePage() {
 /* ---------------- HERO / BALLINA ---------------- */
 function HeroSection() {
   const { data: hero } = useSuspenseQuery(heroQuery());
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const title = lang === "en" ? t("hero.title") : hero.title;
+  const subtitle = lang === "en" ? t("hero.subtitle") : hero.subtitle;
+
 
   return (
     <section
