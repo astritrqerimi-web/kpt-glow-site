@@ -152,16 +152,17 @@ function HeroSection() {
                   <Star key={i} className="h-3.5 w-3.5 fill-current" style={{ color: "var(--brand-gold)" }} />
                 ))}
               </div>
-              <span className="font-medium text-foreground/85">Klientë të kënaqur</span>
+              <span className="font-medium text-foreground/85">{t("hero.happyClients")}</span>
             </div>
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-primary" />
-              <span>Në përputhje me legjislacionin</span>
+              <span>{t("hero.compliance")}</span>
             </div>
             <div className="flex items-center gap-2">
               <Award className="h-4 w-4 text-primary" />
-              <span>Kontabilist i Certifikuar</span>
+              <span>{t("hero.certified")}</span>
             </div>
+
           </div>
         </div>
 
