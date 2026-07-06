@@ -66,7 +66,8 @@ function Card({ item }: { item: Item }) {
 }
 
 export function TrustMarquee() {
-  const loop = [...items, ...items];
+  const loop = [...items, ...items, ...items, ...items];
+
   return (
     <div
       className="relative mt-14 md:mt-16 mb-4 md:mb-6 w-full overflow-hidden"
@@ -77,22 +78,12 @@ export function TrustMarquee() {
           "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
       }}
     >
-      {/* Desktop: marquee */}
-      <div className="hidden md:block group">
-        <div className="flex gap-3 w-max animate-trust-marquee group-hover:[animation-play-state:paused]">
+      <div className="group">
+        <div className="flex gap-3 w-max animate-trust-marquee">
           {loop.map((it, idx) => (
             <Card key={idx} item={it} />
           ))}
         </div>
-      </div>
-
-      {/* Mobile: swipeable snap scroll */}
-      <div className="md:hidden -mx-6 px-6 overflow-x-auto flex gap-3 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-        {items.map((it, idx) => (
-          <div key={idx} className="snap-start">
-            <Card item={it} />
-          </div>
-        ))}
       </div>
 
       <style>{`
@@ -102,6 +93,12 @@ export function TrustMarquee() {
         }
         .animate-trust-marquee {
           animation: trust-marquee 40s linear infinite;
+          will-change: transform;
+        }
+        @media (hover: hover) {
+          .group:hover .animate-trust-marquee {
+            animation-play-state: paused;
+          }
         }
       `}</style>
     </div>
