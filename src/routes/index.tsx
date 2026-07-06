@@ -26,6 +26,7 @@ import {
   aboutQuery,
   servicesQuery,
   companyQuery,
+  pick,
 } from "@/lib/site-content";
 import { ServiceIcon } from "@/components/site/ServiceIcon";
 import { TrustMarquee } from "@/components/site/TrustMarquee";
@@ -75,8 +76,11 @@ function HomePage() {
 function HeroSection() {
   const { data: hero } = useSuspenseQuery(heroQuery());
   const { t, lang } = useI18n();
-  const title = lang === "en" ? t("hero.title") : hero.title;
-  const subtitle = lang === "en" ? t("hero.subtitle") : hero.subtitle;
+  const title = pick(hero.title, lang, t("hero.title"));
+  const subtitle = pick(hero.subtitle, lang, t("hero.subtitle"));
+  const badge = pick(hero.badge, lang, t("hero.badge"));
+  const ctaContact = pick(hero.ctaContact, lang, t("hero.ctaContact"));
+  const ctaServices = pick(hero.ctaServices, lang, t("hero.ctaServices"));
 
 
   return (
