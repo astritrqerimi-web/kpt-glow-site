@@ -117,7 +117,7 @@ function HeroSection() {
             className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg animate-fade-up"
             style={{ animationDelay: "160ms" }}
           >
-            {hero.subtitle}
+            {subtitle}
           </p>
 
           {/* CTA */}
