@@ -529,14 +529,29 @@ function ContactSection() {
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </Field>
-            <Field label="Subjekti" error={errors.subject}>
+          </div>
+          <Field label="Shërbimi që ju intereson *" error={errors.service}>
+            <select
+              value={form.service}
+              onChange={(e) => setForm({ ...form, service: e.target.value, serviceOther: e.target.value === "Tjetër" ? form.serviceOther : "" })}
+              className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+            >
+              <option value="" disabled>Zgjidhni një shërbim</option>
+              {SERVICE_OPTIONS.map((opt) => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </Field>
+          {form.service === "Tjetër" && (
+            <Field label="Përshkruani kërkesën tuaj *" error={errors.serviceOther}>
               <input
-                value={form.subject}
-                onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                value={form.serviceOther}
+                onChange={(e) => setForm({ ...form, serviceOther: e.target.value })}
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                placeholder="Shkruani shërbimin që ju intereson"
               />
             </Field>
-          </div>
+          )}
           <Field label="Mesazhi *" error={errors.message}>
             <textarea
               rows={6}
