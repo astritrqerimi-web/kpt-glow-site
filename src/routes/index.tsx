@@ -234,10 +234,10 @@ function HeroSection() {
 function TrustCards() {
   const { t } = useI18n();
   const cards = [
-    { icon: Award, title: t("trust.1.title"), desc: t("trust.1.desc"), color: "#0F8B8D", bg: "#E6F7F5" },
-    { icon: TrendingUp, title: t("trust.2.title"), desc: t("trust.2.desc"), color: "#1F3A5F", bg: "#EAF0F8" },
-    { icon: ShieldCheck, title: t("trust.3.title"), desc: t("trust.3.desc"), color: "#5B6C7D", bg: "#EEF2F5" },
-    { icon: Handshake, title: t("trust.4.title"), desc: t("trust.4.desc"), color: "#C9A227", bg: "#F8F3E8" },
+    { icon: Award, title: t("trust.1.title"), desc: t("trust.1.desc"), color: "#0F8B8D" },
+    { icon: TrendingUp, title: t("trust.2.title"), desc: t("trust.2.desc"), color: "#1F3A5F" },
+    { icon: ShieldCheck, title: t("trust.3.title"), desc: t("trust.3.desc"), color: "#5B6C7D" },
+    { icon: Handshake, title: t("trust.4.title"), desc: t("trust.4.desc"), color: "#C9A227" },
   ];
 
   return (
@@ -255,8 +255,8 @@ function TrustCards() {
               style={{ background: "var(--gradient-brand-strong)" }}
             />
             <div
-              className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl shadow-soft transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
-              style={{ background: c.bg, color: c.color }}
+              className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-soft transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
+              style={{ background: c.color }}
             >
               <c.icon className="h-6 w-6" strokeWidth={1.8} />
             </div>
