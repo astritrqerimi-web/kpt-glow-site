@@ -289,18 +289,19 @@ function TrustCards() {
 /* ---------------- RRETH NESH ---------------- */
 function AboutSection() {
   const { data: about } = useSuspenseQuery(aboutQuery());
+  const { t } = useI18n();
   const values = [
-    { icon: ShieldCheck, title: "Besueshmëri", desc: "Punojmë me integritet dhe transparencë të plotë." },
-    { icon: Target, title: "Saktësi", desc: "Standarde të larta profesionale në çdo detyrë." },
-    { icon: Users2, title: "Partneritet", desc: "Marrëdhënie afatgjata të bazuara në rezultate." },
-    { icon: CheckCircle2, title: "Përputhshmëri", desc: "Në përputhje të plotë me legjislacionin." },
+    { icon: ShieldCheck, title: t("about.value.1.title"), desc: t("about.value.1.desc") },
+    { icon: Target, title: t("about.value.2.title"), desc: t("about.value.2.desc") },
+    { icon: Users2, title: t("about.value.3.title"), desc: t("about.value.3.desc") },
+    { icon: CheckCircle2, title: t("about.value.4.title"), desc: t("about.value.4.desc") },
   ];
   return (
     <section id="rreth-nesh" className={`container-page pt-8 pb-24 ${sectionAnchor}`}>
       <div className="max-w-3xl">
-        <div className="text-xs uppercase tracking-[0.2em] text-primary">Rreth Nesh</div>
+        <div className="text-xs uppercase tracking-[0.2em] text-primary">{t("about.eyebrow")}</div>
         <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-foreground">
-          Partneri juaj për <span className="text-gradient-brand">zgjidhje financiare</span>
+          {t("about.title.a")} <span className="text-gradient-brand">{t("about.title.b")}</span>
         </h2>
       </div>
 
@@ -309,10 +310,11 @@ function AboutSection() {
           <p className="text-lg leading-relaxed text-foreground/85">{about.intro}</p>
           <p className="text-base leading-relaxed text-muted-foreground">{about.services}</p>
           <div className="rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-6 shadow-soft">
-            <div className="text-xs uppercase tracking-[0.18em] text-primary">Udhëheqja</div>
+            <div className="text-xs uppercase tracking-[0.18em] text-primary">{t("about.leadership")}</div>
             <p className="mt-3 text-base leading-relaxed text-foreground/85">{about.leader}</p>
           </div>
         </div>
+
         <div className="md:col-span-2 grid grid-cols-2 gap-4 content-start">
           {values.map((v, i) => (
             <div
