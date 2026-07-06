@@ -213,3 +213,17 @@
 }
 @utility animate-pulse-glow { animation: pulse-glow 6s ease-in-out infinite; }
 
+@keyframes mesh-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(2%, -1.5%, 0) scale(1.03); }
+  66% { transform: translate3d(-1.5%, 1%, 0) scale(0.98); }
+}
+@utility animate-mesh-drift { animation: mesh-drift 22s ease-in-out infinite; }
+
+@keyframes soft-glow {
+  0%, 100% { opacity: 0.14; transform: translate(-50%, 0) scale(1); }
+  50% { opacity: 0.24; transform: translate(-50%, -3%) scale(1.08); }
+}
+@utility animate-soft-glow { animation: soft-glow 14s ease-in-out infinite; }
+
+
