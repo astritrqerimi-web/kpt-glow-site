@@ -19,6 +19,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
 import { companyQuery } from "@/lib/site-content";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { I18nProvider } from "@/lib/i18n";
+
 
 function NotFoundComponent() {
   return (
