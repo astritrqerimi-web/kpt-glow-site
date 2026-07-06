@@ -1,8 +1,9 @@
 import { useI18n, type Lang } from "@/lib/i18n";
+import { KosovoFlag, UsFlag } from "@/components/site/Flags";
 
-const langs: Record<Lang, { label: string; short: string }> = {
-  sq: { label: "Shqip", short: "AL" },
-  en: { label: "English", short: "EN" },
+const langs: Record<Lang, { label: string; flag: React.FC<{ className?: string }> }> = {
+  sq: { label: "Shqip", flag: KosovoFlag },
+  en: { label: "English", flag: UsFlag },
 };
 
 const order: Lang[] = ["sq", "en"];
@@ -19,6 +20,7 @@ export function LanguageSwitcher({ variant = "desktop" }: Props) {
       <div className="inline-flex items-center rounded-full border border-border/60 bg-background/50 p-[3px] backdrop-blur-sm">
         {order.map((code, i) => {
           const active = lang === code;
+          const Flag = langs[code].flag;
           return (
             <button
               key={code}
@@ -26,13 +28,13 @@ export function LanguageSwitcher({ variant = "desktop" }: Props) {
               onClick={() => setLang(code)}
               aria-label={langs[code].label}
               aria-pressed={active}
-              className={`relative px-3 py-[5px] text-[12px] font-semibold tracking-wider uppercase transition-all duration-300 ease-out ${
+              className={`relative px-3 py-[5px] transition-all duration-300 ease-out ${
                 active
-                  ? "rounded-full bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "rounded-full bg-primary shadow-sm"
+                  : "opacity-60 hover:opacity-100"
               } ${i === 0 ? "mr-[1px]" : ""}`}
             >
-              {langs[code].short}
+              <Flag className="w-6 h-4 rounded-[2px] object-cover" />
             </button>
           );
         })}
