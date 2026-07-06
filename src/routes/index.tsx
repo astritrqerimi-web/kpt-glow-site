@@ -390,19 +390,31 @@ const SERVICE_OPTIONS = [
   "Tjetër",
 ] as const;
 
-const contactSchema = z
-  .object({
-    name: z.string().trim().min(2, "Emri është i detyrueshëm").max(100),
-    email: z.string().trim().email("Email-i nuk është valid").max(255),
-    phone: z.string().trim().max(30).optional().or(z.literal("")),
-    service: z.enum(SERVICE_OPTIONS, { message: "Ju lutem zgjidhni një shërbim" }),
-    serviceOther: z.string().trim().max(150).optional().or(z.literal("")),
-    message: z.string().trim().min(10, "Mesazhi është shumë i shkurtër").max(5000),
-  })
-  .refine((d) => d.service !== "Tjetër" || (d.serviceOther && d.serviceOther.length >= 2), {
-    path: ["serviceOther"],
-    message: "Ju lutem përshkruani kërkesën tuaj",
-  });
+const SERVICE_LABEL_KEYS: Record<(typeof SERVICE_OPTIONS)[number], string> = {
+  "Regjistrimi i Biznesit": "svc.registration",
+  "Kontabiliteti dhe Mbajtja e Librave": "svc.bookkeeping",
+  "Përgatitja e Pasqyrave Financiare": "svc.financial",
+  "Konsulencë Tatimore dhe Financiare": "svc.tax",
+  "Aplikim për Grante dhe Subvencione": "svc.grants",
+  "Tjetër": "svc.other",
+};
+
+function buildContactSchema(t: (k: string) => string) {
+  return z
+    .object({
+      name: z.string().trim().min(2, t("form.err.name")).max(100),
+      email: z.string().trim().email(t("form.err.email")).max(255),
+      phone: z.string().trim().max(30).optional().or(z.literal("")),
+      service: z.enum(SERVICE_OPTIONS, { message: t("form.err.service") }),
+      serviceOther: z.string().trim().max(150).optional().or(z.literal("")),
+      message: z.string().trim().min(10, t("form.err.message")).max(5000),
+    })
+    .refine((d) => d.service !== "Tjetër" || (d.serviceOther && d.serviceOther.length >= 2), {
+      path: ["serviceOther"],
+      message: t("form.err.serviceOther"),
+    });
+}
+
 
 function ContactSection() {
   const { data: company } = useSuspenseQuery(companyQuery());
