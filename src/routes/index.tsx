@@ -389,17 +389,32 @@ function ServicesSection() {
 }
 
 /* ---------------- KONTAKTI ---------------- */
-const contactSchema = z.object({
-  name: z.string().trim().min(2, "Emri është i detyrueshëm").max(100),
-  email: z.string().trim().email("Email-i nuk është valid").max(255),
-  phone: z.string().trim().max(30).optional().or(z.literal("")),
-  subject: z.string().trim().max(150).optional().or(z.literal("")),
-  message: z.string().trim().min(10, "Mesazhi është shumë i shkurtër").max(5000),
-});
+const SERVICE_OPTIONS = [
+  "Regjistrimi i Biznesit",
+  "Kontabiliteti dhe Mbajtja e Librave",
+  "Përgatitja e Pasqyrave Financiare",
+  "Konsulencë Tatimore dhe Financiare",
+  "Aplikim për Grante dhe Subvencione",
+  "Tjetër",
+] as const;
+
+const contactSchema = z
+  .object({
+    name: z.string().trim().min(2, "Emri është i detyrueshëm").max(100),
+    email: z.string().trim().email("Email-i nuk është valid").max(255),
+    phone: z.string().trim().max(30).optional().or(z.literal("")),
+    service: z.enum(SERVICE_OPTIONS, { message: "Ju lutem zgjidhni një shërbim" }),
+    serviceOther: z.string().trim().max(150).optional().or(z.literal("")),
+    message: z.string().trim().min(10, "Mesazhi është shumë i shkurtër").max(5000),
+  })
+  .refine((d) => d.service !== "Tjetër" || (d.serviceOther && d.serviceOther.length >= 2), {
+    path: ["serviceOther"],
+    message: "Ju lutem përshkruani kërkesën tuaj",
+  });
 
 function ContactSection() {
   const { data: company } = useSuspenseQuery(companyQuery());
-  const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", serviceOther: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -414,11 +429,15 @@ function ContactSection() {
       return;
     }
     setSubmitting(true);
+    const subjectValue =
+      parsed.data.service === "Tjetër"
+        ? `Tjetër: ${parsed.data.serviceOther}`
+        : parsed.data.service;
     const { error } = await supabase.from("contact_messages").insert({
       name: parsed.data.name,
       email: parsed.data.email,
       phone: parsed.data.phone || null,
-      subject: parsed.data.subject || null,
+      subject: subjectValue,
       message: parsed.data.message,
     });
     setSubmitting(false);
@@ -427,8 +446,9 @@ function ContactSection() {
       return;
     }
     toast.success("Mesazhi u dërgua me sukses. Do t'ju kontaktojmë së shpejti.");
-    setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+    setForm({ name: "", email: "", phone: "", service: "", serviceOther: "", message: "" });
   };
+
 
   const mapsSrc = `https://www.google.com/maps?q=${encodeURIComponent(company.mapsQuery)}&output=embed`;
 
