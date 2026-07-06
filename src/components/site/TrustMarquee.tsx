@@ -45,7 +45,7 @@ export function TrustMarquee() {
       </div>
 
       {/* Mobile: swipeable snap scroll */}
-      <div className="md:hidden -mx-6 px-6 overflow-x-auto flex gap-4 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      <div className="md:hidden -mx-6 px-6 overflow-x-auto flex gap-3 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {items.map((it, idx) => (
           <div key={idx} className="snap-start">
             <Card {...it} />
