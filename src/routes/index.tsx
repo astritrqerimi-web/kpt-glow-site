@@ -147,11 +147,6 @@ function HeroSection() {
             </a>
 
           </div>
-
-          {/* Trust marquee */}
-          <div className="animate-fade-up" style={{ animationDelay: "320ms" }}>
-            <TrustMarquee />
-          </div>
         </div>
 
         {/* RIGHT — 3D visual */}
