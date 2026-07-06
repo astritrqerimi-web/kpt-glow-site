@@ -100,7 +100,7 @@ function HeroSection() {
         <div className="relative">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur px-4 py-1.5 text-xs font-medium text-primary shadow-soft animate-fade-up">
             <Sparkles className="h-3.5 w-3.5" />
-            <span className="uppercase tracking-[0.14em]">Kontabilitet • Program • Trajnime</span>
+            <span className="uppercase tracking-[0.14em]">{t("hero.badge")}</span>
           </div>
 
           <h1
