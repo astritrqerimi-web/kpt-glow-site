@@ -8,7 +8,8 @@ export type Bilingual = string | { al?: string; en?: string } | null | undefined
 export function pick(value: Bilingual, lang: Lang, fallback = ""): string {
   if (value == null) return fallback;
   if (typeof value === "string") return value || fallback;
-  return value[lang] || value.al || value.en || fallback;
+  const key = lang === "en" ? "en" : "al";
+  return value[key] || value.al || value.en || fallback;
 }
 
 export interface CompanyInfo {
