@@ -31,7 +31,7 @@ import { ServiceIcon } from "@/components/site/ServiceIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import heroVisual from "@/assets/hero-visual.jpg.asset.json";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, SERVICE_TRANSLATIONS } from "@/lib/i18n";
 
 
 export const Route = createFileRoute("/")({
@@ -73,7 +73,10 @@ function HomePage() {
 /* ---------------- HERO / BALLINA ---------------- */
 function HeroSection() {
   const { data: hero } = useSuspenseQuery(heroQuery());
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const title = lang === "en" ? t("hero.title") : hero.title;
+  const subtitle = lang === "en" ? t("hero.subtitle") : hero.subtitle;
+
 
   return (
     <section
@@ -107,14 +110,14 @@ function HeroSection() {
             className="mt-6 font-display text-[2.75rem] leading-[1.02] text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem] animate-fade-up"
             style={{ animationDelay: "80ms" }}
           >
-            <span className="text-gradient-brand">{hero.title}</span>
+            <span className="text-gradient-brand">{title}</span>
           </h1>
 
           <p
             className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg animate-fade-up"
             style={{ animationDelay: "160ms" }}
           >
-            {hero.subtitle}
+            {subtitle}
           </p>
 
           {/* CTA */}
@@ -289,7 +292,10 @@ function TrustCards() {
 /* ---------------- RRETH NESH ---------------- */
 function AboutSection() {
   const { data: about } = useSuspenseQuery(aboutQuery());
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const intro = lang === "en" ? t("about.intro") : about.intro || t("about.intro");
+  const servicesText = lang === "en" ? t("about.services.text") : about.services || t("about.services.text");
+  const leader = lang === "en" ? t("about.leader") : about.leader || t("about.leader");
   const values = [
     { icon: ShieldCheck, title: t("about.value.1.title"), desc: t("about.value.1.desc") },
     { icon: Target, title: t("about.value.2.title"), desc: t("about.value.2.desc") },
@@ -307,13 +313,14 @@ function AboutSection() {
 
       <div className="mt-12 grid gap-10 md:grid-cols-5">
         <div className="md:col-span-3 space-y-6">
-          <p className="text-lg leading-relaxed text-foreground/85">{about.intro}</p>
-          <p className="text-base leading-relaxed text-muted-foreground">{about.services}</p>
+          <p className="text-lg leading-relaxed text-foreground/85">{intro}</p>
+          <p className="text-base leading-relaxed text-muted-foreground">{servicesText}</p>
           <div className="rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-6 shadow-soft">
             <div className="text-xs uppercase tracking-[0.18em] text-primary">{t("about.leadership")}</div>
-            <p className="mt-3 text-base leading-relaxed text-foreground/85">{about.leader}</p>
+            <p className="mt-3 text-base leading-relaxed text-foreground/85">{leader}</p>
           </div>
         </div>
+
 
         <div className="md:col-span-2 grid grid-cols-2 gap-4 content-start">
           {values.map((v, i) => (
@@ -340,7 +347,7 @@ function AboutSection() {
 /* ---------------- SHËRBIMET ---------------- */
 function ServicesSection() {
   const { data: services } = useSuspenseQuery(servicesQuery());
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   return (
     <section id="sherbimet" className={`container-page pb-24 ${sectionAnchor}`}>
       <div className="max-w-3xl">
@@ -355,26 +362,32 @@ function ServicesSection() {
 
 
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {services.map((s, i) => (
-          <div
-            key={s.id}
-            className="group relative overflow-hidden rounded-3xl border border-border/60 bg-background/70 backdrop-blur p-7 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-hover hover:border-primary/30"
-            style={{ animationDelay: `${i * 40}ms` }}
-          >
+        {services.map((s, i) => {
+          const tr = SERVICE_TRANSLATIONS[lang]?.[s.id];
+          const title = tr?.title ?? s.title;
+          const description = tr?.description ?? s.description;
+          return (
             <div
-              className="absolute inset-x-0 -top-px h-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-              style={{ background: "var(--gradient-brand)" }}
-            />
-            <div
-              className="inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-soft transition-transform duration-500 group-hover:scale-110"
-              style={{ background: "var(--gradient-brand)" }}
+              key={s.id}
+              className="group relative overflow-hidden rounded-3xl border border-border/60 bg-background/70 backdrop-blur p-7 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-hover hover:border-primary/30"
+              style={{ animationDelay: `${i * 40}ms` }}
             >
-              <ServiceIcon name={s.icon} className="h-6 w-6" />
+              <div
+                className="absolute inset-x-0 -top-px h-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                style={{ background: "var(--gradient-brand)" }}
+              />
+              <div
+                className="inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-soft transition-transform duration-500 group-hover:scale-110"
+                style={{ background: "var(--gradient-brand)" }}
+              >
+                <ServiceIcon name={s.icon} className="h-6 w-6" />
+              </div>
+              <h3 className="mt-5 text-lg font-semibold text-foreground">{title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
             </div>
-            <h3 className="mt-5 text-lg font-semibold text-foreground">{s.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.description}</p>
-          </div>
-        ))}
+          );
+        })}
+
       </div>
     </section>
   );

@@ -1,9 +1,10 @@
 import { useI18n, type Lang } from "@/lib/i18n";
 
 const flags: Record<Lang, { emoji: string; label: string; short: string }> = {
-  sq: { emoji: "🇦🇱", label: "Shqip", short: "SQ" },
-  en: { emoji: "🇬🇧", label: "English", short: "EN" },
+  sq: { emoji: "🇽🇰", label: "Shqip (Kosovë)", short: "AL" },
+  en: { emoji: "🇺🇸", label: "English", short: "EN" },
 };
+
 
 interface Props {
   variant?: "desktop" | "mobile";
