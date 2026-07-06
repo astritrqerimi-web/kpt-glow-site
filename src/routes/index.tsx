@@ -454,6 +454,18 @@ function ContactSection() {
       toast.error(t("form.error"));
       return;
     }
+    // Fire-and-forget SMTP notification to admin inbox. DB row is source of truth;
+    // if SMTP fails or is not configured, the message is still visible in Admin.
+    supabase.functions.invoke("send-smtp", {
+      body: {
+        mode: "contact",
+        subject: subjectValue || "Mesazh i ri nga faqja",
+        message: parsed.data.message,
+        from_name: parsed.data.name,
+        from_email: parsed.data.email,
+        phone: parsed.data.phone || "",
+      },
+    }).catch(() => { /* ignore — message is stored */ });
     toast.success(t("form.success"));
     setForm({ name: "", email: "", phone: "", service: "", serviceOther: "", message: "" });
   };
