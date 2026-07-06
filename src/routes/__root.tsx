@@ -77,11 +77,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "KPT Consulting — Kontabilitet, Tatime dhe Konsulencë Biznesi" },
+      { title: "KPT Consulting — Kontabilitet, Program dhe Trajnime" },
       { name: "description", content: "Shërbime profesionale të kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve dhe konsulencës financiare në Kosovë." },
       { name: "author", content: "KPT Consulting" },
       { name: "keywords", content: "kontabilitet, tatime, TVSH, konsulence biznesi, Kosove, Fushe Kosove, KPT Consulting" },
-      { property: "og:title", content: "KPT Consulting — Kontabilitet, Tatime dhe Konsulencë" },
+      { property: "og:title", content: "KPT Consulting — Kontabilitet, Program dhe Trajnime" },
       { property: "og:description", content: "Zgjidhje financiare profesionale për biznesin tuaj në Kosovë." },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "sq_AL" },

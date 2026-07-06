@@ -14,7 +14,7 @@ export function Footer({ company }: { company: CompanyInfo }) {
             <div>
               <div className="font-display text-lg text-foreground">KPT Consulting</div>
               <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                Kontabilitet · Tatime · Konsulencë
+                Kontabilitet • Program • Trajnime
               </div>
             </div>
           </div>
