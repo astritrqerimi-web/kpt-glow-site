@@ -174,6 +174,9 @@ const translations: Record<Lang, Dict> = {
     "about.eyebrow": "About Us",
     "about.title.a": "Your partner for",
     "about.title.b": "financial solutions",
+    "about.intro": "KPT Consulting is a company specialized in accounting, tax services and business consulting. Our mission is to deliver professional solutions that help businesses manage their finances with accuracy, transparency and efficiency.",
+    "about.services.text": "We offer services in accounting, tax filings, business registration, payroll administration, financial statement preparation and financial consulting, building long-term partnerships with our clients.",
+    "about.leader": "KPT Consulting is led by Mr. Sc Astrit Qerimi — Certified Accountant and Certified Tax Advisor — with extensive experience delivering professional financial and tax solutions for businesses. Our commitment is to provide accurate, reliable services that are fully compliant with current legislation.",
     "about.leadership": "Leadership",
     "about.value.1.title": "Reliability",
     "about.value.1.desc": "We work with full integrity and transparency.",
@@ -183,6 +186,7 @@ const translations: Record<Lang, Dict> = {
     "about.value.3.desc": "Long-term relationships built on results.",
     "about.value.4.title": "Compliance",
     "about.value.4.desc": "Full compliance with legislation.",
+
 
     "services.eyebrow": "Services",
     "services.title.a": "Everything your business",
