@@ -223,6 +223,8 @@ function TextInput({ label, value, onChange, type = "text" }: { label: string; v
 // ---------- Messages ----------
 function MessagesAdmin() {
   const [items, setItems] = useState<any[] | null>(null);
+  const [query, setQuery] = useState("");
+  const [replyTo, setReplyTo] = useState<any | null>(null);
   const load = async () => {
     const { data, error } = await supabase.from("contact_messages").select("*").order("created_at", { ascending: false });
     if (error) return toast.error(error.message);
@@ -240,15 +242,35 @@ function MessagesAdmin() {
   };
 
   if (!items) return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
+
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? items.filter((m) =>
+        [m.name, m.email, m.phone, m.subject, m.message].some((v) => (v ?? "").toString().toLowerCase().includes(q))
+      )
+    : items;
+  const unreadCount = items.filter((m) => !m.is_read).length;
+
   return (
     <div>
-      <h2 className="font-display text-2xl mb-4">Mesazhet e Kontaktit ({items.length})</h2>
-      {items.length === 0 && <div className="text-sm text-muted-foreground">Ende asnjë mesazh.</div>}
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="font-display text-2xl">
+          Mesazhet e Kontaktit <span className="text-sm font-normal text-muted-foreground">({items.length} · {unreadCount} të palexuara)</span>
+        </h2>
+        <input
+          type="search"
+          placeholder="Kërko sipas emrit, email-it, subjektit..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="w-full sm:w-72 rounded-full border border-input bg-background px-4 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+        />
+      </div>
+      {filtered.length === 0 && <div className="text-sm text-muted-foreground">{items.length === 0 ? "Ende asnjë mesazh." : "Asnjë mesazh nuk përputhet me kërkimin."}</div>}
       <div className="grid gap-3">
-        {items.map((m) => (
+        {filtered.map((m) => (
           <div key={m.id} className={`rounded-2xl border p-5 backdrop-blur shadow-soft ${m.is_read ? "border-border/40 bg-background/50" : "border-primary/30 bg-background/85"}`}>
             <div className="flex items-start justify-between gap-4">
-              <div>
+              <div className="min-w-0 flex-1">
                 <div className="font-semibold">{m.name} <span className="text-xs font-normal text-muted-foreground">· {m.email}</span></div>
                 {m.phone && <div className="text-xs text-muted-foreground">{m.phone}</div>}
                 {m.subject && <div className="mt-1 text-sm font-medium">{m.subject}</div>}
@@ -256,6 +278,9 @@ function MessagesAdmin() {
                 <div className="mt-2 text-[11px] text-muted-foreground">{new Date(m.created_at).toLocaleString("sq-AL")}</div>
               </div>
               <div className="flex flex-col gap-2 shrink-0">
+                <button onClick={() => setReplyTo(m)} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-white shadow-soft" style={{ background: "var(--gradient-brand)" }}>
+                  <Mail className="h-3 w-3" /> Përgjigju
+                </button>
                 <button onClick={() => toggleRead(m.id, m.is_read)} className="text-xs px-3 py-1.5 rounded-full border border-border hover:bg-muted">
                   {m.is_read ? "Shëno si e palexuar" : "Shëno si e lexuar"}
                 </button>
@@ -264,6 +289,60 @@ function MessagesAdmin() {
             </div>
           </div>
         ))}
+      </div>
+      {replyTo && <ReplyModal message={replyTo} onClose={() => setReplyTo(null)} onSent={() => { setReplyTo(null); toggleRead(replyTo.id, false); }} />}
+    </div>
+  );
+}
+
+function ReplyModal({ message, onClose, onSent }: { message: any; onClose: () => void; onSent: () => void }) {
+  const [subject, setSubject] = useState(`Re: ${message.subject || "Mesazhi juaj"}`);
+  const [body, setBody] = useState("");
+  const [sending, setSending] = useState(false);
+
+  const send = async () => {
+    if (!body.trim()) { toast.error("Shkruani përgjigjen."); return; }
+    setSending(true);
+    const { data, error } = await supabase.functions.invoke("send-smtp", {
+      body: { mode: "reply", to: message.email, subject, message: body },
+    });
+    setSending(false);
+    if (error || (data as any)?.error) {
+      toast.error(((data as any)?.error) || error?.message || "Dërgimi dështoi.");
+      return;
+    }
+    toast.success("Email u dërgua me sukses");
+    onSent();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+      <div className="w-full max-w-xl rounded-2xl border border-border bg-background shadow-elegant" onClick={(e) => e.stopPropagation()}>
+        <div className="border-b border-border p-5">
+          <div className="text-xs uppercase tracking-wider text-muted-foreground">Përgjigju</div>
+          <div className="mt-1 font-display text-lg">{message.name} <span className="text-sm font-normal text-muted-foreground">· {message.email}</span></div>
+        </div>
+        <div className="p-5 grid gap-3">
+          <label className="block">
+            <span className="mb-1.5 block text-xs font-medium">Subjekti</span>
+            <input value={subject} onChange={(e) => setSubject(e.target.value)} className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block text-xs font-medium">Mesazhi</span>
+            <textarea rows={8} value={body} onChange={(e) => setBody(e.target.value)} placeholder="Shkruani përgjigjen tuaj këtu..." className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
+          </label>
+          <div className="rounded-xl bg-muted/50 p-3 text-xs text-muted-foreground">
+            <div className="font-medium text-foreground mb-1">Mesazhi origjinal:</div>
+            <div className="whitespace-pre-wrap line-clamp-4">{message.message}</div>
+          </div>
+        </div>
+        <div className="flex justify-end gap-2 border-t border-border p-4">
+          <button onClick={onClose} className="rounded-full border border-border px-5 py-2 text-sm">Anulo</button>
+          <button onClick={send} disabled={sending} className="inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white shadow-soft disabled:opacity-60" style={{ background: "var(--gradient-brand)" }}>
+            {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
+            {sending ? "Duke dërguar..." : "Dërgo"}
+          </button>
+        </div>
       </div>
     </div>
   );
