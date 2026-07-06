@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 import type { CompanyInfo } from "@/lib/site-content";
@@ -46,10 +46,10 @@ export function Footer({ company }: { company: CompanyInfo }) {
         <div>
           <h4 className="text-sm font-semibold text-foreground">Menuja</h4>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link to="/" className="text-muted-foreground hover:text-primary transition">Ballina</Link></li>
-            <li><Link to="/rreth-nesh" className="text-muted-foreground hover:text-primary transition">Rreth Nesh</Link></li>
-            <li><Link to="/sherbimet" className="text-muted-foreground hover:text-primary transition">Shërbimet</Link></li>
-            <li><Link to="/kontakti" className="text-muted-foreground hover:text-primary transition">Kontakti</Link></li>
+            <li><a href="/#ballina" className="text-muted-foreground hover:text-primary transition">Ballina</a></li>
+            <li><a href="/#rreth-nesh" className="text-muted-foreground hover:text-primary transition">Rreth Nesh</a></li>
+            <li><a href="/#sherbimet" className="text-muted-foreground hover:text-primary transition">Shërbimet</a></li>
+            <li><a href="/#kontakti" className="text-muted-foreground hover:text-primary transition">Kontakti</a></li>
           </ul>
         </div>
 

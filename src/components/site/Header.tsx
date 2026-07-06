@@ -4,15 +4,25 @@ import { useEffect, useState } from "react";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 
 const nav = [
-  { to: "/", label: "Ballina" },
-  { to: "/rreth-nesh", label: "Rreth Nesh" },
-  { to: "/sherbimet", label: "Shërbimet" },
-  { to: "/kontakti", label: "Kontakti" },
+  { hash: "#ballina", label: "Ballina" },
+  { hash: "#rreth-nesh", label: "Rreth Nesh" },
+  { hash: "#sherbimet", label: "Shërbimet" },
+  { hash: "#kontakti", label: "Kontakti" },
 ] as const;
+
+function scrollToHash(hash: string) {
+  const id = hash.replace("#", "");
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    history.replaceState(null, "", hash);
+  }
+}
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState<string>("#ballina");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -20,6 +30,32 @@ export function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const ids = nav.map((n) => n.hash.replace("#", ""));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(`#${visible.target.id}`);
+      },
+      { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] },
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  const handleNav = (e: React.MouseEvent, hash: string) => {
+    if (window.location.pathname === "/") {
+      e.preventDefault();
+      scrollToHash(hash);
+      setOpen(false);
+    }
+  };
 
   return (
     <header
@@ -30,14 +66,28 @@ export function Header() {
       }`}
     >
       <div className="container-page flex h-24 items-center justify-between md:h-28">
-        <Link to="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)} aria-label="KPT Consulting — Ballina">
+        <Link
+          to="/"
+          className="flex items-center gap-3 group"
+          onClick={(e) => {
+            if (window.location.pathname === "/") {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              history.replaceState(null, "", "/");
+            }
+            setOpen(false);
+          }}
+          aria-label="KPT Consulting — Ballina"
+        >
           <img
             src={logoAsset.url}
             alt="KPT Consulting"
             className="h-14 w-14 md:h-16 md:w-16 object-contain transition-transform duration-500 group-hover:scale-105"
           />
           <div className="flex flex-col leading-tight">
-            <span className="font-display text-xl md:text-2xl text-foreground tracking-tight">KPT Consulting</span>
+            <span className="font-display text-xl md:text-2xl text-foreground tracking-tight">
+              KPT Consulting
+            </span>
             <span className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
               Kontabilitet | Program | Trajnime
             </span>
@@ -46,23 +96,25 @@ export function Header() {
 
         <nav className="hidden lg:flex items-center gap-1">
           {nav.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              activeOptions={{ exact: true }}
-              className="relative px-4 py-2 text-sm font-medium text-foreground/75 hover:text-foreground transition-colors"
-              activeProps={{ className: "!text-primary" }}
+            <a
+              key={item.hash}
+              href={`/${item.hash}`}
+              onClick={(e) => handleNav(e, item.hash)}
+              className={`relative px-4 py-2 text-sm font-medium transition-colors ${
+                active === item.hash ? "text-primary" : "text-foreground/75 hover:text-foreground"
+              }`}
             >
               {item.label}
-            </Link>
+            </a>
           ))}
-          <Link
-            to="/kontakti"
+          <a
+            href="/#kontakti"
+            onClick={(e) => handleNav(e, "#kontakti")}
             className="ml-4 inline-flex items-center rounded-full px-5 py-2.5 text-sm font-medium text-white shadow-soft transition-all duration-300 hover:shadow-elegant hover:-translate-y-0.5"
             style={{ background: "var(--gradient-brand)" }}
           >
             Na Kontaktoni
-          </Link>
+          </a>
         </nav>
 
         <button
@@ -78,24 +130,25 @@ export function Header() {
         <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-up">
           <nav className="container-page py-4 flex flex-col gap-1">
             {nav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setOpen(false)}
-                className="px-3 py-3 rounded-lg text-base font-medium text-foreground/85 hover:bg-muted transition"
-                activeProps={{ className: "text-primary bg-muted" }}
+              <a
+                key={item.hash}
+                href={`/${item.hash}`}
+                onClick={(e) => handleNav(e, item.hash)}
+                className={`px-3 py-3 rounded-lg text-base font-medium transition ${
+                  active === item.hash ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
+                }`}
               >
                 {item.label}
-              </Link>
+              </a>
             ))}
-            <Link
-              to="/kontakti"
-              onClick={() => setOpen(false)}
+            <a
+              href="/#kontakti"
+              onClick={(e) => handleNav(e, "#kontakti")}
               className="mt-2 inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium text-white"
               style={{ background: "var(--gradient-brand)" }}
             >
               Na Kontaktoni
-            </Link>
+            </a>
           </nav>
         </div>
       )}
