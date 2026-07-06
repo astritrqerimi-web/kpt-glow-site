@@ -9,14 +9,14 @@ const items = [
 
 function Card({ title, desc }: { title: string; desc: string }) {
   return (
-    <div className="group shrink-0 w-[280px] sm:w-[320px] rounded-2xl border border-border/70 bg-background/70 backdrop-blur-sm px-6 py-5 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elegant hover:border-primary/30">
-      <div className="flex items-center gap-0.5 mb-2">
+    <div className="group shrink-0 w-[200px] sm:w-[240px] rounded-xl border border-border/60 bg-background/60 backdrop-blur-sm px-4 py-3 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elegant hover:border-primary/25">
+      <div className="flex items-center gap-0.5 mb-1.5">
         {[0, 1, 2, 3, 4].map((i) => (
-          <Star key={i} className="h-4 w-4 fill-current" style={{ color: "var(--brand-gold)" }} />
+          <Star key={i} className="h-3 w-3 fill-current" style={{ color: "var(--brand-gold)" }} />
         ))}
       </div>
-      <div className="text-sm font-semibold text-foreground leading-tight">{title}</div>
-      <div className="text-xs text-muted-foreground mt-1">{desc}</div>
+      <div className="text-xs font-semibold text-foreground leading-snug">{title}</div>
+      <div className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{desc}</div>
     </div>
   );
 }
