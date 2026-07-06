@@ -2,7 +2,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import logoAsset from "@/assets/kpt-logo.png.asset.json";
+import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({

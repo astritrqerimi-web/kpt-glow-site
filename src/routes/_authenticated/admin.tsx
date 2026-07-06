@@ -6,7 +6,7 @@ import { servicesQuery, companyQuery, heroQuery, aboutQuery, seoQuery } from "@/
 import { ServiceIcon, ICON_NAMES } from "@/components/site/ServiceIcon";
 import { LogOut, Plus, Trash2, Save, Mail, Home, FileEdit, Settings2, Loader2, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
-import logoAsset from "@/assets/kpt-logo.png.asset.json";
+import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
