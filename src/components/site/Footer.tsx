@@ -12,15 +12,19 @@ export function Footer({ company }: { company: CompanyInfo }) {
   const desc = pick(f?.description, lang, t("footer.desc"));
   const menuTitle = pick(f?.menuTitle, lang, t("footer.menu"));
   const contactTitle = pick(f?.contactTitle, lang, t("footer.contact"));
+  const hoursTitle = pick(f?.hoursTitle, lang, lang === "en" ? "Working Hours" : "Orari i Punës");
+  const hoursText = pick(f?.hours, lang, "");
+  const hoursLines = hoursText.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
   const rights = pick(f?.rights, lang, t("footer.rights"));
   const brand = f?.copyrightName || "KPT Consulting";
   const privacyLabel = pick(f?.privacyLabel, lang, "Politika e Privatësisë");
   const termsLabel = pick(f?.termsLabel, lang, "Kushtet e Përdorimit");
   const hours = pick(company.workingHours, lang, "");
 
+
   return (
     <footer className="mt-24 border-t border-border/60 bg-background/60 backdrop-blur">
-      <div className="container-page py-14 grid gap-10 md:grid-cols-4">
+      <div className="container-page py-14 grid gap-10 md:grid-cols-6">
         <div className="md:col-span-2">
           <div className="flex items-center gap-3">
             <img src={logoAsset.url} alt={brand} className="h-11 w-11 object-contain" />
@@ -62,6 +66,20 @@ export function Footer({ company }: { company: CompanyInfo }) {
           </ul>
         </div>
 
+        {hoursLines.length > 0 && (
+          <div>
+            <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Clock className="h-4 w-4 text-primary" />
+              {hoursTitle}
+            </h4>
+            <ul className="mt-4 space-y-1.5 text-sm text-muted-foreground">
+              {hoursLines.map((line, i) => (
+                <li key={i}>{line}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div>
           <h4 className="text-sm font-semibold text-foreground">{contactTitle}</h4>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
@@ -71,6 +89,7 @@ export function Footer({ company }: { company: CompanyInfo }) {
             {hours && <li className="flex gap-2"><Clock className="h-4 w-4 mt-0.5 text-primary shrink-0" /><span>{hours}</span></li>}
           </ul>
         </div>
+
       </div>
       <div className="border-t border-border/60">
         <div className="container-page py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
