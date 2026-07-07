@@ -259,6 +259,23 @@
   .animate-shine-sweep { animation: none !important; }
 }
 
+/* ---- Mobile performance guardrails ----
+   Mobile Safari/Chrome can OOM-kill the tab (causing the "auto-scroll to top
+   and reload" behavior) when large blurred, animated layers stack over a
+   sticky, backdrop-blurred header. Disable the most expensive effects on
+   small screens while keeping the visual identity. */
+@media (max-width: 767px) {
+  .animate-mesh-drift,
+  .animate-soft-glow,
+  .animate-scene-rotate,
+  .animate-shine-sweep,
+  .animate-pulse-glow,
+  .animate-float-hero { animation: none !important; }
+
+  .animate-float-hero { will-change: auto !important; }
+}
+
+
 
 
 /* ---------- Article prose (rendered HTML) + TipTap editor ---------- */
