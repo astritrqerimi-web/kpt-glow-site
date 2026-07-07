@@ -79,10 +79,10 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
           willChange: "transform",
         }}
       >
-        {/* Image card */}
+        {/* Image card — transparent, rounded corners belong to the image */}
         <div
-          className="group relative overflow-hidden rounded-[2.5rem] border border-white/40 bg-background/30 backdrop-blur-xl shadow-elegant animate-float-hero transition-transform duration-500 hover:scale-[1.04]"
-          style={{ transformStyle: "preserve-3d" }}
+          className="group relative overflow-hidden rounded-[1.75rem] sm:rounded-[2.25rem] lg:rounded-[2.5rem] shadow-elegant animate-float-hero transition-transform duration-500 hover:scale-[1.04]"
+          style={{ transformStyle: "preserve-3d", background: "transparent" }}
         >
           <img
             src={src}
@@ -91,7 +91,7 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
             height={1024}
             loading="eager"
             decoding="async"
-            className="block h-auto w-full select-none"
+            className="block h-auto w-full select-none rounded-[1.75rem] sm:rounded-[2.25rem] lg:rounded-[2.5rem]"
             style={{
               transform: "translateZ(40px)",
               imageRendering: "auto",
@@ -130,40 +130,40 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
           />
         </div>
 
-        {/* Floating glass stat cards (pushed forward in 3D) */}
+        {/* Floating glass stat cards (shown on all breakpoints) */}
         <div
-          className="absolute -left-4 top-8 hidden md:flex glass-panel rounded-2xl px-4 py-3 shadow-elegant items-center gap-3 animate-float-hero"
+          className="absolute -left-2 sm:-left-4 top-4 sm:top-8 flex glass-panel rounded-2xl px-3 py-2 sm:px-4 sm:py-3 shadow-elegant items-center gap-2 sm:gap-3 animate-float-hero"
           style={{ transform: "translateZ(90px)", animationDelay: "1s" }}
         >
           <span
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-glow"
+            className="inline-flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl text-white shadow-glow"
             style={{ background: "var(--gradient-brand-strong)" }}
           >
-            <TrendingUp className="h-5 w-5" />
+            <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
           </span>
           <div className="leading-tight">
-            <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+            <div className="text-[9px] sm:text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
               {t("hero.stat.growth")}
             </div>
-            <div className="font-display text-lg text-foreground">+34%</div>
+            <div className="font-display text-base sm:text-lg text-foreground">+34%</div>
           </div>
         </div>
 
         <div
-          className="absolute -right-4 bottom-8 hidden md:flex glass-panel rounded-2xl px-4 py-3 shadow-elegant items-center gap-3 animate-float-hero"
+          className="absolute -right-2 sm:-right-4 bottom-4 sm:bottom-8 flex glass-panel rounded-2xl px-3 py-2 sm:px-4 sm:py-3 shadow-elegant items-center gap-2 sm:gap-3 animate-float-hero"
           style={{ transform: "translateZ(110px)", animationDelay: "2.5s" }}
         >
           <span
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-glow"
+            className="inline-flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl text-white shadow-glow"
             style={{ background: "var(--gradient-brand-strong)" }}
           >
-            <ShieldCheck className="h-5 w-5" />
+            <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5" />
           </span>
           <div className="leading-tight">
-            <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+            <div className="text-[9px] sm:text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
               {t("hero.stat.compliance")}
             </div>
-            <div className="font-display text-lg text-foreground">100%</div>
+            <div className="font-display text-base sm:text-lg text-foreground">100%</div>
           </div>
         </div>
       </div>
