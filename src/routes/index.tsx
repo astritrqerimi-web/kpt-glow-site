@@ -70,6 +70,7 @@ function HomePage() {
       <TrustCards />
       <AboutSection />
       <ServicesSection />
+      <LatestNewsSection />
       <ContactSection />
     </>
   );
