@@ -40,7 +40,7 @@ export function Header() {
   }, []);
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isNews = pathname.startsWith("/lajme");
+
 
   useEffect(() => {
     if (pathname !== "/") return;
