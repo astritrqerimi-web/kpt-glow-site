@@ -154,7 +154,9 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
             <div className="font-display text-xs sm:text-sm md:text-lg text-foreground">100%</div>
           </div>
         </div>
+        </div>
       </div>
     </div>
   );
 }
+
