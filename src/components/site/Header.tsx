@@ -110,6 +110,7 @@ export function Header() {
 
         <nav className="hidden lg:flex items-center gap-9">
           {NAV.map((item) => {
+            const isContact = item.key === "nav.contact";
             if (item.kind === "route") {
               const isActive = pathname.startsWith(item.to);
               return (
@@ -117,9 +118,14 @@ export function Header() {
                   key={item.to}
                   to={item.to}
                   onClick={() => setOpen(false)}
-                  className={`relative px-1 py-2 text-base lg:text-[17px] font-medium whitespace-nowrap transition-colors ${
-                    isActive ? "text-primary" : "text-foreground/75 hover:text-foreground"
-                  }`}
+                  className={
+                    isContact
+                      ? "inline-flex items-center rounded-full px-5 py-2.5 text-base lg:text-[17px] font-medium text-white shadow-soft whitespace-nowrap transition-all duration-300 hover:shadow-elegant hover:-translate-y-0.5"
+                      : `relative px-1 py-2 text-base lg:text-[17px] font-medium whitespace-nowrap transition-colors ${
+                          isActive ? "text-primary" : "text-foreground/75 hover:text-foreground"
+                        }`
+                  }
+                  style={isContact ? { background: "var(--gradient-brand)" } : undefined}
                 >
                   {t(item.key)}
                 </Link>
@@ -131,22 +137,19 @@ export function Header() {
                 key={item.hash}
                 href={`/${item.hash}`}
                 onClick={(e) => handleNav(e, item.hash)}
-                className={`relative px-1 py-2 text-base lg:text-[17px] font-medium whitespace-nowrap transition-colors ${
-                  isActive ? "text-primary" : "text-foreground/75 hover:text-foreground"
-                }`}
+                className={
+                  isContact
+                    ? "inline-flex items-center rounded-full px-5 py-2.5 text-base lg:text-[17px] font-medium text-white shadow-soft whitespace-nowrap transition-all duration-300 hover:shadow-elegant hover:-translate-y-0.5"
+                    : `relative px-1 py-2 text-base lg:text-[17px] font-medium whitespace-nowrap transition-colors ${
+                        isActive ? "text-primary" : "text-foreground/75 hover:text-foreground"
+                      }`
+                }
+                style={isContact ? { background: "var(--gradient-brand)" } : undefined}
               >
                 {t(item.key)}
               </a>
             );
           })}
-          <a
-            href="/#kontakti"
-            onClick={(e) => handleNav(e, "#kontakti")}
-            className="ml-4 inline-flex items-center rounded-full px-5 py-2.5 text-base lg:text-[17px] font-medium text-white shadow-soft whitespace-nowrap transition-all duration-300 hover:shadow-elegant hover:-translate-y-0.5"
-            style={{ background: "var(--gradient-brand)" }}
-          >
-            {t("nav.contactUs")}
-          </a>
           <LanguageSwitcher variant="desktop" />
         </nav>
 
@@ -163,6 +166,7 @@ export function Header() {
         <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-up">
           <nav className="container-page py-4 flex flex-col gap-1">
             {NAV.map((item) => {
+              const isContact = item.key === "nav.contact";
               if (item.kind === "route") {
                 const isActive = pathname.startsWith(item.to);
                 return (
@@ -170,9 +174,14 @@ export function Header() {
                     key={item.to}
                     to={item.to}
                     onClick={() => setOpen(false)}
-                    className={`px-3 py-3 rounded-lg text-base font-medium transition ${
-                      isActive ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
-                    }`}
+                    className={
+                      isContact
+                        ? "mx-3 mt-1 inline-flex items-center justify-center rounded-full px-5 py-3 text-base font-medium text-white transition-all duration-300"
+                        : `px-3 py-3 rounded-lg text-base font-medium transition ${
+                            isActive ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
+                          }`
+                    }
+                    style={isContact ? { background: "var(--gradient-brand)" } : undefined}
                   >
                     {t(item.key)}
                   </Link>
@@ -184,22 +193,19 @@ export function Header() {
                   key={item.hash}
                   href={`/${item.hash}`}
                   onClick={(e) => handleNav(e, item.hash)}
-                  className={`px-3 py-3 rounded-lg text-base font-medium transition ${
-                    isActive ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
-                  }`}
+                  className={
+                    isContact
+                      ? "mx-3 mt-1 inline-flex items-center justify-center rounded-full px-5 py-3 text-base font-medium text-white transition-all duration-300"
+                      : `px-3 py-3 rounded-lg text-base font-medium transition ${
+                          isActive ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
+                        }`
+                  }
+                  style={isContact ? { background: "var(--gradient-brand)" } : undefined}
                 >
                   {t(item.key)}
                 </a>
               );
             })}
-            <a
-              href="/#kontakti"
-              onClick={(e) => handleNav(e, "#kontakti")}
-              className="mt-2 inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium text-white"
-              style={{ background: "var(--gradient-brand)" }}
-            >
-              {t("nav.contactUs")}
-            </a>
             <LanguageSwitcher variant="mobile" />
           </nav>
         </div>
