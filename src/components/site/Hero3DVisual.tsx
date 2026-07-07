@@ -25,8 +25,17 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
     const el = wrapRef.current;
     if (!el) return;
 
+    // Only enable pointer parallax on real mouse pointers.
+    // On touch devices, pointermove fires continuously during scroll,
+    // which causes React re-renders and severe scroll jank on mobile Safari.
+    const canHover =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(hover: hover) and (pointer: fine)").matches;
+    if (!canHover) return;
+
     let raf = 0;
     const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
       const rect = el.getBoundingClientRect();
       const px = (e.clientX - rect.left) / rect.width; // 0..1
       const py = (e.clientY - rect.top) / rect.height;
