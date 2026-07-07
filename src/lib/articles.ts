@@ -239,3 +239,40 @@ export function formatDate(iso: string | null, lang: string): string {
     year: "numeric",
   });
 }
+
+/**
+ * Language-aware helpers. When EN is selected but a field has no English
+ * value, fall back to Albanian so nothing renders empty.
+ */
+function pick(al: string | null | undefined, en: string | null | undefined, lang: string): string {
+  const a = (al ?? "").trim();
+  const e = (en ?? "").trim();
+  if (lang === "en") return e || a;
+  return a || e;
+}
+
+export function articleTitle(a: Pick<Article, "title" | "title_en">, lang: string): string {
+  return pick(a.title, a.title_en, lang);
+}
+
+export function articleExcerpt(a: Pick<Article, "excerpt" | "excerpt_en">, lang: string): string {
+  return pick(a.excerpt, a.excerpt_en, lang);
+}
+
+export function articleContent(a: Pick<Article, "content_html" | "content_html_en">, lang: string): string {
+  return pick(a.content_html, a.content_html_en, lang);
+}
+
+export function articleSeoTitle(
+  a: Pick<Article, "seo_title" | "seo_title_en" | "title" | "title_en">,
+  lang: string,
+): string {
+  return pick(a.seo_title, a.seo_title_en, lang) || articleTitle(a, lang);
+}
+
+export function articleSeoDescription(
+  a: Pick<Article, "seo_description" | "seo_description_en" | "excerpt" | "excerpt_en">,
+  lang: string,
+): string {
+  return pick(a.seo_description, a.seo_description_en, lang) || articleExcerpt(a, lang);
+}
