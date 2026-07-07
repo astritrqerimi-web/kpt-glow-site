@@ -434,7 +434,33 @@ function ContentAdmin() {
     qc.invalidateQueries({ queryKey: ["site_content"] });
   };
 
-  if (!heroDraft || !aboutDraft || !trustDraft || !newsHomeDraft || !servicesSecDraft || !contactSecDraft || !footerDraft) return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
+  if (!heroDraft || !aboutDraft || !trustDraft || !heroTrustDraft || !newsHomeDraft || !servicesSecDraft || !contactSecDraft || !footerDraft) return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
+
+  // ---- Hero Trust Strip helpers ----
+  const updateHT = (patch: Partial<HeroTrustContent>) => setHeroTrustDraft({ ...heroTrustDraft, ...patch });
+  const updateHTItem = (idx: number, patch: Partial<HeroTrustItem>) => {
+    const items = [...heroTrustDraft.items];
+    items[idx] = { ...items[idx], ...patch };
+    updateHT({ items });
+  };
+  const addHTItem = () => {
+    const nextOrder = (heroTrustDraft.items.reduce((m, i) => Math.max(m, i.sort_order || 0), 0) || 0) + 1;
+    updateHT({
+      items: [
+        ...heroTrustDraft.items,
+        { id: crypto.randomUUID?.() ?? String(Date.now()), icon: "BadgeCheck", color: "#0F8B8D", value_al: "0+", value_en: "0+", label_al: "Titull", label_en: "Title", is_active: true, sort_order: nextOrder },
+      ],
+    });
+  };
+  const removeHTItem = (idx: number) => updateHT({ items: heroTrustDraft.items.filter((_, i) => i !== idx) });
+  const moveHTItem = (idx: number, dir: -1 | 1) => {
+    const items = [...heroTrustDraft.items];
+    const j = idx + dir;
+    if (j < 0 || j >= items.length) return;
+    [items[idx], items[j]] = [items[j], items[idx]];
+    items.forEach((it, i) => (it.sort_order = i + 1));
+    updateHT({ items });
+  };
 
   const iconOptions = ["BadgeCheck", "ShieldCheck", "Briefcase", "TrendingUp", "Award", "Handshake", "Users2", "CheckCircle2", "Target"];
 
