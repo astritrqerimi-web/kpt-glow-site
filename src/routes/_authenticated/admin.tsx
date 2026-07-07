@@ -558,10 +558,12 @@ function ContentAdmin() {
           <div className="grid md:grid-cols-2 gap-3">
             <BilingualField label='Titulli i kolonës "Menuja"' value={footerDraft.menuTitle} onChange={(v) => setFooterDraft({ ...footerDraft, menuTitle: v })} />
             <BilingualField label='Titulli i kolonës "Kontakti"' value={footerDraft.contactTitle} onChange={(v) => setFooterDraft({ ...footerDraft, contactTitle: v })} />
+          </div>
           <div className="grid md:grid-cols-2 gap-3">
             <BilingualField label='Titulli i kolonës "Orari i Punës"' value={footerDraft.hoursTitle ?? { al: "Orari i Punës", en: "Working Hours" }} onChange={(v) => setFooterDraft({ ...footerDraft, hoursTitle: v })} />
           </div>
           <BilingualField label="Orari i punës (një ditë për rresht)" value={footerDraft.hours ?? { al: "", en: "" }} onChange={(v) => setFooterDraft({ ...footerDraft, hours: v })} rows={8} />
+
 
           <div className="grid md:grid-cols-2 gap-3">
             <TextInput label="Emri për copyright (© 2026 ...)" value={footerDraft.copyrightName} onChange={(v) => setFooterDraft({ ...footerDraft, copyrightName: v })} />
