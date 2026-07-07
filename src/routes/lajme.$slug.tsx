@@ -270,7 +270,7 @@ function ArticleDetailPage() {
           <a
             aria-label="Email"
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border hover:bg-muted transition"
-            href={`mailto:?subject=${encodeURIComponent(article.title)}&body=${encodeURIComponent(shareUrl)}`}
+            href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(shareUrl)}`}
           >
             <Mail className="h-4 w-4" />
           </a>
@@ -284,14 +284,14 @@ function ArticleDetailPage() {
             {prevNext?.prev ? (
               <Link
                 to="/lajme/$slug"
-                params={{ slug: prevNext.prev.slug }}
+                params={{ slug: articleUrlSlug(prevNext.prev) }}
                 className="group rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xl p-5 hover:border-primary/40 transition"
               >
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <ArrowLeft className="h-3 w-3" /> {t("news.previous")}
                 </div>
                 <div className="mt-2 font-medium text-foreground line-clamp-2 group-hover:text-primary">
-                  {prevNext.prev.title}
+                  {articleTitle(prevNext.prev, lang)}
                 </div>
               </Link>
             ) : (
@@ -300,14 +300,14 @@ function ArticleDetailPage() {
             {prevNext?.next ? (
               <Link
                 to="/lajme/$slug"
-                params={{ slug: prevNext.next.slug }}
+                params={{ slug: articleUrlSlug(prevNext.next) }}
                 className="group rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xl p-5 hover:border-primary/40 transition text-right"
               >
                 <div className="flex items-center justify-end gap-1.5 text-xs text-muted-foreground">
                   {t("news.next")} <ArrowRight className="h-3 w-3" />
                 </div>
                 <div className="mt-2 font-medium text-foreground line-clamp-2 group-hover:text-primary">
-                  {prevNext.next.title}
+                  {articleTitle(prevNext.next, lang)}
                 </div>
               </Link>
             ) : (
