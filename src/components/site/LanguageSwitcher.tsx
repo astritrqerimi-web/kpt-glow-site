@@ -1,9 +1,9 @@
 import { useI18n, type Lang } from "@/lib/i18n";
 import { KosovoFlag, UsFlag } from "@/components/site/Flags";
 
-const langs: Record<Lang, { label: string; flag: React.FC<{ className?: string }> }> = {
-  sq: { label: "Shqip", flag: KosovoFlag },
-  en: { label: "English", flag: UsFlag },
+const langs: Record<Lang, { label: string; code: string; flag: React.FC<{ className?: string }> }> = {
+  sq: { label: "Shqip", code: "AL", flag: KosovoFlag },
+  en: { label: "English", code: "EN", flag: UsFlag },
 };
 
 const order: Lang[] = ["sq", "en"];
@@ -16,25 +16,27 @@ export function LanguageSwitcher({ variant = "desktop" }: Props) {
   const { lang, setLang } = useI18n();
 
   return (
-    <div className={`flex items-center ${variant === "mobile" ? "mt-3 px-3" : "ml-3"}`}>
-      <div className="inline-flex items-center rounded-full border border-border/60 bg-background/50 p-[3px] backdrop-blur-sm">
-        {order.map((code, i) => {
+    <div className={`flex items-center ${variant === "mobile" ? "mt-3 px-3" : "ml-4"}`}>
+      <div className="inline-flex items-center rounded-full border border-border/50 bg-background/60 p-[2px] backdrop-blur-sm shadow-soft">
+        {order.map((code) => {
           const active = lang === code;
-          const Flag = langs[code].flag;
+          const config = langs[code];
+          const Flag = config.flag;
           return (
             <button
               key={code}
               type="button"
               onClick={() => setLang(code)}
-              aria-label={langs[code].label}
+              aria-label={config.label}
               aria-pressed={active}
-              className={`relative px-3 py-[5px] transition-all duration-300 ease-out ${
+              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[13px] font-semibold tracking-wide transition-all duration-300 ease-out ${
                 active
-                  ? "rounded-full bg-primary shadow-sm"
-                  : "opacity-60 hover:opacity-100"
-              } ${i === 0 ? "mr-[1px]" : ""}`}
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-foreground/60 hover:text-foreground hover:bg-muted/60"
+              }`}
             >
-              <Flag className="w-6 h-4 rounded-[2px] object-cover" />
+              <Flag className="w-[18px] h-[13px] rounded-[1px] object-cover flex-shrink-0" />
+              <span>{config.code}</span>
             </button>
           );
         })}
