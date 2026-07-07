@@ -68,12 +68,14 @@ function AdminPage() {
       <div className="container-page py-8">
         <div className="mb-6 flex flex-wrap gap-2">
           <TabBtn active={tab === "services"} onClick={() => setTab("services")} icon={<FileEdit className="h-4 w-4" />}>Shërbimet</TabBtn>
+          <TabBtn active={tab === "articles"} onClick={() => setTab("articles")} icon={<Newspaper className="h-4 w-4" />}>Lajmet</TabBtn>
           <TabBtn active={tab === "messages"} onClick={() => setTab("messages")} icon={<Mail className="h-4 w-4" />}>Mesazhet</TabBtn>
           <TabBtn active={tab === "content"} onClick={() => setTab("content")} icon={<FileEdit className="h-4 w-4" />}>Përmbajtja</TabBtn>
           <TabBtn active={tab === "settings"} onClick={() => setTab("settings")} icon={<Settings2 className="h-4 w-4" />}>Cilësimet</TabBtn>
         </div>
 
         {tab === "services" && <ServicesAdmin />}
+        {tab === "articles" && <ArticlesAdmin />}
         {tab === "messages" && <MessagesAdmin />}
         {tab === "content" && <ContentAdmin />}
         {tab === "settings" && <SettingsAdmin />}
