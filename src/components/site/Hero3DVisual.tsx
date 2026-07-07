@@ -54,16 +54,16 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
   return (
     <div
       ref={wrapRef}
-      className="relative mx-auto w-full max-w-[42rem] lg:max-w-none"
+      className="relative mx-auto w-full max-w-[42rem] px-4 sm:px-5 lg:max-w-none lg:px-0"
       style={{ perspective: "1400px" }}
     >
-      {/* Ambient glow */}
+      {/* Ambient glow — softer */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 blur-3xl opacity-80"
+        className="pointer-events-none absolute inset-0 -z-10 blur-3xl opacity-60"
         style={{
           background:
-            "radial-gradient(60% 60% at 50% 50%, oklch(0.78 0.18 165 / 0.55), transparent 70%)",
+            "radial-gradient(60% 60% at 50% 50%, oklch(0.78 0.18 165 / 0.45), transparent 70%)",
         }}
       />
 
@@ -79,10 +79,14 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
           willChange: "transform",
         }}
       >
-        {/* Image card */}
+        {/* Image — no boxed card; blends into page bg. Soft elegant shadow via drop-shadow filter. */}
         <div
-          className="group relative overflow-hidden rounded-[2.5rem] border border-white/40 bg-background/30 backdrop-blur-xl shadow-elegant animate-float-hero transition-transform duration-500 hover:scale-[1.04]"
-          style={{ transformStyle: "preserve-3d" }}
+          className="group relative animate-float-hero transition-transform duration-500 hover:scale-[1.03] sm:hover:scale-[1.04]"
+          style={{
+            transformStyle: "preserve-3d",
+            filter:
+              "drop-shadow(0 12px 24px rgba(15, 40, 30, 0.10)) drop-shadow(0 30px 60px rgba(15, 40, 30, 0.14))",
+          }}
         >
           <img
             src={src}
@@ -91,82 +95,74 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
             height={1024}
             loading="eager"
             decoding="async"
-            className="block h-auto w-full select-none"
+            className="block h-auto w-full max-w-full select-none mix-blend-multiply"
             style={{
-              transform: "translateZ(40px)",
+              objectFit: "contain",
+              transform: "translateZ(30px)",
               imageRendering: "auto",
             }}
             draggable={false}
           />
 
-          {/* Dynamic light reflection following pointer */}
+          {/* Dynamic light reflection following pointer (desktop only) */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 mix-blend-screen transition-opacity duration-500"
+            className="pointer-events-none absolute inset-0 hidden md:block mix-blend-screen transition-opacity duration-500"
             style={{
-              opacity: tilt.active ? 0.9 : 0.55,
-              background: `radial-gradient(circle at ${tilt.lx}% ${tilt.ly}%, rgba(255,255,255,0.55), rgba(255,255,255,0.08) 30%, transparent 55%)`,
-            }}
-          />
-
-          {/* Soft top/bottom sheen */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.14) 0%, transparent 28%, transparent 72%, rgba(255,255,255,0.10) 100%)",
+              opacity: tilt.active ? 0.7 : 0.35,
+              background: `radial-gradient(circle at ${tilt.lx}% ${tilt.ly}%, rgba(255,255,255,0.45), rgba(255,255,255,0.06) 30%, transparent 55%)`,
             }}
           />
 
           {/* Animated shine sweep */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 animate-shine-sweep"
+            className="pointer-events-none absolute inset-0 animate-shine-sweep opacity-70"
             style={{
               background:
-                "linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
+                "linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%)",
             }}
           />
         </div>
 
-        {/* Floating glass stat cards (pushed forward in 3D) */}
+        {/* Floating glass stat cards — visible on all breakpoints, sized down for mobile */}
         <div
-          className="absolute -left-4 top-8 hidden md:flex glass-panel rounded-2xl px-4 py-3 shadow-elegant items-center gap-3 animate-float-hero"
+          className="absolute left-2 top-4 z-10 flex glass-panel rounded-xl md:rounded-2xl px-2.5 py-2 md:px-4 md:py-3 shadow-soft md:shadow-elegant items-center gap-2 md:gap-3 animate-float-hero sm:left-4 md:-left-4 md:top-8"
           style={{ transform: "translateZ(90px)", animationDelay: "1s" }}
         >
           <span
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-glow"
+            className="inline-flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg md:rounded-xl text-white shadow-glow"
             style={{ background: "var(--gradient-brand-strong)" }}
           >
-            <TrendingUp className="h-5 w-5" />
+            <TrendingUp className="h-3.5 w-3.5 md:h-5 md:w-5" />
           </span>
           <div className="leading-tight">
-            <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+            <div className="text-[9px] md:text-[10px] uppercase tracking-[0.12em] md:tracking-[0.14em] text-muted-foreground">
               {t("hero.stat.growth")}
             </div>
-            <div className="font-display text-lg text-foreground">+34%</div>
+            <div className="font-display text-sm md:text-lg text-foreground">+34%</div>
           </div>
         </div>
 
         <div
-          className="absolute -right-4 bottom-8 hidden md:flex glass-panel rounded-2xl px-4 py-3 shadow-elegant items-center gap-3 animate-float-hero"
+          className="absolute right-2 bottom-4 z-10 flex glass-panel rounded-xl md:rounded-2xl px-2.5 py-2 md:px-4 md:py-3 shadow-soft md:shadow-elegant items-center gap-2 md:gap-3 animate-float-hero sm:right-4 md:-right-4 md:bottom-8"
           style={{ transform: "translateZ(110px)", animationDelay: "2.5s" }}
         >
           <span
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-glow"
+            className="inline-flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg md:rounded-xl text-white shadow-glow"
             style={{ background: "var(--gradient-brand-strong)" }}
           >
-            <ShieldCheck className="h-5 w-5" />
+            <ShieldCheck className="h-3.5 w-3.5 md:h-5 md:w-5" />
           </span>
           <div className="leading-tight">
-            <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+            <div className="text-[9px] md:text-[10px] uppercase tracking-[0.12em] md:tracking-[0.14em] text-muted-foreground">
               {t("hero.stat.compliance")}
             </div>
-            <div className="font-display text-lg text-foreground">100%</div>
+            <div className="font-display text-sm md:text-lg text-foreground">100%</div>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
