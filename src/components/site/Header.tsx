@@ -109,18 +109,36 @@ export function Header() {
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1">
-          {NAV.map((item) => (
-            <a
-              key={item.hash}
-              href={`/${item.hash}`}
-              onClick={(e) => handleNav(e, item.hash)}
-              className={`relative px-4 py-2 text-sm font-medium transition-colors ${
-                active === item.hash ? "text-primary" : "text-foreground/75 hover:text-foreground"
-              }`}
-            >
-              {t(item.key)}
-            </a>
-          ))}
+          {NAV.map((item) => {
+            if (item.kind === "route") {
+              const isActive = pathname.startsWith(item.to);
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  className={`relative px-4 py-2 text-sm font-medium transition-colors ${
+                    isActive ? "text-primary" : "text-foreground/75 hover:text-foreground"
+                  }`}
+                >
+                  {t(item.key)}
+                </Link>
+              );
+            }
+            const isActive = pathname === "/" && active === item.hash;
+            return (
+              <a
+                key={item.hash}
+                href={`/${item.hash}`}
+                onClick={(e) => handleNav(e, item.hash)}
+                className={`relative px-4 py-2 text-sm font-medium transition-colors ${
+                  isActive ? "text-primary" : "text-foreground/75 hover:text-foreground"
+                }`}
+              >
+                {t(item.key)}
+              </a>
+            );
+          })}
           <a
             href="/#kontakti"
             onClick={(e) => handleNav(e, "#kontakti")}
