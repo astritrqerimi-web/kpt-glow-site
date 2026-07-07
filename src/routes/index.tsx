@@ -60,6 +60,7 @@ export const Route = createFileRoute("/")({
     context.queryClient.ensureQueryData(servicesQuery());
     context.queryClient.ensureQueryData(companyQuery());
     context.queryClient.ensureQueryData(trustQuery());
+    context.queryClient.ensureQueryData(heroTrustQuery());
     context.queryClient.ensureQueryData(servicesSectionQuery());
     context.queryClient.ensureQueryData(contactSectionQuery());
   },
