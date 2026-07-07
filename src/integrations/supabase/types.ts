@@ -14,6 +14,122 @@ export type Database = {
   }
   public: {
     Tables: {
+      article_categories: {
+        Row: {
+          created_at: string
+          name_al: string
+          name_en: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          name_al: string
+          name_en: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          name_al?: string
+          name_en?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      articles: {
+        Row: {
+          attachments: Json
+          author: string
+          category_slug: string
+          comments_enabled: boolean
+          content_html: string
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          excerpt: string
+          gallery: Json
+          id: string
+          is_featured: boolean
+          is_sticky: boolean
+          og_image_url: string | null
+          published_at: string | null
+          reading_minutes: number
+          scheduled_at: string | null
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          status: string
+          tags: string[]
+          title: string
+          updated_at: string
+          views_count: number
+        }
+        Insert: {
+          attachments?: Json
+          author?: string
+          category_slug: string
+          comments_enabled?: boolean
+          content_html?: string
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          excerpt?: string
+          gallery?: Json
+          id?: string
+          is_featured?: boolean
+          is_sticky?: boolean
+          og_image_url?: string | null
+          published_at?: string | null
+          reading_minutes?: number
+          scheduled_at?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          status?: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+          views_count?: number
+        }
+        Update: {
+          attachments?: Json
+          author?: string
+          category_slug?: string
+          comments_enabled?: boolean
+          content_html?: string
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          excerpt?: string
+          gallery?: Json
+          id?: string
+          is_featured?: boolean
+          is_sticky?: boolean
+          og_image_url?: string | null
+          published_at?: string | null
+          reading_minutes?: number
+          scheduled_at?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          status?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          views_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "articles_category_slug_fkey"
+            columns: ["category_slug"]
+            isOneToOne: false
+            referencedRelation: "article_categories"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
       contact_messages: {
         Row: {
           created_at: string
@@ -124,7 +240,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      publish_due_articles: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user"
