@@ -42,9 +42,9 @@ const LajmeIndexRoute = LajmeIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const LajmeSlugRoute = LajmeSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => LajmeRoute,
+  id: '/lajme/$slug',
+  path: '/lajme/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
@@ -105,6 +105,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  LajmeSlugRoute: typeof LajmeSlugRoute
   LajmeIndexRoute: typeof LajmeIndexRoute
 }
 
@@ -147,10 +148,10 @@ declare module '@tanstack/react-router' {
     }
     '/lajme/$slug': {
       id: '/lajme/$slug'
-      path: '/$slug'
+      path: '/lajme/$slug'
       fullPath: '/lajme/$slug'
       preLoaderRoute: typeof LajmeSlugRouteImport
-      parentRoute: typeof LajmeRoute
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
@@ -178,18 +179,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  LajmeSlugRoute: LajmeSlugRoute,
   LajmeIndexRoute: LajmeIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
