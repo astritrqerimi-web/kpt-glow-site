@@ -260,20 +260,30 @@
 }
 
 /* ---- Mobile performance guardrails ----
-   Mobile Safari/Chrome can OOM-kill the tab (causing the "auto-scroll to top
-   and reload" behavior) when large blurred, animated layers stack over a
-   sticky, backdrop-blurred header. Disable the most expensive effects on
-   small screens while keeping the visual identity. */
+   Mobile Safari/Chrome can OOM-kill the tab when many large blurred, animated
+   layers stack over a sticky backdrop-blurred header. Disable the heaviest
+   *background* effects on small screens, but keep the Hero image animations
+   (float / gentle 3D rotate / shine sweep) with lighter parameters so the
+   hero still feels alive without causing scroll instability. */
 @media (max-width: 767px) {
+  /* Kill only the heavy full-viewport blurred background loops */
   .animate-mesh-drift,
   .animate-soft-glow,
-  .animate-scene-rotate,
-  .animate-shine-sweep,
-  .animate-pulse-glow,
-  .animate-float-hero { animation: none !important; }
+  .animate-pulse-glow { animation: none !important; }
 
-  .animate-float-hero { will-change: auto !important; }
+  /* Lighter, GPU-friendly hero motion on mobile */
+  .animate-float-hero {
+    animation-duration: 9s !important;
+    will-change: transform;
+  }
+  .animate-scene-rotate {
+    animation-duration: 18s !important;
+  }
+  .animate-shine-sweep {
+    animation-duration: 8s !important;
+  }
 }
+
 
 
 
