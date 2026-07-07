@@ -85,6 +85,8 @@ export interface FooterContent {
   description: Bilingual;
   menuTitle: Bilingual;
   contactTitle: Bilingual;
+  hoursTitle: Bilingual;
+  hours: Bilingual;
   rights: Bilingual;
   copyrightName: string;
   privacyLabel: Bilingual;
@@ -92,6 +94,7 @@ export interface FooterContent {
   termsLabel: Bilingual;
   termsUrl: string;
 }
+
 
 
 export interface Service {
@@ -174,6 +177,11 @@ const DEFAULTS = {
     },
     menuTitle: { al: "Menuja", en: "Menu" },
     contactTitle: { al: "Kontakti", en: "Contact" },
+    hoursTitle: { al: "Orari i Punës", en: "Working Hours" },
+    hours: {
+      al: "E hënë: 09:00 - 17:00\nE martë: 09:00 - 17:00\nE mërkurë: 09:00 - 17:00\nE enjte: 09:00 - 17:00\nE premte: 09:00 - 17:00\nE shtunë: 09:00 - 17:00\nE diel: Pushim",
+      en: "Monday: 09:00 - 17:00\nTuesday: 09:00 - 17:00\nWednesday: 09:00 - 17:00\nThursday: 09:00 - 17:00\nFriday: 09:00 - 17:00\nSaturday: 09:00 - 17:00\nSunday: Closed",
+    },
     rights: { al: "Të gjitha të drejtat e rezervuara.", en: "All rights reserved." },
     copyrightName: "KPT Consulting",
     privacyLabel: { al: "Politika e Privatësisë", en: "Privacy Policy" },
