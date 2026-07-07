@@ -24,7 +24,7 @@ export function Footer({ company }: { company: CompanyInfo }) {
 
   return (
     <footer className="mt-24 border-t border-border/60 bg-background/60 backdrop-blur">
-      <div className="container-page py-14 grid gap-10 md:grid-cols-6">
+      <div className="container-page py-14 grid gap-10 md:grid-cols-5">
         <div className="md:col-span-2">
           <div className="flex items-center gap-3">
             <img src={logoAsset.url} alt={brand} className="h-11 w-11 object-contain" />
