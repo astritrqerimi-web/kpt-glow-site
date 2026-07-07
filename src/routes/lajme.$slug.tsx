@@ -19,6 +19,10 @@ import {
   prevNextArticleQuery,
   categoryName,
   formatDate,
+  articleTitle,
+  articleExcerpt,
+  articleContent,
+  articleUrlSlug,
 } from "@/lib/articles";
 import { ArticleCard } from "@/components/site/ArticleCard";
 import { sanitizeHtml } from "@/lib/sanitize";
@@ -112,9 +116,10 @@ function ArticleDetailPage() {
   const shareUrl =
     typeof window !== "undefined"
       ? window.location.href
-      : `https://kpt-glow-site.lovable.app/lajme/${article.slug}`;
+      : `https://kpt-glow-site.lovable.app/lajme/${articleUrlSlug(article)}`;
 
-  const safeHtml = sanitizeHtml(article.content_html);
+  const title = articleTitle(article, lang);
+  const safeHtml = sanitizeHtml(articleContent(article, lang));
 
   return (
     <article className="pt-10 md:pt-16 pb-20">
@@ -140,7 +145,7 @@ function ArticleDetailPage() {
           </span>
         )}
         <h1 className="mt-5 text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground leading-tight">
-          {article.title}
+          {title}
         </h1>
         <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
@@ -164,7 +169,7 @@ function ArticleDetailPage() {
           <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-border/60 shadow-elegant">
             <img
               src={article.cover_image_url}
-              alt={article.title}
+              alt={title}
               className="w-full h-auto object-cover"
             />
           </div>
@@ -197,7 +202,7 @@ function ArticleDetailPage() {
                 >
                   <img
                     src={g.url}
-                    alt={g.caption || `${article.title} ${i + 1}`}
+                    alt={g.caption || `${title} ${i + 1}`}
                     loading="lazy"
                     className="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
                   />
@@ -265,7 +270,7 @@ function ArticleDetailPage() {
           <a
             aria-label="Email"
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border hover:bg-muted transition"
-            href={`mailto:?subject=${encodeURIComponent(article.title)}&body=${encodeURIComponent(shareUrl)}`}
+            href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(shareUrl)}`}
           >
             <Mail className="h-4 w-4" />
           </a>
@@ -279,14 +284,14 @@ function ArticleDetailPage() {
             {prevNext?.prev ? (
               <Link
                 to="/lajme/$slug"
-                params={{ slug: prevNext.prev.slug }}
+                params={{ slug: articleUrlSlug(prevNext.prev) }}
                 className="group rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xl p-5 hover:border-primary/40 transition"
               >
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <ArrowLeft className="h-3 w-3" /> {t("news.previous")}
                 </div>
                 <div className="mt-2 font-medium text-foreground line-clamp-2 group-hover:text-primary">
-                  {prevNext.prev.title}
+                  {articleTitle(prevNext.prev, lang)}
                 </div>
               </Link>
             ) : (
@@ -295,14 +300,14 @@ function ArticleDetailPage() {
             {prevNext?.next ? (
               <Link
                 to="/lajme/$slug"
-                params={{ slug: prevNext.next.slug }}
+                params={{ slug: articleUrlSlug(prevNext.next) }}
                 className="group rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xl p-5 hover:border-primary/40 transition text-right"
               >
                 <div className="flex items-center justify-end gap-1.5 text-xs text-muted-foreground">
                   {t("news.next")} <ArrowRight className="h-3 w-3" />
                 </div>
                 <div className="mt-2 font-medium text-foreground line-clamp-2 group-hover:text-primary">
-                  {prevNext.next.title}
+                  {articleTitle(prevNext.next, lang)}
                 </div>
               </Link>
             ) : (

@@ -1,7 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Calendar } from "lucide-react";
 import type { Article, ArticleCategory } from "@/lib/articles";
-import { articleUrlSlug, categoryName, formatDate } from "@/lib/articles";
+import {
+  articleUrlSlug,
+  articleTitle,
+  articleExcerpt,
+  categoryName,
+  formatDate,
+} from "@/lib/articles";
 import { useI18n } from "@/lib/i18n";
 
 interface Props {
@@ -14,6 +20,8 @@ export function ArticleCard({ article, categories }: Props) {
   const cat = categories.find((c) => c.slug === article.category_slug);
   const dateStr = formatDate(article.published_at, lang);
   const slug = articleUrlSlug(article);
+  const title = articleTitle(article, lang);
+  const excerpt = articleExcerpt(article, lang);
 
   return (
     <Link
@@ -25,7 +33,7 @@ export function ArticleCard({ article, categories }: Props) {
         {article.cover_image_url ? (
           <img
             src={article.cover_image_url}
-            alt={article.title}
+            alt={title}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
@@ -55,10 +63,10 @@ export function ArticleCard({ article, categories }: Props) {
           </span>
         </div>
         <h3 className="mt-2 text-lg font-semibold leading-snug text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-          {article.title}
+          {title}
         </h3>
-        {article.excerpt && (
-          <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{article.excerpt}</p>
+        {excerpt && (
+          <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{excerpt}</p>
         )}
         <div className="mt-auto pt-4">
           <span className="inline-flex items-center gap-1.5 text-sm font-medium text-primary">

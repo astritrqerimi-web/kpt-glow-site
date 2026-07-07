@@ -45,10 +45,12 @@ export type Database = {
           category_slug: string
           comments_enabled: boolean
           content_html: string
+          content_html_en: string | null
           cover_image_url: string | null
           created_at: string
           created_by: string | null
           excerpt: string
+          excerpt_en: string | null
           gallery: Json
           id: string
           is_featured: boolean
@@ -58,11 +60,14 @@ export type Database = {
           reading_minutes: number
           scheduled_at: string | null
           seo_description: string | null
+          seo_description_en: string | null
           seo_title: string | null
+          seo_title_en: string | null
           slug: string
           status: string
           tags: string[]
           title: string
+          title_en: string | null
           updated_at: string
           views_count: number
         }
@@ -72,10 +77,12 @@ export type Database = {
           category_slug: string
           comments_enabled?: boolean
           content_html?: string
+          content_html_en?: string | null
           cover_image_url?: string | null
           created_at?: string
           created_by?: string | null
           excerpt?: string
+          excerpt_en?: string | null
           gallery?: Json
           id?: string
           is_featured?: boolean
@@ -85,11 +92,14 @@ export type Database = {
           reading_minutes?: number
           scheduled_at?: string | null
           seo_description?: string | null
+          seo_description_en?: string | null
           seo_title?: string | null
+          seo_title_en?: string | null
           slug: string
           status?: string
           tags?: string[]
           title: string
+          title_en?: string | null
           updated_at?: string
           views_count?: number
         }
@@ -99,10 +109,12 @@ export type Database = {
           category_slug?: string
           comments_enabled?: boolean
           content_html?: string
+          content_html_en?: string | null
           cover_image_url?: string | null
           created_at?: string
           created_by?: string | null
           excerpt?: string
+          excerpt_en?: string | null
           gallery?: Json
           id?: string
           is_featured?: boolean
@@ -112,11 +124,14 @@ export type Database = {
           reading_minutes?: number
           scheduled_at?: string | null
           seo_description?: string | null
+          seo_description_en?: string | null
           seo_title?: string | null
+          seo_title_en?: string | null
           slug?: string
           status?: string
           tags?: string[]
           title?: string
+          title_en?: string | null
           updated_at?: string
           views_count?: number
         }

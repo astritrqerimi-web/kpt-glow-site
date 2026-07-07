@@ -26,8 +26,11 @@ export interface Article {
   slug: string;
   category_slug: string;
   title: string;
+  title_en: string | null;
   excerpt: string;
+  excerpt_en: string | null;
   content_html: string;
+  content_html_en: string | null;
   cover_image_url: string | null;
   og_image_url: string | null;
   gallery: GalleryImage[];
@@ -41,7 +44,9 @@ export interface Article {
   is_featured: boolean;
   is_sticky: boolean;
   seo_title: string | null;
+  seo_title_en: string | null;
   seo_description: string | null;
+  seo_description_en: string | null;
   comments_enabled: boolean;
   views_count: number;
   created_by: string | null;
@@ -50,7 +55,7 @@ export interface Article {
 }
 
 const ARTICLE_COLUMNS =
-  "id, slug, category_slug, title, excerpt, content_html, cover_image_url, og_image_url, gallery, attachments, tags, author, reading_minutes, status, published_at, scheduled_at, is_featured, is_sticky, seo_title, seo_description, comments_enabled, views_count, created_by, created_at, updated_at";
+  "id, slug, category_slug, title, title_en, excerpt, excerpt_en, content_html, content_html_en, cover_image_url, og_image_url, gallery, attachments, tags, author, reading_minutes, status, published_at, scheduled_at, is_featured, is_sticky, seo_title, seo_title_en, seo_description, seo_description_en, comments_enabled, views_count, created_by, created_at, updated_at";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const from = () => (supabase as any).from("articles");
@@ -127,7 +132,9 @@ export const articlesListQuery = (params: ListParams) =>
       }
       if (params.q && params.q.trim()) {
         const q = params.q.trim().replace(/[%_]/g, "");
-        query = query.or(`title.ilike.%${q}%,excerpt.ilike.%${q}%`);
+        query = query.or(
+          `title.ilike.%${q}%,title_en.ilike.%${q}%,excerpt.ilike.%${q}%,excerpt_en.ilike.%${q}%`,
+        );
       }
       query = query
         .order("is_sticky", { ascending: false })
@@ -231,4 +238,41 @@ export function formatDate(iso: string | null, lang: string): string {
     month: "short",
     year: "numeric",
   });
+}
+
+/**
+ * Language-aware helpers. When EN is selected but a field has no English
+ * value, fall back to Albanian so nothing renders empty.
+ */
+function pick(al: string | null | undefined, en: string | null | undefined, lang: string): string {
+  const a = (al ?? "").trim();
+  const e = (en ?? "").trim();
+  if (lang === "en") return e || a;
+  return a || e;
+}
+
+export function articleTitle(a: Pick<Article, "title" | "title_en">, lang: string): string {
+  return pick(a.title, a.title_en, lang);
+}
+
+export function articleExcerpt(a: Pick<Article, "excerpt" | "excerpt_en">, lang: string): string {
+  return pick(a.excerpt, a.excerpt_en, lang);
+}
+
+export function articleContent(a: Pick<Article, "content_html" | "content_html_en">, lang: string): string {
+  return pick(a.content_html, a.content_html_en, lang);
+}
+
+export function articleSeoTitle(
+  a: Pick<Article, "seo_title" | "seo_title_en" | "title" | "title_en">,
+  lang: string,
+): string {
+  return pick(a.seo_title, a.seo_title_en, lang) || articleTitle(a, lang);
+}
+
+export function articleSeoDescription(
+  a: Pick<Article, "seo_description" | "seo_description_en" | "excerpt" | "excerpt_en">,
+  lang: string,
+): string {
+  return pick(a.seo_description, a.seo_description_en, lang) || articleExcerpt(a, lang);
 }

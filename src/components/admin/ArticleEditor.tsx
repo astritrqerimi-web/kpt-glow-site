@@ -32,8 +32,11 @@ type Draft = {
   slug: string;
   category_slug: string;
   title: string;
+  title_en: string;
   excerpt: string;
+  excerpt_en: string;
   content_html: string;
+  content_html_en: string;
   cover_image_url: string;
   og_image_url: string;
   gallery: GalleryImage[];
@@ -46,7 +49,9 @@ type Draft = {
   is_featured: boolean;
   is_sticky: boolean;
   seo_title: string;
+  seo_title_en: string;
   seo_description: string;
+  seo_description_en: string;
   comments_enabled: boolean;
 };
 
@@ -56,8 +61,11 @@ function toDraft(a: Article | null, defaultCategory: string): Draft {
     slug: a?.slug ?? "",
     category_slug: a?.category_slug ?? defaultCategory,
     title: a?.title ?? "",
+    title_en: a?.title_en ?? "",
     excerpt: a?.excerpt ?? "",
+    excerpt_en: a?.excerpt_en ?? "",
     content_html: a?.content_html ?? "",
+    content_html_en: a?.content_html_en ?? "",
     cover_image_url: a?.cover_image_url ?? "",
     og_image_url: a?.og_image_url ?? "",
     gallery: a?.gallery ?? [],
@@ -70,7 +78,9 @@ function toDraft(a: Article | null, defaultCategory: string): Draft {
     is_featured: a?.is_featured ?? false,
     is_sticky: a?.is_sticky ?? false,
     seo_title: a?.seo_title ?? "",
+    seo_title_en: a?.seo_title_en ?? "",
     seo_description: a?.seo_description ?? "",
+    seo_description_en: a?.seo_description_en ?? "",
     comments_enabled: a?.comments_enabled ?? false,
   };
 }
@@ -94,6 +104,7 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
   const [saving, setSaving] = useState(false);
   const [tagInput, setTagInput] = useState("");
   const [slugDirty, setSlugDirty] = useState(!!article);
+  const [contentLang, setContentLang] = useState<"al" | "en">("al");
   const pdfRef = useRef<HTMLInputElement | null>(null);
   const galleryRef = useRef<HTMLInputElement | null>(null);
 
@@ -193,8 +204,11 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
         slug: uniqueSlug,
         category_slug: draft.category_slug,
         title: draft.title,
+        title_en: draft.title_en || null,
         excerpt: draft.excerpt,
+        excerpt_en: draft.excerpt_en || null,
         content_html: draft.content_html,
+        content_html_en: draft.content_html_en || null,
         cover_image_url: draft.cover_image_url || null,
         og_image_url: draft.og_image_url || null,
         gallery: draft.gallery,
@@ -205,7 +219,9 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
         is_featured: draft.is_featured,
         is_sticky: draft.is_sticky,
         seo_title: draft.seo_title || null,
+        seo_title_en: draft.seo_title_en || null,
         seo_description: draft.seo_description || null,
+        seo_description_en: draft.seo_description_en || null,
         comments_enabled: draft.comments_enabled,
       };
 
@@ -315,14 +331,95 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
       <div className="container-page py-6 grid gap-6 lg:grid-cols-[1fr_360px]">
         {/* Main */}
         <div className="space-y-5">
-          <Field label="Titulli">
-            <input
-              value={draft.title}
-              onChange={(e) => set("title", e.target.value)}
-              placeholder="p.sh. Ndryshimet e reja në deklarimin e TVSH-së"
-              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
-            />
-          </Field>
+          {/* Language tabs for translated fields */}
+          <div className="inline-flex rounded-full border border-border bg-background p-1 text-xs font-medium">
+            <button
+              type="button"
+              onClick={() => setContentLang("al")}
+              className={`px-4 py-1.5 rounded-full transition ${
+                contentLang === "al"
+                  ? "text-white shadow-soft"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              style={contentLang === "al" ? { background: "var(--gradient-brand)" } : undefined}
+            >
+              🇦🇱 Shqip
+            </button>
+            <button
+              type="button"
+              onClick={() => setContentLang("en")}
+              className={`px-4 py-1.5 rounded-full transition ${
+                contentLang === "en"
+                  ? "text-white shadow-soft"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              style={contentLang === "en" ? { background: "var(--gradient-brand)" } : undefined}
+            >
+              🇬🇧 English
+            </button>
+          </div>
+
+          {contentLang === "al" ? (
+            <>
+              <Field label="Titulli (AL)">
+                <input
+                  value={draft.title}
+                  onChange={(e) => set("title", e.target.value)}
+                  placeholder="p.sh. Ndryshimet e reja në deklarimin e TVSH-së"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </Field>
+
+              <Field label="Përshkrim i shkurtër (AL)">
+                <textarea
+                  value={draft.excerpt}
+                  onChange={(e) => set("excerpt", e.target.value)}
+                  rows={3}
+                  placeholder="Përmbledhje 1–2 fjali që shfaqet në kartë e lajmit."
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm resize-none"
+                />
+              </Field>
+
+              <Field label="Përmbajtja (AL)">
+                <RichTextEditor
+                  value={draft.content_html}
+                  onChange={(html) => set("content_html", html)}
+                  articleId={draft.id}
+                  placeholder="Fillo të shkruash artikullin..."
+                />
+              </Field>
+            </>
+          ) : (
+            <>
+              <Field label="Title (EN)">
+                <input
+                  value={draft.title_en}
+                  onChange={(e) => set("title_en", e.target.value)}
+                  placeholder="e.g. New VAT declaration changes"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </Field>
+
+              <Field label="Short excerpt (EN)">
+                <textarea
+                  value={draft.excerpt_en}
+                  onChange={(e) => set("excerpt_en", e.target.value)}
+                  rows={3}
+                  placeholder="1–2 sentence summary shown on the card."
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm resize-none"
+                />
+              </Field>
+
+              <Field label="Content (EN)">
+                <RichTextEditor
+                  value={draft.content_html_en}
+                  onChange={(html) => set("content_html_en", html)}
+                  articleId={draft.id}
+                  placeholder="Start writing the article..."
+                />
+              </Field>
+            </>
+          )}
 
           <Field label="Slug (URL)">
             <input
@@ -336,24 +433,6 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
             <div className="mt-1 text-[11px] text-muted-foreground">/lajme/{draft.slug || "…"}</div>
           </Field>
 
-          <Field label="Përshkrim i shkurtër (excerpt)">
-            <textarea
-              value={draft.excerpt}
-              onChange={(e) => set("excerpt", e.target.value)}
-              rows={3}
-              placeholder="Përmbledhje 1–2 fjali që shfaqet në kartë e lajmit."
-              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm resize-none"
-            />
-          </Field>
-
-          <Field label="Përmbajtja">
-            <RichTextEditor
-              value={draft.content_html}
-              onChange={(html) => set("content_html", html)}
-              articleId={draft.id}
-              placeholder="Fillo të shkruash artikullin..."
-            />
-          </Field>
 
           {/* Gallery */}
           <div className="rounded-xl border border-border/60 bg-background/60 p-4">
@@ -587,7 +666,7 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
           </div>
 
           <div className="rounded-xl border border-border/60 bg-background/60 p-4 space-y-3">
-            <div className="text-sm font-semibold">SEO</div>
+            <div className="text-sm font-semibold">SEO (AL)</div>
             <input
               value={draft.seo_title}
               onChange={(e) => set("seo_title", e.target.value)}
@@ -598,6 +677,23 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
               value={draft.seo_description}
               onChange={(e) => set("seo_description", e.target.value)}
               placeholder="Meta description (opsional)"
+              rows={3}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm resize-none"
+            />
+          </div>
+
+          <div className="rounded-xl border border-border/60 bg-background/60 p-4 space-y-3">
+            <div className="text-sm font-semibold">SEO (EN)</div>
+            <input
+              value={draft.seo_title_en}
+              onChange={(e) => set("seo_title_en", e.target.value)}
+              placeholder="SEO title (optional)"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            />
+            <textarea
+              value={draft.seo_description_en}
+              onChange={(e) => set("seo_description_en", e.target.value)}
+              placeholder="Meta description (optional)"
               rows={3}
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm resize-none"
             />
