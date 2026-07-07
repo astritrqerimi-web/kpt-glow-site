@@ -226,3 +226,96 @@
 @utility animate-soft-glow { animation: soft-glow 14s ease-in-out infinite; }
 
 
+
+/* ---------- Article prose (rendered HTML) + TipTap editor ---------- */
+.article-prose {
+  color: var(--color-foreground);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.article-prose > * + * { margin-top: 1rem; }
+.article-prose h2 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+.article-prose h3 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+.article-prose p { margin: 0 0 1rem; }
+.article-prose a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.article-prose a:hover { opacity: 0.8; }
+.article-prose strong { font-weight: 600; color: var(--color-foreground); }
+.article-prose ul, .article-prose ol { padding-left: 1.5rem; margin: 0.75rem 0 1rem; }
+.article-prose ul { list-style: disc; }
+.article-prose ol { list-style: decimal; }
+.article-prose li { margin: 0.35rem 0; }
+.article-prose blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding: 0.25rem 0 0.25rem 1rem;
+  margin: 1.25rem 0;
+  color: color-mix(in oklab, var(--color-foreground) 75%, transparent);
+  font-style: italic;
+}
+.article-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1.25rem 0;
+  box-shadow: var(--shadow-soft, 0 2px 12px rgba(0,0,0,0.06));
+}
+.article-prose pre {
+  background: color-mix(in oklab, var(--color-muted) 85%, transparent);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  font-size: 0.9rem;
+}
+.article-prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.article-prose :not(pre) > code {
+  background: color-mix(in oklab, var(--color-muted) 85%, transparent);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.35rem;
+}
+.article-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 0.95rem;
+}
+.article-prose table th,
+.article-prose table td {
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.article-prose table th {
+  background: color-mix(in oklab, var(--color-muted) 60%, transparent);
+  font-weight: 600;
+}
+
+/* TipTap placeholder */
+.article-prose p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--color-muted-foreground);
+  pointer-events: none;
+  height: 0;
+}
+.ProseMirror:focus { outline: none; }

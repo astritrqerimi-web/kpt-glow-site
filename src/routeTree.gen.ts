@@ -14,6 +14,7 @@ import { Route as LajmeRouteImport } from './routes/lajme'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LajmeSlugRouteImport } from './routes/lajme.$slug'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -40,6 +41,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LajmeSlugRoute = LajmeSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => LajmeRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -49,31 +55,40 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/lajme': typeof LajmeRoute
+  '/lajme': typeof LajmeRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/lajme/$slug': typeof LajmeSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/lajme': typeof LajmeRoute
+  '/lajme': typeof LajmeRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/lajme/$slug': typeof LajmeSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/lajme': typeof LajmeRoute
+  '/lajme': typeof LajmeRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/lajme/$slug': typeof LajmeSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/lajme' | '/sitemap.xml' | '/admin'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/lajme'
+    | '/sitemap.xml'
+    | '/admin'
+    | '/lajme/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/lajme' | '/sitemap.xml' | '/admin'
+  to: '/' | '/auth' | '/lajme' | '/sitemap.xml' | '/admin' | '/lajme/$slug'
   id:
     | '__root__'
     | '/'
@@ -82,13 +97,14 @@ export interface FileRouteTypes {
     | '/lajme'
     | '/sitemap.xml'
     | '/_authenticated/admin'
+    | '/lajme/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
-  LajmeRoute: typeof LajmeRoute
+  LajmeRoute: typeof LajmeRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -129,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lajme/$slug': {
+      id: '/lajme/$slug'
+      path: '/$slug'
+      fullPath: '/lajme/$slug'
+      preLoaderRoute: typeof LajmeSlugRouteImport
+      parentRoute: typeof LajmeRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -150,11 +173,21 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface LajmeRouteChildren {
+  LajmeSlugRoute: typeof LajmeSlugRoute
+}
+
+const LajmeRouteChildren: LajmeRouteChildren = {
+  LajmeSlugRoute: LajmeSlugRoute,
+}
+
+const LajmeRouteWithChildren = LajmeRoute._addFileChildren(LajmeRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
-  LajmeRoute: LajmeRoute,
+  LajmeRoute: LajmeRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
