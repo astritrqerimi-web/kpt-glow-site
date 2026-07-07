@@ -28,20 +28,20 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
         }}
       />
 
-      {/* Static card — mirrors TrustCards styling */}
-      <div className="group relative rounded-3xl border border-border/60 bg-background/75 backdrop-blur-xl p-4 sm:p-6 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-hover hover:border-primary/40">
+      {/* Static card — solid white on mobile for seamless image blending, glass on desktop */}
+      <div className="group relative rounded-3xl border border-border/60 bg-background sm:bg-background/75 sm:backdrop-blur-xl p-3 sm:p-6 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-hover hover:border-primary/40">
         <div
           aria-hidden
           className="absolute inset-x-0 -top-px h-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           style={{ background: "var(--gradient-brand-strong)" }}
         />
 
-        {/* Photo container — rounded corners clip the image */}
+        {/* Photo container — rounded corners clip the image, inner padding for breathing room */}
         <div
-          className="relative overflow-hidden rounded-[22px] sm:rounded-[28px] lg:rounded-[32px]"
+          className="relative overflow-hidden rounded-[20px] sm:rounded-[28px] lg:rounded-[32px] p-2 sm:p-0"
           style={{
             boxShadow:
-              "0 20px 50px -20px oklch(0.40 0.09 210 / 0.28), 0 6px 16px -6px oklch(0.40 0.09 210 / 0.12)",
+              "0 12px 32px -12px oklch(0.40 0.09 210 / 0.14), 0 4px 10px -4px oklch(0.40 0.09 210 / 0.06)",
           }}
         >
           <img
@@ -51,39 +51,38 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
             height={1024}
             loading="eager"
             decoding="async"
-            className="block h-auto w-full max-w-full select-none"
-            style={{ objectFit: "contain" }}
+            className="block h-auto w-full select-none object-contain"
             draggable={false}
           />
 
-          {/* Floating glass stat badges — positioned inside the photo */}
-          <div className="absolute left-4 top-4 sm:left-5 sm:top-5 md:left-6 md:top-6 z-10 flex glass-panel rounded-xl md:rounded-2xl px-2.5 py-2 md:px-4 md:py-3 shadow-soft md:shadow-elegant items-center gap-2 md:gap-3">
+          {/* Floating stat badges — solid white on mobile for visibility, glass on desktop */}
+          <div className="absolute left-2 top-2 sm:left-4 sm:top-4 md:left-5 md:top-5 z-10 flex bg-background/95 sm:glass-panel rounded-lg sm:rounded-xl md:rounded-2xl border border-border/80 sm:border-transparent px-2 py-1.5 sm:px-2.5 sm:py-2 md:px-4 md:py-3 shadow-elegant sm:shadow-soft md:shadow-elegant items-center gap-1.5 sm:gap-2 md:gap-3">
             <span
-              className="inline-flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg md:rounded-xl text-white shadow-glow"
+              className="inline-flex h-5 w-5 sm:h-7 sm:w-7 md:h-10 md:w-10 items-center justify-center rounded-md sm:rounded-lg md:rounded-xl text-white shadow-glow"
               style={{ background: "var(--gradient-brand-strong)" }}
             >
-              <TrendingUp className="h-3.5 w-3.5 md:h-5 md:w-5" />
+              <TrendingUp className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 md:h-5 md:w-5" />
             </span>
             <div className="leading-tight">
-              <div className="text-[9px] md:text-[10px] uppercase tracking-[0.12em] md:tracking-[0.14em] text-muted-foreground">
+              <div className="text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.12em] md:tracking-[0.14em] text-muted-foreground">
                 {t("hero.stat.growth")}
               </div>
-              <div className="font-display text-sm md:text-lg text-foreground">+34%</div>
+              <div className="font-display text-xs sm:text-sm md:text-lg text-foreground">+34%</div>
             </div>
           </div>
 
-          <div className="absolute right-4 bottom-4 sm:right-5 sm:bottom-5 md:right-6 md:bottom-6 z-10 flex glass-panel rounded-xl md:rounded-2xl px-2.5 py-2 md:px-4 md:py-3 shadow-soft md:shadow-elegant items-center gap-2 md:gap-3">
+          <div className="absolute right-2 bottom-2 sm:right-4 sm:bottom-4 md:right-5 md:bottom-5 z-10 flex bg-background/95 sm:glass-panel rounded-lg sm:rounded-xl md:rounded-2xl border border-border/80 sm:border-transparent px-2 py-1.5 sm:px-2.5 sm:py-2 md:px-4 md:py-3 shadow-elegant sm:shadow-soft md:shadow-elegant items-center gap-1.5 sm:gap-2 md:gap-3">
             <span
-              className="inline-flex h-7 w-7 md:h-10 md:w-10 items-center justify-center rounded-lg md:rounded-xl text-white shadow-glow"
+              className="inline-flex h-5 w-5 sm:h-7 sm:w-7 md:h-10 md:w-10 items-center justify-center rounded-md sm:rounded-lg md:rounded-xl text-white shadow-glow"
               style={{ background: "var(--gradient-brand-strong)" }}
             >
-              <ShieldCheck className="h-3.5 w-3.5 md:h-5 md:w-5" />
+              <ShieldCheck className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 md:h-5 md:w-5" />
             </span>
             <div className="leading-tight">
-              <div className="text-[9px] md:text-[10px] uppercase tracking-[0.12em] md:tracking-[0.14em] text-muted-foreground">
+              <div className="text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.12em] md:tracking-[0.14em] text-muted-foreground">
                 {t("hero.stat.compliance")}
               </div>
-              <div className="font-display text-sm md:text-lg text-foreground">100%</div>
+              <div className="font-display text-xs sm:text-sm md:text-lg text-foreground">100%</div>
             </div>
           </div>
         </div>
