@@ -27,6 +27,8 @@ import {
   servicesQuery,
   companyQuery,
   trustQuery,
+  servicesSectionQuery,
+  contactSectionQuery,
   pick,
 } from "@/lib/site-content";
 import { ServiceIcon } from "@/components/site/ServiceIcon";
