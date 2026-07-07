@@ -1,5 +1,5 @@
-import { TrendingUp, ShieldCheck } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { TrendingUp, ShieldCheck } from "lucide-react";
 import heroAsset from "@/assets/hero-3d-finance.png.asset.json";
 import { useI18n } from "@/lib/i18n";
 
@@ -9,154 +9,164 @@ interface Props {
 }
 
 /**
- * Hero visual — frameless premium card with soft shadow, rounded corners,
- * floating animation, subtle parallax on mouse-move, and gently drifting badges.
+ * Premium 3D hero visual:
+ *  - slow auto-rotation
+ *  - mouse-parallax tilt (perspective transform on layers)
+ *  - floating orbs/cards
+ *  - dynamic light reflection that follows the pointer
+ *  - hover pop-out effect
  */
 export function Hero3DVisual({ imageUrl, alt }: Props) {
   const { t } = useI18n();
-  const src = imageUrl || heroAsset.url;
-  const wrapRef = useRef<HTMLDivElement | null>(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0, lx: 50, ly: 50, active: false });
 
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (window.matchMedia("(hover: none)").matches) return;
 
-    const onMove = (e: MouseEvent) => {
-      const r = el.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width - 0.5;
-      const py = (e.clientY - r.top) / r.height - 0.5;
-      setTilt({ x: px, y: py });
+    let raf = 0;
+    const onMove = (e: PointerEvent) => {
+      const rect = el.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width; // 0..1
+      const py = (e.clientY - rect.top) / rect.height;
+      const rx = (0.5 - py) * 14; // rotateX max ±7deg
+      const ry = (px - 0.5) * 18; // rotateY max ±9deg
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() =>
+        setTilt({ x: rx, y: ry, lx: px * 100, ly: py * 100, active: true }),
+      );
     };
-    const onLeave = () => setTilt({ x: 0, y: 0 });
-    el.addEventListener("mousemove", onMove);
-    el.addEventListener("mouseleave", onLeave);
+    const onLeave = () =>
+      setTilt({ x: 0, y: 0, lx: 50, ly: 50, active: false });
+
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerleave", onLeave);
     return () => {
-      el.removeEventListener("mousemove", onMove);
-      el.removeEventListener("mouseleave", onLeave);
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerleave", onLeave);
+      cancelAnimationFrame(raf);
     };
   }, []);
 
-  const rotY = tilt.x * 14; // deg — stronger parallax
-  const rotX = -tilt.y * 12;
-  const tx = tilt.x * 22;
-  const ty = tilt.y * 22;
-  const lightX = 50 + tilt.x * 60;
-  const lightY = 40 + tilt.y * 60;
+  const src = imageUrl || heroAsset.url;
 
   return (
     <div
       ref={wrapRef}
-      className="relative mx-auto w-full max-w-[46rem] px-4 sm:px-5 lg:max-w-none lg:px-0"
+      className="relative mx-auto w-full max-w-[42rem] lg:max-w-none"
       style={{ perspective: "1400px" }}
     >
-      {/* Soft ambient glow behind card */}
+      {/* Ambient glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 blur-3xl opacity-60"
+        className="pointer-events-none absolute inset-0 -z-10 blur-3xl opacity-80"
         style={{
           background:
-            "radial-gradient(60% 60% at 50% 55%, oklch(0.78 0.18 165 / 0.38), transparent 70%)",
+            "radial-gradient(60% 60% at 50% 50%, oklch(0.78 0.18 165 / 0.55), transparent 70%)",
         }}
       />
 
-      {/* Auto-rotating scene wrapper */}
+      {/* 3D scene wrapper — auto rotation + mouse tilt */}
       <div
-        className="animate-scene-rotate"
-        style={{ transformStyle: "preserve-3d" }}
+        className="relative animate-scene-rotate"
+        style={{
+          transformStyle: "preserve-3d",
+          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+          transition: tilt.active
+            ? "transform 120ms ease-out"
+            : "transform 700ms cubic-bezier(0.22, 1, 0.36, 1)",
+          willChange: "transform",
+        }}
       >
-        {/* Floating frameless card with parallax + hover pop-out */}
+        {/* Image card */}
         <div
-          className="group relative animate-float-hero rounded-[28px] sm:rounded-[32px] lg:rounded-[36px] overflow-hidden transition-transform duration-500 ease-out hover:scale-[1.04]"
-          style={{
-            transform: `rotateY(${rotY}deg) rotateX(${rotX}deg) translate3d(${tx}px, ${ty}px, 0)`,
-            transformStyle: "preserve-3d",
-            boxShadow:
-              "0 50px 100px -40px oklch(0.40 0.09 210 / 0.35), 0 22px 50px -20px oklch(0.40 0.09 210 / 0.22), 0 6px 14px -6px oklch(0.40 0.09 210 / 0.12)",
-          }}
+          className="group relative overflow-hidden rounded-[2.5rem] border border-white/40 bg-background/30 backdrop-blur-xl shadow-elegant animate-float-hero transition-transform duration-500 hover:scale-[1.04]"
+          style={{ transformStyle: "preserve-3d" }}
         >
-        <img
-          src={src}
-          alt={alt || "Vizualizim premium — kontabilitet dhe konsulencë biznesi"}
-          width={1536}
-          height={1024}
-          loading="eager"
-          decoding="async"
-          className="block h-auto w-full select-none object-contain"
-          draggable={false}
-          style={{ transform: "translateZ(0)" }}
-        />
+          <img
+            src={src}
+            alt={alt || "Vizualizim premium 3D — kontabilitet dhe konsulencë biznesi"}
+            width={1536}
+            height={1024}
+            loading="eager"
+            decoding="async"
+            className="block h-auto w-full select-none"
+            style={{
+              transform: "translateZ(40px)",
+              imageRendering: "auto",
+            }}
+            draggable={false}
+          />
 
-        {/* Dynamic light reflection */}
+          {/* Dynamic light reflection following pointer */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 mix-blend-screen transition-opacity duration-500"
+            style={{
+              opacity: tilt.active ? 0.9 : 0.55,
+              background: `radial-gradient(circle at ${tilt.lx}% ${tilt.ly}%, rgba(255,255,255,0.55), rgba(255,255,255,0.08) 30%, transparent 55%)`,
+            }}
+          />
+
+          {/* Soft top/bottom sheen */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(255,255,255,0.14) 0%, transparent 28%, transparent 72%, rgba(255,255,255,0.10) 100%)",
+            }}
+          />
+
+          {/* Animated shine sweep */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 animate-shine-sweep"
+            style={{
+              background:
+                "linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
+            }}
+          />
+        </div>
+
+        {/* Floating glass stat cards (pushed forward in 3D) */}
         <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 mix-blend-screen opacity-70 transition-opacity duration-300"
-          style={{
-            background: `radial-gradient(45% 40% at ${lightX}% ${lightY}%, oklch(1 0 0 / 0.35), transparent 70%)`,
-          }}
-        />
-        {/* Shine sweep */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 animate-shine-sweep"
-          style={{
-            background:
-              "linear-gradient(115deg, transparent 20%, oklch(1 0 0 / 0.28) 50%, transparent 80%)",
-          }}
-        />
-
-
-
-        {/* Growth badge — top left */}
-        <div
-          className="absolute left-2 top-2 sm:left-4 sm:top-4 md:left-5 md:top-5 z-10 flex glass-panel rounded-lg sm:rounded-xl md:rounded-2xl px-2 py-1.5 sm:px-2.5 sm:py-2 md:px-4 md:py-3 shadow-elegant items-center gap-1.5 sm:gap-2 md:gap-3 animate-float-hero"
-          style={{
-            animationDuration: "6s",
-            animationDelay: "-2s",
-            transform: `translate3d(${tx * -1.6}px, ${ty * -1.6}px, 40px)`,
-          }}
+          className="absolute -left-4 top-8 hidden md:flex glass-panel rounded-2xl px-4 py-3 shadow-elegant items-center gap-3 animate-float-hero"
+          style={{ transform: "translateZ(90px)", animationDelay: "1s" }}
         >
           <span
-            className="inline-flex h-5 w-5 sm:h-7 sm:w-7 md:h-10 md:w-10 items-center justify-center rounded-md sm:rounded-lg md:rounded-xl text-white shadow-glow"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-glow"
             style={{ background: "var(--gradient-brand-strong)" }}
           >
-            <TrendingUp className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 md:h-5 md:w-5" />
+            <TrendingUp className="h-5 w-5" />
           </span>
           <div className="leading-tight">
-            <div className="text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.12em] md:tracking-[0.14em] text-muted-foreground">
+            <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
               {t("hero.stat.growth")}
             </div>
-            <div className="font-display text-xs sm:text-sm md:text-lg text-foreground">+34%</div>
+            <div className="font-display text-lg text-foreground">+34%</div>
           </div>
         </div>
 
-        {/* Compliance badge — bottom right */}
         <div
-          className="absolute right-2 bottom-2 sm:right-4 sm:bottom-4 md:right-5 md:bottom-5 z-10 flex glass-panel rounded-lg sm:rounded-xl md:rounded-2xl px-2 py-1.5 sm:px-2.5 sm:py-2 md:px-4 md:py-3 shadow-elegant items-center gap-1.5 sm:gap-2 md:gap-3 animate-float-hero"
-          style={{
-            animationDuration: "8s",
-            animationDelay: "-4s",
-            transform: `translate3d(${tx * -1.6}px, ${ty * -1.6}px, 40px)`,
-          }}
+          className="absolute -right-4 bottom-8 hidden md:flex glass-panel rounded-2xl px-4 py-3 shadow-elegant items-center gap-3 animate-float-hero"
+          style={{ transform: "translateZ(110px)", animationDelay: "2.5s" }}
         >
           <span
-            className="inline-flex h-5 w-5 sm:h-7 sm:w-7 md:h-10 md:w-10 items-center justify-center rounded-md sm:rounded-lg md:rounded-xl text-white shadow-glow"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-glow"
             style={{ background: "var(--gradient-brand-strong)" }}
           >
-            <ShieldCheck className="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 md:h-5 md:w-5" />
+            <ShieldCheck className="h-5 w-5" />
           </span>
           <div className="leading-tight">
-            <div className="text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.12em] md:tracking-[0.14em] text-muted-foreground">
+            <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
               {t("hero.stat.compliance")}
             </div>
-            <div className="font-display text-xs sm:text-sm md:text-lg text-foreground">100%</div>
+            <div className="font-display text-lg text-foreground">100%</div>
           </div>
-        </div>
         </div>
       </div>
     </div>
   );
 }
-
