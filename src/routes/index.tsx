@@ -192,7 +192,7 @@ function TrustCards() {
   ];
 
   return (
-    <section className="container-page -mt-8 pb-24 md:-mt-14 md:pb-28">
+    <section className="container-page -mt-4 md:-mt-8 pb-24 md:pb-28">
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c, i) => (
           <div
