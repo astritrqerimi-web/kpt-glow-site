@@ -262,6 +262,13 @@ export const trustQuery = () =>
     staleTime: 60_000,
   });
 
+export const heroTrustQuery = () =>
+  queryOptions({
+    queryKey: ["site_content", "hero_trust"],
+    queryFn: () => fetchContent<HeroTrustContent>("hero_trust", DEFAULTS.hero_trust),
+    staleTime: 60_000,
+  });
+
 export const newsHomeQuery = () =>
   queryOptions({
     queryKey: ["site_content", "news_home"],
