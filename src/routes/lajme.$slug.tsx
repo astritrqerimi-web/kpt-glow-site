@@ -116,9 +116,10 @@ function ArticleDetailPage() {
   const shareUrl =
     typeof window !== "undefined"
       ? window.location.href
-      : `https://kpt-glow-site.lovable.app/lajme/${article.slug}`;
+      : `https://kpt-glow-site.lovable.app/lajme/${articleUrlSlug(article)}`;
 
-  const safeHtml = sanitizeHtml(article.content_html);
+  const title = articleTitle(article, lang);
+  const safeHtml = sanitizeHtml(articleContent(article, lang));
 
   return (
     <article className="pt-10 md:pt-16 pb-20">
@@ -144,7 +145,7 @@ function ArticleDetailPage() {
           </span>
         )}
         <h1 className="mt-5 text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground leading-tight">
-          {article.title}
+          {title}
         </h1>
         <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
@@ -168,7 +169,7 @@ function ArticleDetailPage() {
           <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-border/60 shadow-elegant">
             <img
               src={article.cover_image_url}
-              alt={article.title}
+              alt={title}
               className="w-full h-auto object-cover"
             />
           </div>
