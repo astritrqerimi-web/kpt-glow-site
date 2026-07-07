@@ -39,8 +39,14 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isNews = pathname.startsWith("/lajme");
+
   useEffect(() => {
-    const ids = NAV.map((n) => n.hash.replace("#", ""));
+    if (pathname !== "/") return;
+    const ids = NAV.filter((n): n is Extract<NavItem, { kind: "hash" }> => n.kind === "hash").map(
+      (n) => n.hash.replace("#", ""),
+    );
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
@@ -55,7 +61,7 @@ export function Header() {
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   const handleNav = (e: React.MouseEvent, hash: string) => {
     if (window.location.pathname === "/") {
