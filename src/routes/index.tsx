@@ -111,7 +111,7 @@ function HeroSection() {
         />
       </div>
 
-      <div className="container-page grid gap-12 pt-14 pb-20 md:pt-20 md:pb-28 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16">
+      <div className="container-page grid gap-12 pt-14 pb-20 md:pt-20 md:pb-28 lg:grid-cols-[1fr_1.25fr] lg:items-center lg:gap-16">
         {/* LEFT — copy */}
         <div className="relative">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur px-4 py-1.5 text-xs font-medium text-primary shadow-soft animate-fade-up">
@@ -163,75 +163,13 @@ function HeroSection() {
 
         {/* RIGHT — 3D visual */}
         <div
-          className="relative animate-fade-up"
+          className="relative animate-fade-up lg:-mr-8 xl:-mr-16"
           style={{ animationDelay: "200ms" }}
         >
-          {/* Glow behind image */}
-          <div
-            aria-hidden
-            className="absolute inset-0 -z-10 blur-3xl opacity-70"
-            style={{
-              background:
-                "radial-gradient(60% 60% at 50% 50%, oklch(0.78 0.18 165 / 0.55), transparent 70%)",
-            }}
-          />
-
-          <div className="relative mx-auto max-w-lg lg:max-w-none">
-            <div
-              className="relative overflow-hidden rounded-[2.25rem] border border-white/40 bg-background/40 backdrop-blur-xl shadow-elegant animate-float-slow"
-            >
-              <img
-                src={hero.image || heroVisual.url}
-                alt="Vizualizim premium — kontabilitet dhe konsulencë biznesi"
-                width={1280}
-                height={1280}
-                className="block h-auto w-full"
-              />
-              {/* Subtle inner highlight */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 30%, transparent 70%, rgba(255,255,255,0.08) 100%)",
-                }}
-              />
-            </div>
-
-            {/* Floating glass stat cards */}
-            <div
-              className="absolute -left-4 top-8 hidden md:flex glass-panel rounded-2xl px-4 py-3 shadow-elegant items-center gap-3 animate-float-slow"
-              style={{ animationDelay: "1s" }}
-            >
-              <span
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-glow"
-                style={{ background: "var(--gradient-brand-strong)" }}
-              >
-                <TrendingUp className="h-5 w-5" />
-              </span>
-              <div className="leading-tight">
-                <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{t("hero.stat.growth")}</div>
-                <div className="font-display text-lg text-foreground">+34%</div>
-              </div>
-            </div>
-
-            <div
-              className="absolute -right-4 bottom-8 hidden md:flex glass-panel rounded-2xl px-4 py-3 shadow-elegant items-center gap-3 animate-float-slow"
-              style={{ animationDelay: "2.5s" }}
-            >
-              <span
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-glow"
-                style={{ background: "var(--gradient-brand-strong)" }}
-              >
-                <ShieldCheck className="h-5 w-5" />
-              </span>
-              <div className="leading-tight">
-                <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{t("hero.stat.compliance")}</div>
-                <div className="font-display text-lg text-foreground">100%</div>
-              </div>
-            </div>
-          </div>
+          <Hero3DVisual imageUrl={hero.image} />
         </div>
+      </div>
+
       </div>
 
       {/* Trust marquee below hero */}
