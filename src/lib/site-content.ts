@@ -161,6 +161,17 @@ const DEFAULTS = {
     keywords: "",
   } as SeoContent,
   trust: { items: [] } as TrustContent,
+  hero_trust: {
+    items: [
+      { id: "c1", icon: "Users", color: "#0F8B8D", value_al: "50+", value_en: "50+", label_al: "Klientë të kënaqur", label_en: "Happy clients", is_active: true, sort_order: 1 },
+      { id: "c2", icon: "LineChart", color: "#0F8B8D", value_al: "10+", value_en: "10+", label_al: "Vite përvojë", label_en: "Years of experience", is_active: true, sort_order: 2 },
+      { id: "c3", icon: "ShieldCheck", color: "#0F8B8D", value_al: "100%", value_en: "100%", label_al: "Përputhshmëri ligjore", label_en: "Legal compliance", is_active: true, sort_order: 3 },
+      { id: "c4", icon: "Headphones", color: "#0F8B8D", value_al: "24/7", value_en: "24/7", label_al: "Mbështetje & Këshillim", label_en: "Support & Advisory", is_active: true, sort_order: 4 },
+    ],
+    speed: 50,
+    direction: "left",
+    pause_on_hover: true,
+  } as HeroTrustContent,
   news_home: {
     badge: { al: "Përditësime & Njoftime", en: "Updates & Announcements" },
     title: { al: "Përditësime Ligjore dhe Tatimore", en: "Legal and Tax Updates" },
