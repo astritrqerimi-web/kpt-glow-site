@@ -405,6 +405,7 @@ function ContentAdmin() {
   const { data: hero } = useQuery(heroQuery());
   const { data: about } = useQuery(aboutQuery());
   const { data: trust } = useQuery(trustQuery());
+  const { data: heroTrust } = useQuery(heroTrustQuery());
   const { data: newsHome } = useQuery(newsHomeQuery());
   const { data: servicesSec } = useQuery(servicesSectionQuery());
   const { data: contactSec } = useQuery(contactSectionQuery());
@@ -412,6 +413,7 @@ function ContentAdmin() {
   const [heroDraft, setHeroDraft] = useState<any>(null);
   const [aboutDraft, setAboutDraft] = useState<any>(null);
   const [trustDraft, setTrustDraft] = useState<{ items: TrustItem[] } | null>(null);
+  const [heroTrustDraft, setHeroTrustDraft] = useState<HeroTrustContent | null>(null);
   const [newsHomeDraft, setNewsHomeDraft] = useState<any>(null);
   const [servicesSecDraft, setServicesSecDraft] = useState<any>(null);
   const [contactSecDraft, setContactSecDraft] = useState<any>(null);
@@ -419,6 +421,7 @@ function ContentAdmin() {
   useEffect(() => { if (hero && !heroDraft) setHeroDraft(hero); }, [hero]); // eslint-disable-line
   useEffect(() => { if (about && !aboutDraft) setAboutDraft(about); }, [about]); // eslint-disable-line
   useEffect(() => { if (trust && !trustDraft) setTrustDraft({ items: trust.items ?? [] }); }, [trust]); // eslint-disable-line
+  useEffect(() => { if (heroTrust && !heroTrustDraft) setHeroTrustDraft(heroTrust); }, [heroTrust]); // eslint-disable-line
   useEffect(() => { if (newsHome && !newsHomeDraft) setNewsHomeDraft(newsHome); }, [newsHome]); // eslint-disable-line
   useEffect(() => { if (servicesSec && !servicesSecDraft) setServicesSecDraft(servicesSec); }, [servicesSec]); // eslint-disable-line
   useEffect(() => { if (contactSec && !contactSecDraft) setContactSecDraft(contactSec); }, [contactSec]); // eslint-disable-line
