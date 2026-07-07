@@ -14,7 +14,7 @@ const NAV: readonly NavItem[] = [
   { kind: "hash", hash: "#rreth-nesh", key: "nav.about" },
   { kind: "hash", hash: "#sherbimet", key: "nav.services" },
   { kind: "route", to: "/lajme", key: "nav.news" },
-  { kind: "hash", hash: "#kontakti", key: "nav.contact" },
+  { kind: "hash", hash: "#kontakti", key: "nav.contactUs" },
 ] as const;
 
 function scrollToHash(hash: string) {
