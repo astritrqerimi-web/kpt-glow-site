@@ -89,6 +89,26 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
           style={{ transform: "translateZ(0)" }}
         />
 
+        {/* Dynamic light reflection */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 mix-blend-screen opacity-70 transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(45% 40% at ${lightX}% ${lightY}%, oklch(1 0 0 / 0.35), transparent 70%)`,
+          }}
+        />
+        {/* Shine sweep */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 animate-shine-sweep"
+          style={{
+            background:
+              "linear-gradient(115deg, transparent 20%, oklch(1 0 0 / 0.28) 50%, transparent 80%)",
+          }}
+        />
+
+
+
         {/* Growth badge — top left */}
         <div
           className="absolute left-2 top-2 sm:left-4 sm:top-4 md:left-5 md:top-5 z-10 flex glass-panel rounded-lg sm:rounded-xl md:rounded-2xl px-2 py-1.5 sm:px-2.5 sm:py-2 md:px-4 md:py-3 shadow-elegant items-center gap-1.5 sm:gap-2 md:gap-3 animate-float-hero"
