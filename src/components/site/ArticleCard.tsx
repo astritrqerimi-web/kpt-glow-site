@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Calendar } from "lucide-react";
 import type { Article, ArticleCategory } from "@/lib/articles";
-import { categoryName, formatDate } from "@/lib/articles";
+import { articleUrlSlug, categoryName, formatDate } from "@/lib/articles";
 import { useI18n } from "@/lib/i18n";
 
 interface Props {
@@ -13,11 +13,12 @@ export function ArticleCard({ article, categories }: Props) {
   const { lang, t } = useI18n();
   const cat = categories.find((c) => c.slug === article.category_slug);
   const dateStr = formatDate(article.published_at, lang);
+  const slug = articleUrlSlug(article);
 
   return (
     <Link
       to="/lajme/$slug"
-      params={{ slug: article.slug }}
+      params={{ slug }}
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-background/60 backdrop-blur-xl shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-elegant hover:border-primary/30"
     >
       <div className="relative aspect-[16/9] overflow-hidden bg-muted">

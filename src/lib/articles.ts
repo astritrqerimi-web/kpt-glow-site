@@ -57,6 +57,30 @@ const from = () => (supabase as any).from("articles");
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fromCats = () => (supabase as any).from("article_categories");
 
+function slugifyTitle(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ç/g, "c")
+    .replace(/ë/g, "e")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 96);
+}
+
+export function articleUrlSlug(article: Pick<Article, "slug" | "title">): string {
+  return article.slug?.trim() || slugifyTitle(article.title);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function publishedOnly(query: any) {
+  return query
+    .eq("status", "published")
+    .not("published_at", "is", null)
+    .lte("published_at", new Date().toISOString());
+}
+
 export const categoriesQuery = () =>
   queryOptions({
     queryKey: ["article_categories"],
@@ -72,8 +96,7 @@ export const latestArticlesQuery = (limit = 4) =>
   queryOptions({
     queryKey: ["articles", "latest", limit],
     queryFn: async (): Promise<Article[]> => {
-      const { data, error } = await from()
-        .select(ARTICLE_COLUMNS)
+      const { data, error } = await publishedOnly(from().select(ARTICLE_COLUMNS))
         .order("is_sticky", { ascending: false })
         .order("published_at", { ascending: false })
         .limit(limit);
@@ -98,7 +121,7 @@ export const articlesListQuery = (params: ListParams) =>
       const pageSize = params.pageSize ?? 12;
       const page = Math.max(1, params.page ?? 1);
       const ascending = params.sort === "oldest";
-      let query = from().select(ARTICLE_COLUMNS, { count: "exact" });
+      let query = publishedOnly(from().select(ARTICLE_COLUMNS, { count: "exact" }));
       if (params.category && params.category !== "all") {
         query = query.eq("category_slug", params.category);
       }
@@ -121,9 +144,17 @@ export const articleBySlugQuery = (slug: string) =>
   queryOptions({
     queryKey: ["articles", "slug", slug],
     queryFn: async (): Promise<Article | null> => {
-      const { data, error } = await from().select(ARTICLE_COLUMNS).eq("slug", slug).maybeSingle();
+      const { data, error } = await publishedOnly(from().select(ARTICLE_COLUMNS))
+        .eq("slug", slug)
+        .maybeSingle();
       if (error) throw error;
-      return (data as Article | null) ?? null;
+      if (data) return data as Article;
+
+      const { data: fallbackData, error: fallbackError } = await publishedOnly(
+        from().select(ARTICLE_COLUMNS),
+      ).order("published_at", { ascending: false });
+      if (fallbackError) throw fallbackError;
+      return ((fallbackData ?? []) as Article[]).find((article) => articleUrlSlug(article) === slug) ?? null;
     },
     staleTime: 60_000,
   });
@@ -132,8 +163,7 @@ export const relatedArticlesQuery = (categorySlug: string, excludeId: string, li
   queryOptions({
     queryKey: ["articles", "related", categorySlug, excludeId, limit],
     queryFn: async (): Promise<Article[]> => {
-      const { data, error } = await from()
-        .select(ARTICLE_COLUMNS)
+      const { data, error } = await publishedOnly(from().select(ARTICLE_COLUMNS))
         .eq("category_slug", categorySlug)
         .neq("id", excludeId)
         .order("published_at", { ascending: false })
@@ -151,12 +181,16 @@ export const prevNextArticleQuery = (publishedAt: string, id: string) =>
       const [prevRes, nextRes] = await Promise.all([
         from()
           .select(ARTICLE_COLUMNS)
+          .eq("status", "published")
+          .not("published_at", "is", null)
           .lt("published_at", publishedAt)
           .order("published_at", { ascending: false })
           .limit(1)
           .maybeSingle(),
         from()
           .select(ARTICLE_COLUMNS)
+          .eq("status", "published")
+          .not("published_at", "is", null)
           .gt("published_at", publishedAt)
           .order("published_at", { ascending: true })
           .limit(1)
