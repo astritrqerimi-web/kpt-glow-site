@@ -666,7 +666,7 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
           </div>
 
           <div className="rounded-xl border border-border/60 bg-background/60 p-4 space-y-3">
-            <div className="text-sm font-semibold">SEO</div>
+            <div className="text-sm font-semibold">SEO (AL)</div>
             <input
               value={draft.seo_title}
               onChange={(e) => set("seo_title", e.target.value)}
@@ -677,6 +677,23 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
               value={draft.seo_description}
               onChange={(e) => set("seo_description", e.target.value)}
               placeholder="Meta description (opsional)"
+              rows={3}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm resize-none"
+            />
+          </div>
+
+          <div className="rounded-xl border border-border/60 bg-background/60 p-4 space-y-3">
+            <div className="text-sm font-semibold">SEO (EN)</div>
+            <input
+              value={draft.seo_title_en}
+              onChange={(e) => set("seo_title_en", e.target.value)}
+              placeholder="SEO title (optional)"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            />
+            <textarea
+              value={draft.seo_description_en}
+              onChange={(e) => set("seo_description_en", e.target.value)}
+              placeholder="Meta description (optional)"
               rows={3}
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm resize-none"
             />
