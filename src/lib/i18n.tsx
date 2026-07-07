@@ -143,6 +143,7 @@ const translations: Record<Lang, Dict> = {
     "nav.home": "Home",
     "nav.about": "About Us",
     "nav.services": "Services",
+    "nav.news": "News & Announcements",
     "nav.contact": "Contact",
     "nav.contactUs": "Contact Us",
     "nav.menu": "Menu",
