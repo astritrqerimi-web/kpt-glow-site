@@ -429,7 +429,8 @@ function buildContactSchema(t: (k: string) => string) {
 
 function ContactSection() {
   const { data: company } = useSuspenseQuery(companyQuery());
-  const { t } = useI18n();
+  const { data: sec } = useSuspenseQuery(contactSectionQuery());
+  const { t, lang } = useI18n();
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", serviceOther: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
