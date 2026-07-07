@@ -67,50 +67,45 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
         className="animate-scene-rotate"
         style={{ transformStyle: "preserve-3d" }}
       >
-        {/* Premium white card wrapper — same on mobile and desktop */}
+        {/* Floating frameless card with parallax + hover pop-out */}
         <div
-          className="group relative animate-float-hero rounded-[28px] sm:rounded-[32px] lg:rounded-[36px] bg-background p-3 sm:p-4 border border-border/40 transition-transform duration-500 ease-out hover:scale-[1.04]"
+          className="group relative animate-float-hero rounded-[28px] sm:rounded-[32px] lg:rounded-[36px] overflow-hidden transition-transform duration-500 ease-out hover:scale-[1.04]"
           style={{
             transform: `rotateY(${rotY}deg) rotateX(${rotX}deg) translate3d(${tx}px, ${ty}px, 0)`,
             transformStyle: "preserve-3d",
             boxShadow:
-              "0 50px 100px -40px oklch(0.40 0.09 210 / 0.28), 0 22px 50px -20px oklch(0.40 0.09 210 / 0.18), 0 6px 14px -6px oklch(0.40 0.09 210 / 0.10)",
+              "0 50px 100px -40px oklch(0.40 0.09 210 / 0.35), 0 22px 50px -20px oklch(0.40 0.09 210 / 0.22), 0 6px 14px -6px oklch(0.40 0.09 210 / 0.12)",
           }}
         >
-          {/* Inner rounded image surface */}
-          <div className="relative overflow-hidden rounded-[22px] sm:rounded-[26px] lg:rounded-[30px]">
-            <img
-              src={src}
-              alt={alt || "Vizualizim premium — kontabilitet dhe konsulencë biznesi"}
-              width={1536}
-              height={1024}
-              loading="eager"
-              decoding="async"
-              className="block h-auto w-full select-none object-contain"
-              draggable={false}
-              style={{ transform: "translateZ(0)" }}
-            />
+        <img
+          src={src}
+          alt={alt || "Vizualizim premium — kontabilitet dhe konsulencë biznesi"}
+          width={1536}
+          height={1024}
+          loading="eager"
+          decoding="async"
+          className="block h-auto w-full select-none object-contain"
+          draggable={false}
+          style={{ transform: "translateZ(0)" }}
+        />
 
-            {/* Dynamic light reflection */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 mix-blend-screen opacity-70 transition-opacity duration-300"
-              style={{
-                background: `radial-gradient(45% 40% at ${lightX}% ${lightY}%, oklch(1 0 0 / 0.35), transparent 70%)`,
-              }}
-            />
-            {/* Shine sweep */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 animate-shine-sweep"
-              style={{
-                background:
-                  "linear-gradient(115deg, transparent 20%, oklch(1 0 0 / 0.28) 50%, transparent 80%)",
-              }}
-            />
-          </div>
-
-
+        {/* Dynamic light reflection */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 mix-blend-screen opacity-70 transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(45% 40% at ${lightX}% ${lightY}%, oklch(1 0 0 / 0.35), transparent 70%)`,
+          }}
+        />
+        {/* Shine sweep */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 animate-shine-sweep"
+          style={{
+            background:
+              "linear-gradient(115deg, transparent 20%, oklch(1 0 0 / 0.28) 50%, transparent 80%)",
+          }}
+        />
 
 
 
