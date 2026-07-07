@@ -202,7 +202,7 @@ function ArticleDetailPage() {
                 >
                   <img
                     src={g.url}
-                    alt={g.caption || `${article.title} ${i + 1}`}
+                    alt={g.caption || `${title} ${i + 1}`}
                     loading="lazy"
                     className="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
                   />
