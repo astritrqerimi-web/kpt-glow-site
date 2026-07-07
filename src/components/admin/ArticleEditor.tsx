@@ -166,15 +166,31 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
       toast.error("Titulli është i detyrueshëm");
       return;
     }
-    if (!draft.slug.trim()) {
-      toast.error("Slug është i detyrueshëm");
-      return;
-    }
     setSaving(true);
     try {
       const status = statusOverride ?? draft.status;
+      const table = (supabase as any).from("articles");
+      const baseSlug = makeSlug(draft.slug || draft.title);
+      if (!baseSlug) {
+        toast.error("Slug nuk mund të gjenerohet pa titull");
+        setSaving(false);
+        return;
+      }
+
+      let uniqueSlug = baseSlug;
+      for (let suffix = 2; suffix < 100; suffix += 1) {
+        const { data: existing, error: slugError } = await table
+          .select("id")
+          .eq("slug", uniqueSlug)
+          .limit(1);
+        if (slugError) throw slugError;
+        const ownerId = existing?.[0]?.id as string | undefined;
+        if (!ownerId || ownerId === draft.id) break;
+        uniqueSlug = `${baseSlug}-${suffix}`;
+      }
+
       const payload: Record<string, unknown> = {
-        slug: draft.slug,
+        slug: uniqueSlug,
         category_slug: draft.category_slug,
         title: draft.title,
         excerpt: draft.excerpt,
@@ -209,8 +225,6 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
         payload.published_at = null;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const table = (supabase as any).from("articles");
       if (draft.id) {
         const { error } = await table.update(payload).eq("id", draft.id);
         if (error) throw error;
