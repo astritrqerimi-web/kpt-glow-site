@@ -404,12 +404,15 @@ function ContentAdmin() {
   const { data: hero } = useQuery(heroQuery());
   const { data: about } = useQuery(aboutQuery());
   const { data: trust } = useQuery(trustQuery());
+  const { data: newsHome } = useQuery(newsHomeQuery());
   const [heroDraft, setHeroDraft] = useState<any>(null);
   const [aboutDraft, setAboutDraft] = useState<any>(null);
   const [trustDraft, setTrustDraft] = useState<{ items: TrustItem[] } | null>(null);
+  const [newsHomeDraft, setNewsHomeDraft] = useState<any>(null);
   useEffect(() => { if (hero && !heroDraft) setHeroDraft(hero); }, [hero]); // eslint-disable-line
   useEffect(() => { if (about && !aboutDraft) setAboutDraft(about); }, [about]); // eslint-disable-line
   useEffect(() => { if (trust && !trustDraft) setTrustDraft({ items: trust.items ?? [] }); }, [trust]); // eslint-disable-line
+  useEffect(() => { if (newsHome && !newsHomeDraft) setNewsHomeDraft(newsHome); }, [newsHome]); // eslint-disable-line
 
   const save = async (key: string, value: any) => {
     const { error } = await supabase.from("site_content").upsert({ key, value });
