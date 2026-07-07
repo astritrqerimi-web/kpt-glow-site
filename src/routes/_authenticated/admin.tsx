@@ -514,6 +514,67 @@ function ContentAdmin() {
         </div>
       </section>
 
+      {/* SERVICES SECTION HEADINGS */}
+      <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
+        <h3 className="font-display text-xl mb-1">Ballina — Seksioni "Shërbimet"</h3>
+        <p className="text-xs text-muted-foreground mb-4">Titulli, nëntitulli dhe eyebrow-i i seksionit të Shërbimeve në Ballinë. Kartat menaxhohen te tabi "Shërbimet".</p>
+        <div className="grid gap-3">
+          <BilingualField label="Eyebrow (mbi titull)" value={servicesSecDraft.eyebrow} onChange={(v) => setServicesSecDraft({ ...servicesSecDraft, eyebrow: v })} />
+          <div className="grid md:grid-cols-2 gap-3">
+            <BilingualField label="Titulli — pjesa e parë" value={servicesSecDraft.titleA} onChange={(v) => setServicesSecDraft({ ...servicesSecDraft, titleA: v })} />
+            <BilingualField label="Titulli — pjesa e gradientuar" value={servicesSecDraft.titleB} onChange={(v) => setServicesSecDraft({ ...servicesSecDraft, titleB: v })} />
+          </div>
+          <BilingualField label="Nëntitulli / përshkrimi" value={servicesSecDraft.subtitle} onChange={(v) => setServicesSecDraft({ ...servicesSecDraft, subtitle: v })} rows={3} />
+          <button onClick={() => save("services_section", servicesSecDraft)} className="self-start inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
+            <Save className="h-4 w-4" /> Ruaj Seksionin
+          </button>
+        </div>
+      </section>
+
+      {/* CONTACT SECTION HEADINGS */}
+      <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
+        <h3 className="font-display text-xl mb-1">Ballina — Seksioni "Kontakti"</h3>
+        <p className="text-xs text-muted-foreground mb-4">Titujt dhe etiketa "Na Ndiqni".</p>
+        <div className="grid gap-3">
+          <BilingualField label="Eyebrow" value={contactSecDraft.eyebrow} onChange={(v) => setContactSecDraft({ ...contactSecDraft, eyebrow: v })} />
+          <div className="grid md:grid-cols-2 gap-3">
+            <BilingualField label="Titulli — pjesa e parë" value={contactSecDraft.titleA} onChange={(v) => setContactSecDraft({ ...contactSecDraft, titleA: v })} />
+            <BilingualField label="Titulli — pjesa e gradientuar" value={contactSecDraft.titleB} onChange={(v) => setContactSecDraft({ ...contactSecDraft, titleB: v })} />
+          </div>
+          <BilingualField label="Nëntitulli / përshkrimi" value={contactSecDraft.subtitle} onChange={(v) => setContactSecDraft({ ...contactSecDraft, subtitle: v })} rows={3} />
+          <BilingualField label='Etiketa "Na Ndiqni"' value={contactSecDraft.followLabel} onChange={(v) => setContactSecDraft({ ...contactSecDraft, followLabel: v })} />
+          <button onClick={() => save("contact_section", contactSecDraft)} className="self-start inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
+            <Save className="h-4 w-4" /> Ruaj Seksionin
+          </button>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
+        <h3 className="font-display text-xl mb-1">Footer (Fund faqe)</h3>
+        <p className="text-xs text-muted-foreground mb-4">Përshkrimi, titujt e kolonave, copyright dhe linqet ligjore. Rrjetet sociale dhe kontaktet menaxhohen te tabi "Cilësimet".</p>
+        <div className="grid gap-3">
+          <BilingualField label="Përshkrimi i kompanisë" value={footerDraft.description} onChange={(v) => setFooterDraft({ ...footerDraft, description: v })} rows={3} />
+          <div className="grid md:grid-cols-2 gap-3">
+            <BilingualField label='Titulli i kolonës "Menuja"' value={footerDraft.menuTitle} onChange={(v) => setFooterDraft({ ...footerDraft, menuTitle: v })} />
+            <BilingualField label='Titulli i kolonës "Kontakti"' value={footerDraft.contactTitle} onChange={(v) => setFooterDraft({ ...footerDraft, contactTitle: v })} />
+          </div>
+          <div className="grid md:grid-cols-2 gap-3">
+            <TextInput label="Emri për copyright (© 2026 ...)" value={footerDraft.copyrightName} onChange={(v) => setFooterDraft({ ...footerDraft, copyrightName: v })} />
+            <BilingualField label='Teksti "Të gjitha të drejtat..."' value={footerDraft.rights} onChange={(v) => setFooterDraft({ ...footerDraft, rights: v })} />
+          </div>
+          <div className="grid md:grid-cols-2 gap-3">
+            <BilingualField label="Etiketa — Politika e Privatësisë" value={footerDraft.privacyLabel} onChange={(v) => setFooterDraft({ ...footerDraft, privacyLabel: v })} />
+            <TextInput label="URL — Politika e Privatësisë" value={footerDraft.privacyUrl} onChange={(v) => setFooterDraft({ ...footerDraft, privacyUrl: v })} />
+            <BilingualField label="Etiketa — Kushtet e Përdorimit" value={footerDraft.termsLabel} onChange={(v) => setFooterDraft({ ...footerDraft, termsLabel: v })} />
+            <TextInput label="URL — Kushtet e Përdorimit" value={footerDraft.termsUrl} onChange={(v) => setFooterDraft({ ...footerDraft, termsUrl: v })} />
+          </div>
+          <button onClick={() => save("footer", footerDraft)} className="self-start inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
+            <Save className="h-4 w-4" /> Ruaj Footer
+          </button>
+        </div>
+      </section>
+
 
       {/* TRUST STRIP */}
       <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
