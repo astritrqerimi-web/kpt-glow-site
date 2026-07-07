@@ -59,6 +59,25 @@ export interface TrustContent {
   items: TrustItem[];
 }
 
+export interface HeroTrustItem {
+  id?: string;
+  icon: string; // lucide icon name from HERO_TRUST_ICONS
+  color?: string; // hex color of the icon
+  value_al: string; // e.g. "50+"
+  value_en: string;
+  label_al: string; // e.g. "Klientë të kënaqur"
+  label_en: string;
+  is_active: boolean;
+  sort_order: number;
+}
+export interface HeroTrustContent {
+  items: HeroTrustItem[];
+  speed: number; // seconds for one full loop (higher = slower)
+  direction: "left" | "right";
+  pause_on_hover: boolean;
+}
+
+
 export interface NewsHomeContent {
   badge: Bilingual;
   title: Bilingual;
