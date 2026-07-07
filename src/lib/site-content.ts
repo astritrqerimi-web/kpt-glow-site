@@ -156,6 +156,15 @@ export const trustQuery = () =>
     staleTime: 60_000,
   });
 
+export const newsHomeQuery = () =>
+  queryOptions({
+    queryKey: ["site_content", "news_home"],
+    queryFn: () => fetchContent<NewsHomeContent>("news_home", DEFAULTS.news_home),
+    staleTime: 60_000,
+  });
+
+
+
 export const servicesQuery = (includeInactive = false) =>
   queryOptions({
     queryKey: ["services", includeInactive],
