@@ -32,7 +32,7 @@ import {
   pick,
 } from "@/lib/site-content";
 import { ServiceIcon } from "@/components/site/ServiceIcon";
-import { TrustMarquee } from "@/components/site/TrustMarquee";
+import { HeroStats } from "@/components/site/HeroStats";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useI18n, SERVICE_TRANSLATIONS } from "@/lib/i18n";
@@ -92,6 +92,7 @@ function HeroSection() {
 
 
   return (
+    <>
     <section
       id="ballina"
       className={`relative overflow-hidden ${sectionAnchor}`}
@@ -170,12 +171,11 @@ function HeroSection() {
         </div>
       </div>
 
-
-      {/* Trust marquee below hero */}
-      <div className="container-page pb-16 md:pb-20 animate-fade-up" style={{ animationDelay: "360ms" }}>
-        <TrustMarquee />
-      </div>
     </section>
+    <div className="animate-fade-up" style={{ animationDelay: "360ms" }}>
+      <HeroStats />
+    </div>
+    </>
   );
 }
 
