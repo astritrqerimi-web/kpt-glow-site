@@ -331,14 +331,95 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
       <div className="container-page py-6 grid gap-6 lg:grid-cols-[1fr_360px]">
         {/* Main */}
         <div className="space-y-5">
-          <Field label="Titulli">
-            <input
-              value={draft.title}
-              onChange={(e) => set("title", e.target.value)}
-              placeholder="p.sh. Ndryshimet e reja në deklarimin e TVSH-së"
-              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
-            />
-          </Field>
+          {/* Language tabs for translated fields */}
+          <div className="inline-flex rounded-full border border-border bg-background p-1 text-xs font-medium">
+            <button
+              type="button"
+              onClick={() => setContentLang("al")}
+              className={`px-4 py-1.5 rounded-full transition ${
+                contentLang === "al"
+                  ? "text-white shadow-soft"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              style={contentLang === "al" ? { background: "var(--gradient-brand)" } : undefined}
+            >
+              🇦🇱 Shqip
+            </button>
+            <button
+              type="button"
+              onClick={() => setContentLang("en")}
+              className={`px-4 py-1.5 rounded-full transition ${
+                contentLang === "en"
+                  ? "text-white shadow-soft"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              style={contentLang === "en" ? { background: "var(--gradient-brand)" } : undefined}
+            >
+              🇬🇧 English
+            </button>
+          </div>
+
+          {contentLang === "al" ? (
+            <>
+              <Field label="Titulli (AL)">
+                <input
+                  value={draft.title}
+                  onChange={(e) => set("title", e.target.value)}
+                  placeholder="p.sh. Ndryshimet e reja në deklarimin e TVSH-së"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </Field>
+
+              <Field label="Përshkrim i shkurtër (AL)">
+                <textarea
+                  value={draft.excerpt}
+                  onChange={(e) => set("excerpt", e.target.value)}
+                  rows={3}
+                  placeholder="Përmbledhje 1–2 fjali që shfaqet në kartë e lajmit."
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm resize-none"
+                />
+              </Field>
+
+              <Field label="Përmbajtja (AL)">
+                <RichTextEditor
+                  value={draft.content_html}
+                  onChange={(html) => set("content_html", html)}
+                  articleId={draft.id}
+                  placeholder="Fillo të shkruash artikullin..."
+                />
+              </Field>
+            </>
+          ) : (
+            <>
+              <Field label="Title (EN)">
+                <input
+                  value={draft.title_en}
+                  onChange={(e) => set("title_en", e.target.value)}
+                  placeholder="e.g. New VAT declaration changes"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </Field>
+
+              <Field label="Short excerpt (EN)">
+                <textarea
+                  value={draft.excerpt_en}
+                  onChange={(e) => set("excerpt_en", e.target.value)}
+                  rows={3}
+                  placeholder="1–2 sentence summary shown on the card."
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm resize-none"
+                />
+              </Field>
+
+              <Field label="Content (EN)">
+                <RichTextEditor
+                  value={draft.content_html_en}
+                  onChange={(html) => set("content_html_en", html)}
+                  articleId={draft.id}
+                  placeholder="Start writing the article..."
+                />
+              </Field>
+            </>
+          )}
 
           <Field label="Slug (URL)">
             <input
@@ -352,24 +433,6 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
             <div className="mt-1 text-[11px] text-muted-foreground">/lajme/{draft.slug || "…"}</div>
           </Field>
 
-          <Field label="Përshkrim i shkurtër (excerpt)">
-            <textarea
-              value={draft.excerpt}
-              onChange={(e) => set("excerpt", e.target.value)}
-              rows={3}
-              placeholder="Përmbledhje 1–2 fjali që shfaqet në kartë e lajmit."
-              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm resize-none"
-            />
-          </Field>
-
-          <Field label="Përmbajtja">
-            <RichTextEditor
-              value={draft.content_html}
-              onChange={(html) => set("content_html", html)}
-              articleId={draft.id}
-              placeholder="Fillo të shkruash artikullin..."
-            />
-          </Field>
 
           {/* Gallery */}
           <div className="rounded-xl border border-border/60 bg-background/60 p-4">
