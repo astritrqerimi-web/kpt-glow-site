@@ -231,6 +231,29 @@ export const newsHomeQuery = () =>
     staleTime: 60_000,
   });
 
+export const servicesSectionQuery = () =>
+  queryOptions({
+    queryKey: ["site_content", "services_section"],
+    queryFn: () => fetchContent<ServicesSectionContent>("services_section", DEFAULTS.services_section),
+    staleTime: 60_000,
+  });
+
+export const contactSectionQuery = () =>
+  queryOptions({
+    queryKey: ["site_content", "contact_section"],
+    queryFn: () => fetchContent<ContactSectionContent>("contact_section", DEFAULTS.contact_section),
+    staleTime: 60_000,
+  });
+
+export const footerQuery = () =>
+  queryOptions({
+    queryKey: ["site_content", "footer"],
+    queryFn: () => fetchContent<FooterContent>("footer", DEFAULTS.footer),
+    staleTime: 60_000,
+  });
+
+
+
 
 
 export const servicesQuery = (includeInactive = false) =>
