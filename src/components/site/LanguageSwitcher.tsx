@@ -1,8 +1,8 @@
 import { useI18n, type Lang } from "@/lib/i18n";
-import { KosovoFlag, UsFlag } from "@/components/site/Flags";
+import { AlbaniaFlag, UsFlag } from "@/components/site/Flags";
 
 const langs: Record<Lang, { label: string; code: string; flag: React.FC<{ className?: string }> }> = {
-  sq: { label: "Shqip", code: "AL", flag: KosovoFlag },
+  sq: { label: "Shqip", code: "AL", flag: AlbaniaFlag },
   en: { label: "English", code: "EN", flag: UsFlag },
 };
 
