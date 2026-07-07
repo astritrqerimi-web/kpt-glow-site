@@ -19,9 +19,12 @@ export interface CompanyInfo {
   email: string;
   address: string;
   mapsQuery: string;
+  workingHours?: Bilingual;
   facebook: string;
   instagram: string;
   linkedin: string;
+  tiktok?: string;
+  youtube?: string;
 }
 
 export interface HeroContent {
