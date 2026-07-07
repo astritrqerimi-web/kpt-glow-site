@@ -66,6 +66,34 @@ export interface NewsHomeContent {
   viewAll: Bilingual;
 }
 
+export interface ServicesSectionContent {
+  eyebrow: Bilingual;
+  titleA: Bilingual;
+  titleB: Bilingual;
+  subtitle: Bilingual;
+}
+
+export interface ContactSectionContent {
+  eyebrow: Bilingual;
+  titleA: Bilingual;
+  titleB: Bilingual;
+  subtitle: Bilingual;
+  followLabel: Bilingual;
+}
+
+export interface FooterContent {
+  description: Bilingual;
+  menuTitle: Bilingual;
+  contactTitle: Bilingual;
+  rights: Bilingual;
+  copyrightName: string;
+  privacyLabel: Bilingual;
+  privacyUrl: string;
+  termsLabel: Bilingual;
+  termsUrl: string;
+}
+
+
 export interface Service {
   id: string;
   title: string;
