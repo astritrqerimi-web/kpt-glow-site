@@ -344,16 +344,17 @@ function AboutSection() {
 /* ---------------- SHËRBIMET ---------------- */
 function ServicesSection() {
   const { data: services } = useSuspenseQuery(servicesQuery());
+  const { data: sec } = useSuspenseQuery(servicesSectionQuery());
   const { t, lang } = useI18n();
   return (
     <section id="sherbimet" className={`container-page pb-24 ${sectionAnchor}`}>
       <div className="max-w-3xl">
-        <div className="text-xs uppercase tracking-[0.2em] text-primary">{t("services.eyebrow")}</div>
+        <div className="text-xs uppercase tracking-[0.2em] text-primary">{pick(sec.eyebrow, lang, t("services.eyebrow"))}</div>
         <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-foreground">
-          {t("services.title.a")} <span className="text-gradient-brand">{t("services.title.b")}</span>
+          {pick(sec.titleA, lang, t("services.title.a"))} <span className="text-gradient-brand">{pick(sec.titleB, lang, t("services.title.b"))}</span>
         </h2>
         <p className="mt-5 text-lg text-muted-foreground max-w-2xl">
-          {t("services.subtitle")}
+          {pick(sec.subtitle, lang, t("services.subtitle"))}
         </p>
       </div>
 
