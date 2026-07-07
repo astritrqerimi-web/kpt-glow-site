@@ -170,12 +170,11 @@ function HeroSection() {
         </div>
       </div>
 
-
-      {/* Trust marquee below hero */}
-      <div className="container-page pb-16 md:pb-20 animate-fade-up" style={{ animationDelay: "360ms" }}>
-        <TrustMarquee />
-      </div>
     </section>
+    <div className="animate-fade-up" style={{ animationDelay: "360ms" }}>
+      <HeroStats />
+    </div>
+    </>
   );
 }
 
