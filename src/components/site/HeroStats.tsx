@@ -66,7 +66,7 @@ export function HeroStats() {
   const pauseOnHover = data.pause_on_hover !== false;
 
   return (
-    <div className="container-page relative z-20 -mt-6 md:-mt-10 mb-8 md:mb-12">
+    <div className="container-page relative z-20 -mt-10 md:-mt-16 lg:-mt-20 mb-10 md:mb-14">
       <div
         className="hero-stats-card group relative overflow-hidden rounded-2xl md:rounded-[20px] border border-white/40 bg-white/45 backdrop-blur-md shadow-[0_10px_30px_-18px_rgba(15,139,141,0.25)]"
         style={{
