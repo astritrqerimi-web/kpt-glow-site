@@ -32,8 +32,11 @@ type Draft = {
   slug: string;
   category_slug: string;
   title: string;
+  title_en: string;
   excerpt: string;
+  excerpt_en: string;
   content_html: string;
+  content_html_en: string;
   cover_image_url: string;
   og_image_url: string;
   gallery: GalleryImage[];
@@ -46,7 +49,9 @@ type Draft = {
   is_featured: boolean;
   is_sticky: boolean;
   seo_title: string;
+  seo_title_en: string;
   seo_description: string;
+  seo_description_en: string;
   comments_enabled: boolean;
 };
 
@@ -56,8 +61,11 @@ function toDraft(a: Article | null, defaultCategory: string): Draft {
     slug: a?.slug ?? "",
     category_slug: a?.category_slug ?? defaultCategory,
     title: a?.title ?? "",
+    title_en: a?.title_en ?? "",
     excerpt: a?.excerpt ?? "",
+    excerpt_en: a?.excerpt_en ?? "",
     content_html: a?.content_html ?? "",
+    content_html_en: a?.content_html_en ?? "",
     cover_image_url: a?.cover_image_url ?? "",
     og_image_url: a?.og_image_url ?? "",
     gallery: a?.gallery ?? [],
@@ -70,7 +78,9 @@ function toDraft(a: Article | null, defaultCategory: string): Draft {
     is_featured: a?.is_featured ?? false,
     is_sticky: a?.is_sticky ?? false,
     seo_title: a?.seo_title ?? "",
+    seo_title_en: a?.seo_title_en ?? "",
     seo_description: a?.seo_description ?? "",
+    seo_description_en: a?.seo_description_en ?? "",
     comments_enabled: a?.comments_enabled ?? false,
   };
 }
