@@ -10,7 +10,7 @@ export function LatestNewsSection() {
   const { data: articles = [] } = useQuery(latestArticlesQuery(4));
   const { data: categories = [] } = useQuery(categoriesQuery());
 
-  if (!articles.length) return null;
+  
 
   return (
     <section id="lajme-home" className="relative scroll-mt-28 md:scroll-mt-32 py-20 md:py-28">
@@ -36,11 +36,22 @@ export function LatestNewsSection() {
           </Link>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {articles.map((a) => (
-            <ArticleCard key={a.id} article={a} categories={categories} />
-          ))}
-        </div>
+        {articles.length > 0 ? (
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {articles.map((a) => (
+              <ArticleCard key={a.id} article={a} categories={categories} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-12 rounded-2xl border border-dashed border-border bg-background/50 backdrop-blur px-6 py-16 text-center">
+            <p className="text-base md:text-lg text-muted-foreground">
+              {t("news.empty.title")}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground/80">
+              {t("news.empty.desc")}
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );
