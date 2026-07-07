@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { servicesQuery, companyQuery, heroQuery, aboutQuery, seoQuery, trustQuery, type Bilingual, type TrustItem } from "@/lib/site-content";
+import { servicesQuery, companyQuery, heroQuery, aboutQuery, seoQuery, trustQuery, newsHomeQuery, type Bilingual, type TrustItem } from "@/lib/site-content";
 import { ServiceIcon, ICON_NAMES } from "@/components/site/ServiceIcon";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { LogOut, Plus, Trash2, Save, Mail, Home, FileEdit, Settings2, Loader2, ShieldAlert, Star, Newspaper } from "lucide-react";
@@ -404,12 +404,15 @@ function ContentAdmin() {
   const { data: hero } = useQuery(heroQuery());
   const { data: about } = useQuery(aboutQuery());
   const { data: trust } = useQuery(trustQuery());
+  const { data: newsHome } = useQuery(newsHomeQuery());
   const [heroDraft, setHeroDraft] = useState<any>(null);
   const [aboutDraft, setAboutDraft] = useState<any>(null);
   const [trustDraft, setTrustDraft] = useState<{ items: TrustItem[] } | null>(null);
+  const [newsHomeDraft, setNewsHomeDraft] = useState<any>(null);
   useEffect(() => { if (hero && !heroDraft) setHeroDraft(hero); }, [hero]); // eslint-disable-line
   useEffect(() => { if (about && !aboutDraft) setAboutDraft(about); }, [about]); // eslint-disable-line
   useEffect(() => { if (trust && !trustDraft) setTrustDraft({ items: trust.items ?? [] }); }, [trust]); // eslint-disable-line
+  useEffect(() => { if (newsHome && !newsHomeDraft) setNewsHomeDraft(newsHome); }, [newsHome]); // eslint-disable-line
 
   const save = async (key: string, value: any) => {
     const { error } = await supabase.from("site_content").upsert({ key, value });
@@ -418,7 +421,7 @@ function ContentAdmin() {
     qc.invalidateQueries({ queryKey: ["site_content"] });
   };
 
-  if (!heroDraft || !aboutDraft || !trustDraft) return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
+  if (!heroDraft || !aboutDraft || !trustDraft || !newsHomeDraft) return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
 
   const iconOptions = ["BadgeCheck", "ShieldCheck", "Briefcase", "TrendingUp", "Award", "Handshake", "Users2", "CheckCircle2", "Target"];
 
@@ -486,6 +489,22 @@ function ContentAdmin() {
           </button>
         </div>
       </section>
+
+      {/* NEWS HOME SECTION */}
+      <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
+        <h3 className="font-display text-xl mb-1">Ballina — Seksioni "Lajme & Njoftime"</h3>
+        <p className="text-xs text-muted-foreground mb-4">Tekstet e seksionit "Përditësime Ligjore dhe Tatimore" në Ballinë. Artikujt tërhiqen automatikisht nga moduli Lajmet.</p>
+        <div className="grid gap-3">
+          <BilingualField label="Badge (mbi titull)" value={newsHomeDraft.badge} onChange={(v) => setNewsHomeDraft({ ...newsHomeDraft, badge: v })} />
+          <BilingualField label="Titulli i seksionit" value={newsHomeDraft.title} onChange={(v) => setNewsHomeDraft({ ...newsHomeDraft, title: v })} />
+          <BilingualField label="Nëntitulli / përshkrimi" value={newsHomeDraft.subtitle} onChange={(v) => setNewsHomeDraft({ ...newsHomeDraft, subtitle: v })} rows={3} />
+          <BilingualField label='Butoni ("Shiko të gjitha")' value={newsHomeDraft.viewAll} onChange={(v) => setNewsHomeDraft({ ...newsHomeDraft, viewAll: v })} />
+          <button onClick={() => save("news_home", newsHomeDraft)} className="self-start inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
+            <Save className="h-4 w-4" /> Ruaj Seksionin
+          </button>
+        </div>
+      </section>
+
 
       {/* TRUST STRIP */}
       <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">

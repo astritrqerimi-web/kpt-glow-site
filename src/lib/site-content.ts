@@ -56,6 +56,13 @@ export interface TrustContent {
   items: TrustItem[];
 }
 
+export interface NewsHomeContent {
+  badge: Bilingual;
+  title: Bilingual;
+  subtitle: Bilingual;
+  viewAll: Bilingual;
+}
+
 export interface Service {
   id: string;
   title: string;
@@ -98,6 +105,15 @@ const DEFAULTS = {
     keywords: "",
   } as SeoContent,
   trust: { items: [] } as TrustContent,
+  news_home: {
+    badge: { al: "Përditësime & Njoftime", en: "Updates & Announcements" },
+    title: { al: "Përditësime Ligjore dhe Tatimore", en: "Legal and Tax Updates" },
+    subtitle: {
+      al: "Informohu i pari për ndryshimet ligjore, tatimore dhe njoftimet më të rëndësishme për biznesin tuaj.",
+      en: "Be the first to know about legal changes, tax updates and the most important announcements for your business.",
+    },
+    viewAll: { al: "Shiko të gjitha", en: "View all" },
+  } as NewsHomeContent,
 };
 
 async function fetchContent<T>(key: string, fallback: T): Promise<T> {
@@ -139,6 +155,15 @@ export const trustQuery = () =>
     queryFn: () => fetchContent<TrustContent>("trust", DEFAULTS.trust),
     staleTime: 60_000,
   });
+
+export const newsHomeQuery = () =>
+  queryOptions({
+    queryKey: ["site_content", "news_home"],
+    queryFn: () => fetchContent<NewsHomeContent>("news_home", DEFAULTS.news_home),
+    staleTime: 60_000,
+  });
+
+
 
 export const servicesQuery = (includeInactive = false) =>
   queryOptions({
