@@ -405,14 +405,23 @@ function ContentAdmin() {
   const { data: about } = useQuery(aboutQuery());
   const { data: trust } = useQuery(trustQuery());
   const { data: newsHome } = useQuery(newsHomeQuery());
+  const { data: servicesSec } = useQuery(servicesSectionQuery());
+  const { data: contactSec } = useQuery(contactSectionQuery());
+  const { data: footer } = useQuery(footerQuery());
   const [heroDraft, setHeroDraft] = useState<any>(null);
   const [aboutDraft, setAboutDraft] = useState<any>(null);
   const [trustDraft, setTrustDraft] = useState<{ items: TrustItem[] } | null>(null);
   const [newsHomeDraft, setNewsHomeDraft] = useState<any>(null);
+  const [servicesSecDraft, setServicesSecDraft] = useState<any>(null);
+  const [contactSecDraft, setContactSecDraft] = useState<any>(null);
+  const [footerDraft, setFooterDraft] = useState<any>(null);
   useEffect(() => { if (hero && !heroDraft) setHeroDraft(hero); }, [hero]); // eslint-disable-line
   useEffect(() => { if (about && !aboutDraft) setAboutDraft(about); }, [about]); // eslint-disable-line
   useEffect(() => { if (trust && !trustDraft) setTrustDraft({ items: trust.items ?? [] }); }, [trust]); // eslint-disable-line
   useEffect(() => { if (newsHome && !newsHomeDraft) setNewsHomeDraft(newsHome); }, [newsHome]); // eslint-disable-line
+  useEffect(() => { if (servicesSec && !servicesSecDraft) setServicesSecDraft(servicesSec); }, [servicesSec]); // eslint-disable-line
+  useEffect(() => { if (contactSec && !contactSecDraft) setContactSecDraft(contactSec); }, [contactSec]); // eslint-disable-line
+  useEffect(() => { if (footer && !footerDraft) setFooterDraft(footer); }, [footer]); // eslint-disable-line
 
   const save = async (key: string, value: any) => {
     const { error } = await supabase.from("site_content").upsert({ key, value });
@@ -421,7 +430,7 @@ function ContentAdmin() {
     qc.invalidateQueries({ queryKey: ["site_content"] });
   };
 
-  if (!heroDraft || !aboutDraft || !trustDraft || !newsHomeDraft) return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
+  if (!heroDraft || !aboutDraft || !trustDraft || !newsHomeDraft || !servicesSecDraft || !contactSecDraft || !footerDraft) return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
 
   const iconOptions = ["BadgeCheck", "ShieldCheck", "Briefcase", "TrendingUp", "Award", "Handshake", "Users2", "CheckCircle2", "Target"];
 
