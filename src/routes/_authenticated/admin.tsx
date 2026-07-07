@@ -490,6 +490,22 @@ function ContentAdmin() {
         </div>
       </section>
 
+      {/* NEWS HOME SECTION */}
+      <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
+        <h3 className="font-display text-xl mb-1">Ballina — Seksioni "Lajme & Njoftime"</h3>
+        <p className="text-xs text-muted-foreground mb-4">Tekstet e seksionit "Përditësime Ligjore dhe Tatimore" në Ballinë. Artikujt tërhiqen automatikisht nga moduli Lajmet.</p>
+        <div className="grid gap-3">
+          <BilingualField label="Badge (mbi titull)" value={newsHomeDraft.badge} onChange={(v) => setNewsHomeDraft({ ...newsHomeDraft, badge: v })} />
+          <BilingualField label="Titulli i seksionit" value={newsHomeDraft.title} onChange={(v) => setNewsHomeDraft({ ...newsHomeDraft, title: v })} />
+          <BilingualField label="Nëntitulli / përshkrimi" value={newsHomeDraft.subtitle} onChange={(v) => setNewsHomeDraft({ ...newsHomeDraft, subtitle: v })} rows={3} />
+          <BilingualField label='Butoni ("Shiko të gjitha")' value={newsHomeDraft.viewAll} onChange={(v) => setNewsHomeDraft({ ...newsHomeDraft, viewAll: v })} />
+          <button onClick={() => save("news_home", newsHomeDraft)} className="self-start inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
+            <Save className="h-4 w-4" /> Ruaj Seksionin
+          </button>
+        </div>
+      </section>
+
+
       {/* TRUST STRIP */}
       <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
         <div className="flex items-center justify-between mb-4">
