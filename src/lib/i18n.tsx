@@ -39,6 +39,7 @@ const translations: Record<Lang, Dict> = {
     "nav.home": "Ballina",
     "nav.about": "Rreth Nesh",
     "nav.services": "Shërbimet",
+    "nav.news": "Lajme & Njoftime",
     "nav.contact": "Kontakti",
     "nav.contactUs": "Na Kontaktoni",
     "nav.menu": "Menu",
