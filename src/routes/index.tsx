@@ -35,6 +35,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import heroVisual from "@/assets/hero-visual.jpg.asset.json";
 import { useI18n, SERVICE_TRANSLATIONS } from "@/lib/i18n";
+import { LatestNewsSection } from "@/components/site/LatestNewsSection";
 
 
 export const Route = createFileRoute("/")({
