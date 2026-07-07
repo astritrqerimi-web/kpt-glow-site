@@ -39,16 +39,18 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
     };
   }, []);
 
-  const rotY = tilt.x * 6; // deg
-  const rotX = -tilt.y * 6;
-  const tx = tilt.x * 10;
-  const ty = tilt.y * 10;
+  const rotY = tilt.x * 14; // deg — stronger parallax
+  const rotX = -tilt.y * 12;
+  const tx = tilt.x * 22;
+  const ty = tilt.y * 22;
+  const lightX = 50 + tilt.x * 60;
+  const lightY = 40 + tilt.y * 60;
 
   return (
     <div
       ref={wrapRef}
       className="relative mx-auto w-full max-w-[46rem] px-4 sm:px-5 lg:max-w-none lg:px-0"
-      style={{ perspective: "1200px" }}
+      style={{ perspective: "1400px" }}
     >
       {/* Soft ambient glow behind card */}
       <div
@@ -60,16 +62,21 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
         }}
       />
 
-      {/* Floating frameless card */}
+      {/* Auto-rotating scene wrapper */}
       <div
-        className="group relative animate-float-hero rounded-[28px] sm:rounded-[32px] lg:rounded-[36px] overflow-hidden transition-transform duration-300 ease-out"
-        style={{
-          transform: `rotateY(${rotY}deg) rotateX(${rotX}deg) translate3d(${tx}px, ${ty}px, 0)`,
-          transformStyle: "preserve-3d",
-          boxShadow:
-            "0 40px 80px -40px oklch(0.40 0.09 210 / 0.28), 0 18px 40px -20px oklch(0.40 0.09 210 / 0.18), 0 4px 12px -6px oklch(0.40 0.09 210 / 0.10)",
-        }}
+        className="animate-scene-rotate"
+        style={{ transformStyle: "preserve-3d" }}
       >
+        {/* Floating frameless card with parallax + hover pop-out */}
+        <div
+          className="group relative animate-float-hero rounded-[28px] sm:rounded-[32px] lg:rounded-[36px] overflow-hidden transition-transform duration-500 ease-out hover:scale-[1.04]"
+          style={{
+            transform: `rotateY(${rotY}deg) rotateX(${rotX}deg) translate3d(${tx}px, ${ty}px, 0)`,
+            transformStyle: "preserve-3d",
+            boxShadow:
+              "0 50px 100px -40px oklch(0.40 0.09 210 / 0.35), 0 22px 50px -20px oklch(0.40 0.09 210 / 0.22), 0 6px 14px -6px oklch(0.40 0.09 210 / 0.12)",
+          }}
+        >
         <img
           src={src}
           alt={alt || "Vizualizim premium — kontabilitet dhe konsulencë biznesi"}
