@@ -511,9 +511,9 @@ function ContactSection() {
           <ContactCard icon={<MapPin className="h-5 w-5" />} title={t("contact.address")} value={company.address} />
 
           <div className="rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-5 shadow-soft">
-            <div className="text-xs uppercase tracking-[0.18em] text-primary mb-3">{t("contact.follow")}</div>
+            <div className="text-xs uppercase tracking-[0.18em] text-primary mb-3">{pick(sec.followLabel, lang, t("contact.follow"))}</div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               {company.facebook && (
                 <SocialIcon href={company.facebook} label="Facebook">
                   <Facebook className="h-4 w-4" />
@@ -527,6 +527,16 @@ function ContactSection() {
               {company.linkedin && (
                 <SocialIcon href={company.linkedin} label="LinkedIn">
                   <Linkedin className="h-4 w-4" />
+                </SocialIcon>
+              )}
+              {company.tiktok && (
+                <SocialIcon href={company.tiktok} label="TikTok">
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M19.6 6.3a5.4 5.4 0 0 1-3.3-1.1V15a5.6 5.6 0 1 1-5.6-5.6c.3 0 .6 0 .9.1v2.5a3.1 3.1 0 1 0 2.1 2.9V2h2.4a5.4 5.4 0 0 0 3.5 4.3v0z"/></svg>
+                </SocialIcon>
+              )}
+              {company.youtube && (
+                <SocialIcon href={company.youtube} label="YouTube">
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M23 7.2s-.2-1.6-.9-2.3c-.9-.9-1.9-.9-2.3-1C16.6 3.5 12 3.5 12 3.5s-4.6 0-7.8.4c-.5.1-1.5.1-2.3 1C1.2 5.6 1 7.2 1 7.2S.7 9 .7 10.9v1.7c0 1.8.3 3.7.3 3.7s.2 1.6.9 2.3c.9.9 2.1.9 2.6 1 1.9.2 8 .3 8 .3s4.6 0 7.8-.4c.5-.1 1.5-.1 2.3-1 .7-.7.9-2.3.9-2.3s.3-1.8.3-3.7v-1.7c0-1.8-.3-3.6-.3-3.6zM9.7 14.6V8.3l6 3.2-6 3.1z"/></svg>
                 </SocialIcon>
               )}
             </div>
