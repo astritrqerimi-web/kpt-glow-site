@@ -516,6 +516,120 @@ function ContentAdmin() {
         </div>
       </section>
 
+      {/* HERO TRUST STRIP */}
+      <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
+        <div className="flex items-center justify-between mb-1 flex-wrap gap-2">
+          <h3 className="font-display text-xl">Ballina — Hero Trust Strip</h3>
+          <button onClick={addHTItem} className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:bg-muted">
+            <Plus className="h-3 w-3" /> Shto Bllok
+          </button>
+        </div>
+        <p className="text-xs text-muted-foreground mb-4">Shiriti lëvizës i statistikave nën Hero. Blloqet, ikonat, ngjyrat dhe animacioni menaxhohen këtu.</p>
+
+        {/* Motion controls */}
+        <div className="grid gap-3 md:grid-cols-3 mb-5 rounded-xl border border-border/60 bg-background/60 p-4">
+          <label className="block">
+            <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">Shpejtësia (sekonda / cikël) — më e lartë = më e ngadaltë</span>
+            <input
+              type="number"
+              min={5}
+              max={300}
+              value={heroTrustDraft.speed}
+              onChange={(e) => updateHT({ speed: Number(e.target.value) || 50 })}
+              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">Drejtimi</span>
+            <select
+              value={heroTrustDraft.direction}
+              onChange={(e) => updateHT({ direction: e.target.value as "left" | "right" })}
+              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+            >
+              <option value="left">Majtas ←</option>
+              <option value="right">Djathtas →</option>
+            </select>
+          </label>
+          <label className="flex items-end gap-2 pb-2">
+            <input
+              type="checkbox"
+              checked={heroTrustDraft.pause_on_hover}
+              onChange={(e) => updateHT({ pause_on_hover: e.target.checked })}
+              className="h-4 w-4"
+            />
+            <span className="text-sm">Ndalo lëvizjen kur mouse-i hover</span>
+          </label>
+        </div>
+
+        <div className="grid gap-3">
+          {heroTrustDraft.items.map((item, idx) => {
+            const Icon = HERO_TRUST_ICONS[item.icon] ?? HERO_TRUST_ICONS.BadgeCheck;
+            return (
+              <div key={item.id ?? idx} className={`rounded-xl border border-border/60 bg-background/60 p-4 ${item.is_active ? "" : "opacity-60"}`}>
+                <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <GripVertical className="h-3 w-3" /> #{idx + 1}
+                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: `${item.color || "#0F8B8D"}1A`, color: item.color || "#0F8B8D" }}>
+                      <Icon className="h-3.5 w-3.5" />
+                    </span>
+                  </div>
+                  <div className="flex gap-1 items-center">
+                    <label className="flex items-center gap-1 text-xs mr-2">
+                      <input type="checkbox" checked={item.is_active} onChange={(e) => updateHTItem(idx, { is_active: e.target.checked })} className="h-3.5 w-3.5" />
+                      Aktiv
+                    </label>
+                    <button onClick={() => moveHTItem(idx, -1)} className="rounded-full border border-border px-2 py-0.5 text-xs hover:bg-muted">↑</button>
+                    <button onClick={() => moveHTItem(idx, 1)} className="rounded-full border border-border px-2 py-0.5 text-xs hover:bg-muted">↓</button>
+                    <button onClick={() => removeHTItem(idx)} className="rounded-full border border-border p-1 hover:bg-destructive/10 hover:text-destructive"><Trash2 className="h-3 w-3" /></button>
+                  </div>
+                </div>
+                <div className="grid gap-2 md:grid-cols-2">
+                  <label className="block">
+                    <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">Ikona</span>
+                    <select value={item.icon} onChange={(e) => updateHTItem(idx, { icon: e.target.value })}
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
+                      {HERO_TRUST_ICON_NAMES.map((n) => <option key={n} value={n}>{n}</option>)}
+                    </select>
+                  </label>
+                  <label className="block">
+                    <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">Ngjyra e ikonës</span>
+                    <input type="color" value={item.color ?? "#0F8B8D"} onChange={(e) => updateHTItem(idx, { color: e.target.value })}
+                      className="h-10 w-full rounded-lg border border-input bg-background px-2" />
+                  </label>
+                  <label className="block">
+                    <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">🇦🇱 Numri / Titulli (AL)</span>
+                    <input type="text" value={item.value_al} onChange={(e) => updateHTItem(idx, { value_al: e.target.value })}
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+                  </label>
+                  <label className="block">
+                    <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">🇬🇧 Number / Title (EN)</span>
+                    <input type="text" value={item.value_en} onChange={(e) => updateHTItem(idx, { value_en: e.target.value })}
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+                  </label>
+                  <label className="block">
+                    <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">🇦🇱 Përshkrimi (AL)</span>
+                    <input type="text" value={item.label_al} onChange={(e) => updateHTItem(idx, { label_al: e.target.value })}
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+                  </label>
+                  <label className="block">
+                    <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">🇬🇧 Description (EN)</span>
+                    <input type="text" value={item.label_en} onChange={(e) => updateHTItem(idx, { label_en: e.target.value })}
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+                  </label>
+                </div>
+              </div>
+            );
+          })}
+          {heroTrustDraft.items.length === 0 && (
+            <div className="text-sm text-muted-foreground text-center py-6">Asnjë bllok. Klikoni "Shto Bllok" për të shtuar.</div>
+          )}
+        </div>
+        <button onClick={() => save("hero_trust", heroTrustDraft)} className="mt-4 inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
+          <Save className="h-4 w-4" /> Ruaj Hero Trust Strip
+        </button>
+      </section>
+
+
       {/* ABOUT */}
       <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
         <h3 className="font-display text-xl mb-4">Rreth Nesh</h3>
