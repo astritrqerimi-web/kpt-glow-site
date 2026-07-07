@@ -203,8 +203,11 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
         slug: uniqueSlug,
         category_slug: draft.category_slug,
         title: draft.title,
+        title_en: draft.title_en || null,
         excerpt: draft.excerpt,
+        excerpt_en: draft.excerpt_en || null,
         content_html: draft.content_html,
+        content_html_en: draft.content_html_en || null,
         cover_image_url: draft.cover_image_url || null,
         og_image_url: draft.og_image_url || null,
         gallery: draft.gallery,
@@ -215,7 +218,9 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
         is_featured: draft.is_featured,
         is_sticky: draft.is_sticky,
         seo_title: draft.seo_title || null,
+        seo_title_en: draft.seo_title_en || null,
         seo_description: draft.seo_description || null,
+        seo_description_en: draft.seo_description_en || null,
         comments_enabled: draft.comments_enabled,
       };
 
