@@ -66,27 +66,27 @@ export function HeroStats() {
   const pauseOnHover = data.pause_on_hover !== false;
 
   return (
-    <div className="container-page relative z-20 -mt-10 md:-mt-16 mb-10 md:mb-14">
+    <div className="container-page relative z-20 -mt-6 md:-mt-10 mb-8 md:mb-12">
       <div
-        className="hero-stats-card group relative overflow-hidden rounded-[28px] md:rounded-[32px] border border-white/50 bg-white/60 backdrop-blur-2xl shadow-[0_20px_60px_-24px_rgba(15,139,141,0.35)]"
+        className="hero-stats-card group relative overflow-hidden rounded-2xl md:rounded-[20px] border border-white/40 bg-white/45 backdrop-blur-md shadow-[0_10px_30px_-18px_rgba(15,139,141,0.25)]"
         style={{
           backgroundImage:
-            "linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.55) 100%)",
+            "linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.45) 100%)",
         }}
       >
         {/* Edge fades */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28 z-10"
-          style={{ background: "linear-gradient(to right, rgba(255,255,255,0.95), rgba(255,255,255,0))" }}
+          className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 z-10"
+          style={{ background: "linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0))" }}
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 z-10"
-          style={{ background: "linear-gradient(to left, rgba(255,255,255,0.95), rgba(255,255,255,0))" }}
+          className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 z-10"
+          style={{ background: "linear-gradient(to left, rgba(255,255,255,0.9), rgba(255,255,255,0))" }}
         />
 
-        <div className="py-6 md:py-7">
+        <div className="h-[64px] sm:h-[72px] md:h-[80px] flex items-center">
           <div
             className="flex w-max animate-hero-stats-marquee items-center"
             style={{ animationDuration: `${speed}s`, animationDirection: direction }}
@@ -98,29 +98,28 @@ export function HeroStats() {
               const color = item.color || "#0F8B8D";
               return (
                 <div key={i} className="flex items-center">
-                  <div className="shrink-0 flex items-center gap-4 px-8 sm:px-12">
+                  <div className="shrink-0 flex items-center gap-2.5 sm:gap-3 px-5 sm:px-8">
                     <span
-                      className="inline-flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl ring-1"
+                      className="inline-flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg"
                       style={{
-                        backgroundColor: `${color}1A`,
+                        backgroundColor: `${color}14`,
                         color,
-                        boxShadow: `inset 0 0 0 1px ${color}26`,
                       }}
                     >
-                      <Icon className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={1.6} />
+                      <Icon className="h-4 w-4 sm:h-[18px] sm:w-[18px]" strokeWidth={1.75} />
                     </span>
-                    <div className="leading-tight text-left">
-                      <div className="font-display text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">
+                    <div className="leading-tight text-left flex items-baseline gap-1.5">
+                      <span className="font-display text-base sm:text-lg font-semibold text-foreground tracking-tight whitespace-nowrap">
                         {value}
-                      </div>
-                      <div className="text-[11px] sm:text-xs uppercase tracking-[0.12em] text-muted-foreground mt-0.5 whitespace-nowrap">
+                      </span>
+                      <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.1em] text-muted-foreground whitespace-nowrap">
                         {label}
-                      </div>
+                      </span>
                     </div>
                   </div>
                   <span
                     aria-hidden
-                    className="h-10 w-px bg-gradient-to-b from-transparent via-border to-transparent"
+                    className="h-5 sm:h-6 w-px bg-border/60"
                   />
                 </div>
               );
@@ -128,6 +127,7 @@ export function HeroStats() {
           </div>
         </div>
       </div>
+
 
       <style>{`
         @keyframes hero-stats-marquee {
