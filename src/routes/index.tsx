@@ -27,6 +27,7 @@ import {
   servicesQuery,
   companyQuery,
   trustQuery,
+  heroTrustQuery,
   servicesSectionQuery,
   contactSectionQuery,
   pick,
