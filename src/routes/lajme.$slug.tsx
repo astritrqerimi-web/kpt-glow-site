@@ -19,6 +19,10 @@ import {
   prevNextArticleQuery,
   categoryName,
   formatDate,
+  articleTitle,
+  articleExcerpt,
+  articleContent,
+  articleUrlSlug,
 } from "@/lib/articles";
 import { ArticleCard } from "@/components/site/ArticleCard";
 import { sanitizeHtml } from "@/lib/sanitize";
