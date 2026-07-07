@@ -138,9 +138,12 @@ export function HeroStats() {
           animation-name: hero-stats-marquee;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
-          will-change: transform;
+          transform: translateZ(0);
         }
         ${pauseOnHover ? `@media (hover: hover) { .hero-stats-card:hover .animate-hero-stats-marquee { animation-play-state: paused; } }` : ""}
+        @media (prefers-reduced-motion: reduce) {
+          .animate-hero-stats-marquee { animation: none !important; }
+        }
       `}</style>
     </div>
   );
