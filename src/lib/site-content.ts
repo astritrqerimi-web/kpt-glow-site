@@ -56,6 +56,13 @@ export interface TrustContent {
   items: TrustItem[];
 }
 
+export interface NewsHomeContent {
+  badge: Bilingual;
+  title: Bilingual;
+  subtitle: Bilingual;
+  viewAll: Bilingual;
+}
+
 export interface Service {
   id: string;
   title: string;
