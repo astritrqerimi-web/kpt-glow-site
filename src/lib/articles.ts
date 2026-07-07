@@ -132,7 +132,9 @@ export const articlesListQuery = (params: ListParams) =>
       }
       if (params.q && params.q.trim()) {
         const q = params.q.trim().replace(/[%_]/g, "");
-        query = query.or(`title.ilike.%${q}%,excerpt.ilike.%${q}%`);
+        query = query.or(
+          `title.ilike.%${q}%,title_en.ilike.%${q}%,excerpt.ilike.%${q}%,excerpt_en.ilike.%${q}%`,
+        );
       }
       query = query
         .order("is_sticky", { ascending: false })
