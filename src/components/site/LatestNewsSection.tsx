@@ -10,7 +10,7 @@ export function LatestNewsSection() {
   const { data: articles = [] } = useQuery(latestArticlesQuery(4));
   const { data: categories = [] } = useQuery(categoriesQuery());
 
-  if (!articles.length) return null;
+  
 
   return (
     <section id="lajme-home" className="relative scroll-mt-28 md:scroll-mt-32 py-20 md:py-28">
