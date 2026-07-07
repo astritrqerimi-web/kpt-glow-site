@@ -111,9 +111,12 @@ const DEFAULTS = {
     email: "info@kptconsulting.al",
     address: "Rr. e Llapit, L/1, Kati Përdhesë, Objekti A, Nr. 1 – Fushë Kosovë",
     mapsQuery: "KPT Consulting L.L.C., Rruga e Llapit, Fushë-Kosovë 12000",
+    workingHours: { al: "Hën – Pre: 09:00 – 17:00", en: "Mon – Fri: 09:00 – 17:00" },
     facebook: "",
     instagram: "",
     linkedin: "",
+    tiktok: "",
+    youtube: "",
   } as CompanyInfo,
   hero: {
     title: { al: "Zgjidhje financiare për biznesin tuaj", en: "Financial solutions for your business" },
