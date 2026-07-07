@@ -162,18 +162,36 @@ export function Header() {
       {open && (
         <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-up">
           <nav className="container-page py-4 flex flex-col gap-1">
-            {NAV.map((item) => (
-              <a
-                key={item.hash}
-                href={`/${item.hash}`}
-                onClick={(e) => handleNav(e, item.hash)}
-                className={`px-3 py-3 rounded-lg text-base font-medium transition ${
-                  active === item.hash ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
-                }`}
-              >
-                {t(item.key)}
-              </a>
-            ))}
+            {NAV.map((item) => {
+              if (item.kind === "route") {
+                const isActive = pathname.startsWith(item.to);
+                return (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setOpen(false)}
+                    className={`px-3 py-3 rounded-lg text-base font-medium transition ${
+                      isActive ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
+                    }`}
+                  >
+                    {t(item.key)}
+                  </Link>
+                );
+              }
+              const isActive = pathname === "/" && active === item.hash;
+              return (
+                <a
+                  key={item.hash}
+                  href={`/${item.hash}`}
+                  onClick={(e) => handleNav(e, item.hash)}
+                  className={`px-3 py-3 rounded-lg text-base font-medium transition ${
+                    isActive ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
+                  }`}
+                >
+                  {t(item.key)}
+                </a>
+              );
+            })}
             <a
               href="/#kontakti"
               onClick={(e) => handleNav(e, "#kontakti")}
