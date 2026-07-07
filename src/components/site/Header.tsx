@@ -142,7 +142,7 @@ export function Header() {
           <a
             href="/#kontakti"
             onClick={(e) => handleNav(e, "#kontakti")}
-            className="ml-3 inline-flex items-center rounded-full px-4 py-2.5 text-[13px] font-medium text-white shadow-soft whitespace-nowrap transition-all duration-300 hover:shadow-elegant hover:-translate-y-0.5"
+            className="ml-4 inline-flex items-center rounded-full px-5 py-2.5 text-base lg:text-[17px] font-medium text-white shadow-soft whitespace-nowrap transition-all duration-300 hover:shadow-elegant hover:-translate-y-0.5"
             style={{ background: "var(--gradient-brand)" }}
           >
             {t("nav.contactUs")}
