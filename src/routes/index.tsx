@@ -484,12 +484,12 @@ function ContactSection() {
   return (
     <section id="kontakti" className={`container-page pb-24 ${sectionAnchor}`}>
       <div className="max-w-3xl">
-        <div className="text-xs uppercase tracking-[0.2em] text-primary">{t("contact.eyebrow")}</div>
+        <div className="text-xs uppercase tracking-[0.2em] text-primary">{pick(sec.eyebrow, lang, t("contact.eyebrow"))}</div>
         <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-foreground">
-          {t("contact.title.a")} <span className="text-gradient-brand">{t("contact.title.b")}</span>
+          {pick(sec.titleA, lang, t("contact.title.a"))} <span className="text-gradient-brand">{pick(sec.titleB, lang, t("contact.title.b"))}</span>
         </h2>
         <p className="mt-5 text-lg text-muted-foreground max-w-2xl">
-          {t("contact.subtitle")}
+          {pick(sec.subtitle, lang, t("contact.subtitle"))}
         </p>
       </div>
 
