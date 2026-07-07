@@ -1,15 +1,20 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 
-const NAV = [
-  { hash: "#ballina", key: "nav.home" },
-  { hash: "#rreth-nesh", key: "nav.about" },
-  { hash: "#sherbimet", key: "nav.services" },
-  { hash: "#kontakti", key: "nav.contact" },
+type NavItem =
+  | { kind: "hash"; hash: string; key: string }
+  | { kind: "route"; to: string; key: string };
+
+const NAV: readonly NavItem[] = [
+  { kind: "hash", hash: "#ballina", key: "nav.home" },
+  { kind: "hash", hash: "#rreth-nesh", key: "nav.about" },
+  { kind: "hash", hash: "#sherbimet", key: "nav.services" },
+  { kind: "route", to: "/lajme", key: "nav.news" },
+  { kind: "hash", hash: "#kontakti", key: "nav.contact" },
 ] as const;
 
 function scrollToHash(hash: string) {
