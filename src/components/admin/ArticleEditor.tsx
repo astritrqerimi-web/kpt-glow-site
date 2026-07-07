@@ -104,6 +104,7 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
   const [saving, setSaving] = useState(false);
   const [tagInput, setTagInput] = useState("");
   const [slugDirty, setSlugDirty] = useState(!!article);
+  const [contentLang, setContentLang] = useState<"al" | "en">("al");
   const pdfRef = useRef<HTMLInputElement | null>(null);
   const galleryRef = useRef<HTMLInputElement | null>(null);
 
