@@ -166,6 +166,7 @@ export function Header() {
         <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-up">
           <nav className="container-page py-4 flex flex-col gap-1">
             {NAV.map((item) => {
+              const isContact = item.key === "nav.contact";
               if (item.kind === "route") {
                 const isActive = pathname.startsWith(item.to);
                 return (
@@ -173,9 +174,14 @@ export function Header() {
                     key={item.to}
                     to={item.to}
                     onClick={() => setOpen(false)}
-                    className={`px-3 py-3 rounded-lg text-base font-medium transition ${
-                      isActive ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
-                    }`}
+                    className={
+                      isContact
+                        ? "mx-3 mt-1 inline-flex items-center justify-center rounded-full px-5 py-3 text-base font-medium text-white transition-all duration-300"
+                        : `px-3 py-3 rounded-lg text-base font-medium transition ${
+                            isActive ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
+                          }`
+                    }
+                    style={isContact ? { background: "var(--gradient-brand)" } : undefined}
                   >
                     {t(item.key)}
                   </Link>
@@ -187,22 +193,19 @@ export function Header() {
                   key={item.hash}
                   href={`/${item.hash}`}
                   onClick={(e) => handleNav(e, item.hash)}
-                  className={`px-3 py-3 rounded-lg text-base font-medium transition ${
-                    isActive ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
-                  }`}
+                  className={
+                    isContact
+                      ? "mx-3 mt-1 inline-flex items-center justify-center rounded-full px-5 py-3 text-base font-medium text-white transition-all duration-300"
+                      : `px-3 py-3 rounded-lg text-base font-medium transition ${
+                          isActive ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
+                        }`
+                  }
+                  style={isContact ? { background: "var(--gradient-brand)" } : undefined}
                 >
                   {t(item.key)}
                 </a>
               );
             })}
-            <a
-              href="/#kontakti"
-              onClick={(e) => handleNav(e, "#kontakti")}
-              className="mt-2 inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium text-white"
-              style={{ background: "var(--gradient-brand)" }}
-            >
-              {t("nav.contactUs")}
-            </a>
             <LanguageSwitcher variant="mobile" />
           </nav>
         </div>
