@@ -117,7 +117,7 @@ export function Header() {
                   key={item.to}
                   to={item.to}
                   onClick={() => setOpen(false)}
-                  className={`relative px-3 py-2 text-[13px] font-medium whitespace-nowrap transition-colors ${
+                  className={`relative px-1 py-2 text-base lg:text-[17px] font-medium whitespace-nowrap transition-colors ${
                     isActive ? "text-primary" : "text-foreground/75 hover:text-foreground"
                   }`}
                 >
@@ -131,7 +131,7 @@ export function Header() {
                 key={item.hash}
                 href={`/${item.hash}`}
                 onClick={(e) => handleNav(e, item.hash)}
-                className={`relative px-3 py-2 text-[13px] font-medium whitespace-nowrap transition-colors ${
+                className={`relative px-1 py-2 text-base lg:text-[17px] font-medium whitespace-nowrap transition-colors ${
                   isActive ? "text-primary" : "text-foreground/75 hover:text-foreground"
                 }`}
               >
