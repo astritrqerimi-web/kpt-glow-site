@@ -672,9 +672,12 @@ function SettingsAdmin() {
           <TextInput label="Email" value={c.email} onChange={(v) => setC({ ...c, email: v })} />
           <div className="md:col-span-2"><TextInput label="Adresa" value={c.address} onChange={(v) => setC({ ...c, address: v })} /></div>
           <div className="md:col-span-2"><TextInput label="Google Maps (adresa/kërkim)" value={c.mapsQuery} onChange={(v) => setC({ ...c, mapsQuery: v })} /></div>
+          <div className="md:col-span-2"><BilingualField label="Orari i punës" value={c.workingHours ?? { al: "", en: "" }} onChange={(v) => setC({ ...c, workingHours: v })} /></div>
           <TextInput label="Facebook URL" value={c.facebook} onChange={(v) => setC({ ...c, facebook: v })} />
           <TextInput label="Instagram URL" value={c.instagram} onChange={(v) => setC({ ...c, instagram: v })} />
           <TextInput label="LinkedIn URL" value={c.linkedin} onChange={(v) => setC({ ...c, linkedin: v })} />
+          <TextInput label="TikTok URL" value={c.tiktok ?? ""} onChange={(v) => setC({ ...c, tiktok: v })} />
+          <TextInput label="YouTube URL" value={c.youtube ?? ""} onChange={(v) => setC({ ...c, youtube: v })} />
         </div>
         <button onClick={() => save("company", c)} className="mt-4 inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
           <Save className="h-4 w-4" /> Ruaj
