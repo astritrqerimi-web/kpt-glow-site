@@ -92,6 +92,7 @@ function HeroSection() {
 
 
   return (
+    <>
     <section
       id="ballina"
       className={`relative overflow-hidden ${sectionAnchor}`}
