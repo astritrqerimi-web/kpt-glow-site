@@ -421,7 +421,7 @@ function ContentAdmin() {
     qc.invalidateQueries({ queryKey: ["site_content"] });
   };
 
-  if (!heroDraft || !aboutDraft || !trustDraft) return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
+  if (!heroDraft || !aboutDraft || !trustDraft || !newsHomeDraft) return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
 
   const iconOptions = ["BadgeCheck", "ShieldCheck", "Briefcase", "TrendingUp", "Award", "Handshake", "Users2", "CheckCircle2", "Target"];
 
