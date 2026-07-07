@@ -32,7 +32,7 @@ export function LanguageSwitcher({ variant = "desktop" }: Props) {
               className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[13px] font-semibold tracking-wide transition-all duration-300 ease-out ${
                 active
                   ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-foreground/60 hover:text-foreground hover:bg-muted/60"
+                  : "text-foreground/80 hover:text-foreground hover:bg-muted/50"
               }`}
             >
               <Flag className="w-[18px] h-[13px] rounded-[1px] object-cover flex-shrink-0" />
