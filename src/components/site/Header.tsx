@@ -108,7 +108,7 @@ export function Header() {
           </div>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-9">
           {NAV.map((item) => {
             if (item.kind === "route") {
               const isActive = pathname.startsWith(item.to);
