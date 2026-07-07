@@ -35,9 +35,9 @@ import { ServiceIcon } from "@/components/site/ServiceIcon";
 import { TrustMarquee } from "@/components/site/TrustMarquee";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import heroVisual from "@/assets/hero-visual.jpg.asset.json";
 import { useI18n, SERVICE_TRANSLATIONS } from "@/lib/i18n";
 import { LatestNewsSection } from "@/components/site/LatestNewsSection";
+import { Hero3DVisual } from "@/components/site/Hero3DVisual";
 
 
 export const Route = createFileRoute("/")({
