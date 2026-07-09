@@ -242,8 +242,21 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
       }
 
       if (draft.id) {
-        const { error } = await table.update(payload).eq("id", draft.id);
+        // Use .select() so PostgREST returns the updated row — if RLS blocks
+        // the write (0 rows matched) we surface a real error instead of a
+        // silent 204 that fakes success.
+        const { data: updated, error } = await table
+          .update(payload)
+          .eq("id", draft.id)
+          .select("id")
+          .maybeSingle();
         if (error) throw error;
+        if (!updated) {
+          throw new Error(
+            "Ruajtja dështoi: nuk keni leje për të përditësuar këtë artikull.",
+          );
+        }
+        setDraft((d) => ({ ...d, status }));
         toast.success("Artikulli u ruajt");
       } else {
         const { data: userRes } = await supabase.auth.getUser();
