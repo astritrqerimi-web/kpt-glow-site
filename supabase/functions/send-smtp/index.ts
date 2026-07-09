@@ -133,6 +133,6 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { ...cors, "Content-Type": "application/json" } });
   } catch (e) {
     console.error("send-smtp error", e);
-    return new Response(JSON.stringify({ error: (e as Error).message ?? "Dështoi dërgimi" }), { status: 500, headers: { ...cors, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: "Dërgimi i email-it dështoi. Provoni përsëri." }), { status: 500, headers: { ...cors, "Content-Type": "application/json" } });
   }
 });
