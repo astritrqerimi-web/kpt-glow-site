@@ -135,9 +135,7 @@ export const articlesListQuery = (params: ListParams) =>
           `title.ilike.%${q}%,title_en.ilike.%${q}%,excerpt.ilike.%${q}%,excerpt_en.ilike.%${q}%`,
         );
       }
-      query = query
-        .order("is_sticky", { ascending: false })
-        .order("published_at", { ascending });
+      query = query.order("published_at", { ascending });
       query = query.range((page - 1) * pageSize, page * pageSize - 1);
       const { data, error, count } = await query;
       if (error) throw error;
