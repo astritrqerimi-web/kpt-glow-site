@@ -102,7 +102,6 @@ export const latestArticlesQuery = (limit = 4) =>
     queryKey: ["articles", "latest", limit],
     queryFn: async (): Promise<Article[]> => {
       const { data, error } = await publishedOnly(from().select(ARTICLE_COLUMNS))
-        .order("is_sticky", { ascending: false })
         .order("published_at", { ascending: false })
         .limit(limit);
       if (error) throw error;
