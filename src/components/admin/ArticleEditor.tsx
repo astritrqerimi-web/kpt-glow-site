@@ -311,12 +311,13 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
               </button>
             )}
             <button
-              onClick={() => save("draft")}
+              onClick={() => save()}
               disabled={saving}
               className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:bg-muted"
+              title={draft.status === "published" ? "Ruaj ndryshimet" : "Ruaj draft"}
             >
               {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-              Ruaj draft
+              {draft.status === "published" ? "Ruaj ndryshimet" : "Ruaj draft"}
             </button>
             {draft.status === "published" ? (
               <button
