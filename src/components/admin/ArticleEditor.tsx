@@ -579,34 +579,23 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
               <option value="published">Publikuar</option>
               <option value="scheduled">Planifikuar</option>
             </select>
-            {draft.status === "scheduled" && (
-              <div>
-                <label className="block text-xs text-muted-foreground mb-1">
-                  <CalendarClock className="inline h-3 w-3 mr-1" /> Data & ora
-                </label>
-                <input
-                  type="datetime-local"
-                  value={toIsoLocal(draft.scheduled_at)}
-                  onChange={(e) =>
-                    set("scheduled_at", e.target.value ? new Date(e.target.value).toISOString() : null)
-                  }
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
+            <div>
+              <label className="block text-xs text-muted-foreground mb-1">
+                <CalendarClock className="inline h-3 w-3 mr-1" /> Data e publikimit
+              </label>
+              <input
+                type="datetime-local"
+                value={toIsoLocal(draft.published_at ?? draft.scheduled_at)}
+                onChange={(e) =>
+                  set("published_at", e.target.value ? new Date(e.target.value).toISOString() : null)
+                }
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+              />
+              <div className="mt-1 text-[11px] text-muted-foreground">
+                Zgjidh datë të kaluar, të sotme ose të ardhshme. Data e ardhshme e bën artikullin të planifikuar automatikisht.
               </div>
-            )}
-            {draft.status === "published" && (
-              <div>
-                <label className="block text-xs text-muted-foreground mb-1">Data e publikimit</label>
-                <input
-                  type="datetime-local"
-                  value={toIsoLocal(draft.published_at)}
-                  onChange={(e) =>
-                    set("published_at", e.target.value ? new Date(e.target.value).toISOString() : null)
-                  }
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-              </div>
-            )}
+            </div>
+
             <div className="flex flex-col gap-2 pt-1">
               <label className="inline-flex items-center gap-2 text-sm">
                 <input
