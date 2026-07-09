@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +12,23 @@ import { toast } from "sonner";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/admin")({
+  ssr: false,
+  beforeLoad: async () => {
+    const { data: u, error: userErr } = await supabase.auth.getUser();
+    if (userErr || !u.user) {
+      throw redirect({ to: "/auth" });
+    }
+    const { data: roleRow } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", u.user.id)
+      .eq("role", "admin")
+      .maybeSingle();
+    if (!roleRow) {
+      throw redirect({ to: "/" });
+    }
+    return { user: u.user };
+  },
   component: AdminPage,
 });
 
