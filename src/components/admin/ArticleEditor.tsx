@@ -179,7 +179,7 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
     }
     setSaving(true);
     try {
-      const status = statusOverride ?? draft.status;
+      let status = statusOverride ?? draft.status;
       const table = (supabase as any).from("articles");
       const baseSlug = makeSlug(draft.slug || draft.title);
       if (!baseSlug) {
@@ -200,6 +200,44 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
         uniqueSlug = `${baseSlug}-${suffix}`;
       }
 
+      // Smart date handling: admin-selected "Data e publikimit" drives status.
+      // Future date + publish intent → automatically scheduled.
+      const chosenDate = draft.published_at ? new Date(draft.published_at) : null;
+      const isFuture = chosenDate ? chosenDate.getTime() > Date.now() : false;
+
+      let publishedAt: string | null = null;
+      let scheduledAt: string | null = null;
+
+      if (status === "published") {
+        if (isFuture && chosenDate) {
+          status = "scheduled";
+          scheduledAt = chosenDate.toISOString();
+          publishedAt = null;
+        } else {
+          publishedAt = (chosenDate ?? new Date()).toISOString();
+          scheduledAt = null;
+        }
+      } else if (status === "scheduled") {
+        const when = chosenDate ?? (draft.scheduled_at ? new Date(draft.scheduled_at) : null);
+        if (!when) {
+          toast.error("Zgjidhni datën e publikimit për artikull të planifikuar");
+          setSaving(false);
+          return;
+        }
+        if (when.getTime() <= Date.now()) {
+          status = "published";
+          publishedAt = when.toISOString();
+          scheduledAt = null;
+        } else {
+          scheduledAt = when.toISOString();
+          publishedAt = null;
+        }
+      } else {
+        // draft — preserve chosen date so admin can edit later without losing it
+        publishedAt = chosenDate ? chosenDate.toISOString() : null;
+        scheduledAt = null;
+      }
+
       const payload: Record<string, unknown> = {
         slug: uniqueSlug,
         category_slug: draft.category_slug,
@@ -216,6 +254,8 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
         tags: draft.tags,
         author: draft.author,
         status,
+        published_at: publishedAt,
+        scheduled_at: scheduledAt,
         is_featured: draft.is_featured,
         is_sticky: draft.is_sticky,
         seo_title: draft.seo_title || null,
@@ -225,26 +265,7 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
         comments_enabled: draft.comments_enabled,
       };
 
-      if (status === "published") {
-        payload.published_at = draft.published_at ?? new Date().toISOString();
-        payload.scheduled_at = null;
-      } else if (status === "scheduled") {
-        if (!draft.scheduled_at) {
-          toast.error("Zgjidhni datën për publikim të planifikuar");
-          setSaving(false);
-          return;
-        }
-        payload.scheduled_at = draft.scheduled_at;
-        payload.published_at = null;
-      } else {
-        // draft
-        payload.published_at = null;
-      }
-
       if (draft.id) {
-        // Use .select() so PostgREST returns the updated row — if RLS blocks
-        // the write (0 rows matched) we surface a real error instead of a
-        // silent 204 that fakes success.
         const { data: updated, error } = await table
           .update(payload)
           .eq("id", draft.id)
@@ -256,15 +277,15 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
             "Ruajtja dështoi: nuk keni leje për të përditësuar këtë artikull.",
           );
         }
-        setDraft((d) => ({ ...d, status }));
-        toast.success("Artikulli u ruajt");
+        setDraft((d) => ({ ...d, status, published_at: publishedAt, scheduled_at: scheduledAt }));
+        toast.success("Artikulli u ruajt me sukses");
       } else {
         const { data: userRes } = await supabase.auth.getUser();
         payload.created_by = userRes.user?.id ?? null;
         const { data, error } = await table.insert(payload).select("id").single();
         if (error) throw error;
-        setDraft((d) => ({ ...d, id: data.id, status }));
-        toast.success("Artikulli u krijua");
+        setDraft((d) => ({ ...d, id: data.id, status, published_at: publishedAt, scheduled_at: scheduledAt }));
+        toast.success("Artikulli u krijua me sukses");
       }
       qc.invalidateQueries({ queryKey: ["articles"] });
       onClose();
@@ -275,6 +296,7 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
       setSaving(false);
     }
   };
+
 
   const del = async () => {
     if (!draft.id) return;
@@ -557,34 +579,23 @@ export function ArticleEditor({ article, categories, onClose }: Props) {
               <option value="published">Publikuar</option>
               <option value="scheduled">Planifikuar</option>
             </select>
-            {draft.status === "scheduled" && (
-              <div>
-                <label className="block text-xs text-muted-foreground mb-1">
-                  <CalendarClock className="inline h-3 w-3 mr-1" /> Data & ora
-                </label>
-                <input
-                  type="datetime-local"
-                  value={toIsoLocal(draft.scheduled_at)}
-                  onChange={(e) =>
-                    set("scheduled_at", e.target.value ? new Date(e.target.value).toISOString() : null)
-                  }
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
+            <div>
+              <label className="block text-xs text-muted-foreground mb-1">
+                <CalendarClock className="inline h-3 w-3 mr-1" /> Data e publikimit
+              </label>
+              <input
+                type="datetime-local"
+                value={toIsoLocal(draft.published_at ?? draft.scheduled_at)}
+                onChange={(e) =>
+                  set("published_at", e.target.value ? new Date(e.target.value).toISOString() : null)
+                }
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+              />
+              <div className="mt-1 text-[11px] text-muted-foreground">
+                Zgjidh datë të kaluar, të sotme ose të ardhshme. Data e ardhshme e bën artikullin të planifikuar automatikisht.
               </div>
-            )}
-            {draft.status === "published" && (
-              <div>
-                <label className="block text-xs text-muted-foreground mb-1">Data e publikimit</label>
-                <input
-                  type="datetime-local"
-                  value={toIsoLocal(draft.published_at)}
-                  onChange={(e) =>
-                    set("published_at", e.target.value ? new Date(e.target.value).toISOString() : null)
-                  }
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-              </div>
-            )}
+            </div>
+
             <div className="flex flex-col gap-2 pt-1">
               <label className="inline-flex items-center gap-2 text-sm">
                 <input
