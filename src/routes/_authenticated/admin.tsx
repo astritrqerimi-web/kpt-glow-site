@@ -425,6 +425,39 @@ function BilingualField({
   );
 }
 
+function BilingualRichField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: Bilingual;
+  onChange: (v: { al: string; en: string }) => void;
+}) {
+  const v = bg(value);
+  return (
+    <div className="rounded-xl border border-border/60 bg-background/60 p-3">
+      <div className="mb-2 text-xs font-medium text-foreground">{label}</div>
+      <div className="grid gap-3 lg:grid-cols-2">
+        <div>
+          <div className="mb-1 flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">🇦🇱 Shqip</div>
+          <div className="rounded-lg border border-input bg-background overflow-hidden">
+            <RichTextEditor value={v.al} onChange={(html) => onChange({ ...v, al: html })} />
+          </div>
+        </div>
+        <div>
+          <div className="mb-1 flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">🇬🇧 English</div>
+          <div className="rounded-lg border border-input bg-background overflow-hidden">
+            <RichTextEditor value={v.en} onChange={(html) => onChange({ ...v, en: html })} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
 // ---------- Content ----------
 function ContentAdmin() {
   const qc = useQueryClient();
