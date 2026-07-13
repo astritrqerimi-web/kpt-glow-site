@@ -29,7 +29,7 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
           name: "KPT Consulting",
-          image: "https://www.kptconsulting.al/favicon.ico",
+          image: "https://www.kptconsulting.al/kpt-icon-v2-512.png?v=2",
           url: "https://www.kptconsulting.al/",
           telephone: "+383 45 555 686",
           email: "info@kptconsulting.al",
