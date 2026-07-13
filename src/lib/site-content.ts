@@ -156,10 +156,24 @@ const DEFAULTS = {
     ctaServices: { al: "Shërbimet", en: "Services" },
   } as HeroContent,
   about: {
-    intro: { al: "", en: "" },
-    services: { al: "", en: "" },
-    leader: { al: "", en: "" },
+    eyebrow: { al: "Rreth Nesh", en: "About Us" },
+    titleA: { al: "Partneri juaj për", en: "Your partner for" },
+    titleB: { al: "zgjidhje financiare", en: "financial solutions" },
+    leadershipLabel: { al: "Udhëheqja", en: "Leadership" },
+    intro: {
+      al: "<p>KPT Consulting është një kompani e specializuar në kontabilitet, shërbime tatimore dhe konsulencë për biznese. Misioni ynë është të ofrojmë zgjidhje profesionale që ndihmojnë bizneset të menaxhojnë financat me saktësi, transparencë dhe efikasitet.</p>",
+      en: "<p>KPT Consulting is a company specialized in accounting, tax services and business consulting. Our mission is to deliver professional solutions that help businesses manage their finances with accuracy, transparency and efficiency.</p>",
+    },
+    services: {
+      al: "<p>Ne ofrojmë shërbime në fushën e kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve, administrimit të pagave, përgatitjes së pasqyrave financiare dhe konsulencës financiare, duke ndërtuar partneritete afatgjata me klientët tanë.</p>",
+      en: "<p>We offer services in accounting, tax filings, business registration, payroll administration, financial statement preparation and financial consulting, building long-term partnerships with our clients.</p>",
+    },
+    leader: {
+      al: "<p>KPT Consulting udhëhiqet nga Mr. Sc Astrit Qerimi, Kontabilist i Certifikuar dhe Këshilltar Tatimor i Certifikuar, me përvojë në ofrimin e zgjidhjeve profesionale financiare dhe tatimore për biznese.</p>",
+      en: "<p>KPT Consulting is led by Mr. Sc Astrit Qerimi — Certified Accountant and Certified Tax Advisor — with extensive experience delivering professional financial and tax solutions for businesses.</p>",
+    },
   } as AboutContent,
+
   seo: {
     title: "KPT Consulting",
     description: "Kontabilitet, tatime dhe konsulencë biznesi.",
