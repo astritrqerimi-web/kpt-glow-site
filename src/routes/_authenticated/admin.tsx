@@ -8,6 +8,8 @@ import { HERO_TRUST_ICONS, HERO_TRUST_ICON_NAMES } from "@/components/site/HeroS
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { LogOut, Plus, Trash2, Save, Mail, Home, FileEdit, Settings2, Loader2, ShieldAlert, Star, Newspaper, GripVertical } from "lucide-react";
 import { ArticlesAdmin } from "@/components/admin/ArticlesAdmin";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
+
 import { toast } from "sonner";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 
@@ -425,6 +427,39 @@ function BilingualField({
   );
 }
 
+function BilingualRichField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: Bilingual;
+  onChange: (v: { al: string; en: string }) => void;
+}) {
+  const v = bg(value);
+  return (
+    <div className="rounded-xl border border-border/60 bg-background/60 p-3">
+      <div className="mb-2 text-xs font-medium text-foreground">{label}</div>
+      <div className="grid gap-3 lg:grid-cols-2">
+        <div>
+          <div className="mb-1 flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">🇦🇱 Shqip</div>
+          <div className="rounded-lg border border-input bg-background overflow-hidden">
+            <RichTextEditor value={v.al} onChange={(html) => onChange({ ...v, al: html })} />
+          </div>
+        </div>
+        <div>
+          <div className="mb-1 flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">🇬🇧 English</div>
+          <div className="rounded-lg border border-input bg-background overflow-hidden">
+            <RichTextEditor value={v.en} onChange={(html) => onChange({ ...v, en: html })} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
 // ---------- Content ----------
 function ContentAdmin() {
   const qc = useQueryClient();
@@ -658,16 +693,24 @@ function ContentAdmin() {
 
       {/* ABOUT */}
       <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
-        <h3 className="font-display text-xl mb-4">Rreth Nesh</h3>
+        <h3 className="font-display text-xl mb-1">Rreth Nesh</h3>
+        <p className="text-xs text-muted-foreground mb-4">Titulli, nëntitujt dhe paragrafët e seksionit "Rreth Nesh". Paragrafët mbështesin formatim të pasur (bold, italic, tituj, lista, lidhje).</p>
         <div className="grid gap-3">
-          <BilingualField label="Hyrje" value={aboutDraft.intro} onChange={(v) => setAboutDraft({ ...aboutDraft, intro: v })} rows={4} />
-          <BilingualField label="Shërbimet (paragraf)" value={aboutDraft.services} onChange={(v) => setAboutDraft({ ...aboutDraft, services: v })} rows={4} />
-          <BilingualField label="Udhëheqja (Astrit Qerimi)" value={aboutDraft.leader} onChange={(v) => setAboutDraft({ ...aboutDraft, leader: v })} rows={4} />
+          <BilingualField label="Eyebrow (mbi titull)" value={aboutDraft.eyebrow} onChange={(v) => setAboutDraft({ ...aboutDraft, eyebrow: v })} />
+          <div className="grid md:grid-cols-2 gap-3">
+            <BilingualField label="Titulli — pjesa e parë" value={aboutDraft.titleA} onChange={(v) => setAboutDraft({ ...aboutDraft, titleA: v })} />
+            <BilingualField label="Titulli — pjesa e gradientuar" value={aboutDraft.titleB} onChange={(v) => setAboutDraft({ ...aboutDraft, titleB: v })} />
+          </div>
+          <BilingualRichField label="Hyrje (paragrafi kryesor)" value={aboutDraft.intro} onChange={(v) => setAboutDraft({ ...aboutDraft, intro: v })} />
+          <BilingualRichField label="Shërbimet (paragraf)" value={aboutDraft.services} onChange={(v) => setAboutDraft({ ...aboutDraft, services: v })} />
+          <BilingualField label='Etiketa "Udhëheqja"' value={aboutDraft.leadershipLabel} onChange={(v) => setAboutDraft({ ...aboutDraft, leadershipLabel: v })} />
+          <BilingualRichField label="Udhëheqja (paragraf)" value={aboutDraft.leader} onChange={(v) => setAboutDraft({ ...aboutDraft, leader: v })} />
           <button onClick={() => save("about", aboutDraft)} className="self-start inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
             <Save className="h-4 w-4" /> Ruaj Rreth Nesh
           </button>
         </div>
       </section>
+
 
       {/* NEWS HOME SECTION */}
       <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">

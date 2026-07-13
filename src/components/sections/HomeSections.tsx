@@ -36,6 +36,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useI18n, SERVICE_TRANSLATIONS } from "@/lib/i18n";
 import { Hero3DVisual } from "@/components/site/Hero3DVisual";
+import { sanitizeHtml } from "@/lib/sanitize";
+
 
 /* ---------------- HERO / BALLINA ---------------- */
 export function HeroSection() {
@@ -176,9 +178,13 @@ export function TrustCards() {
 export function AboutSection() {
   const { data: about } = useSuspenseQuery(aboutQuery());
   const { t, lang } = useI18n();
-  const intro = pick(about.intro, lang, t("about.intro"));
-  const servicesText = pick(about.services, lang, t("about.services.text"));
-  const leader = pick(about.leader, lang, t("about.leader"));
+  const eyebrow = pick(about.eyebrow, lang, t("about.eyebrow"));
+  const titleA = pick(about.titleA, lang, t("about.title.a"));
+  const titleB = pick(about.titleB, lang, t("about.title.b"));
+  const leadershipLabel = pick(about.leadershipLabel, lang, t("about.leadership"));
+  const introHtml = sanitizeHtml(pick(about.intro, lang, t("about.intro")));
+  const servicesHtml = sanitizeHtml(pick(about.services, lang, t("about.services.text")));
+  const leaderHtml = sanitizeHtml(pick(about.leader, lang, t("about.leader")));
   const values = [
     { icon: ShieldCheck, title: t("about.value.1.title"), desc: t("about.value.1.desc") },
     { icon: Target, title: t("about.value.2.title"), desc: t("about.value.2.desc") },
@@ -188,19 +194,28 @@ export function AboutSection() {
   return (
     <section className="container-page pt-8 pb-24">
       <div className="max-w-3xl">
-        <div className="text-xs uppercase tracking-[0.2em] text-primary">{t("about.eyebrow")}</div>
+        <div className="text-xs uppercase tracking-[0.2em] text-primary">{eyebrow}</div>
         <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-foreground">
-          {t("about.title.a")} <span className="text-gradient-brand">{t("about.title.b")}</span>
+          {titleA} <span className="text-gradient-brand">{titleB}</span>
         </h2>
       </div>
 
       <div className="mt-12 grid gap-10 md:grid-cols-5">
         <div className="md:col-span-3 space-y-6">
-          <p className="text-lg leading-relaxed text-foreground/85">{intro}</p>
-          <p className="text-base leading-relaxed text-muted-foreground">{servicesText}</p>
+          <div
+            className="article-prose text-lg leading-relaxed text-foreground/85"
+            dangerouslySetInnerHTML={{ __html: introHtml }}
+          />
+          <div
+            className="article-prose text-base leading-relaxed text-muted-foreground"
+            dangerouslySetInnerHTML={{ __html: servicesHtml }}
+          />
           <div className="rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-6 shadow-soft">
-            <div className="text-xs uppercase tracking-[0.18em] text-primary">{t("about.leadership")}</div>
-            <p className="mt-3 text-base leading-relaxed text-foreground/85">{leader}</p>
+            <div className="text-xs uppercase tracking-[0.18em] text-primary">{leadershipLabel}</div>
+            <div
+              className="article-prose mt-3 text-base leading-relaxed text-foreground/85"
+              dangerouslySetInnerHTML={{ __html: leaderHtml }}
+            />
           </div>
         </div>
 
@@ -225,6 +240,7 @@ export function AboutSection() {
     </section>
   );
 }
+
 
 /* ---------------- SHËRBIMET ---------------- */
 export function ServicesSection() {
