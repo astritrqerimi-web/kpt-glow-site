@@ -99,6 +99,7 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
             width={1536}
             height={1024}
             loading="eager"
+            fetchPriority="high"
             decoding="async"
             className="block h-auto w-full select-none rounded-[1.75rem] sm:rounded-[2.25rem] lg:rounded-[2.5rem]"
             style={{

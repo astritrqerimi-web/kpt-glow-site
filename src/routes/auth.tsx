@@ -7,6 +7,15 @@ import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
+  head: () => ({
+    meta: [
+      { title: "Kyçu — KPT Consulting" },
+      { name: "description", content: "Kyçu në panelin e administrimit të KPT Consulting për të menaxhuar shërbimet, lajmet dhe përmbajtjen e faqes." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Kyçu — KPT Consulting" },
+      { property: "og:description", content: "Qasje e kufizuar në panelin e administrimit të KPT Consulting." },
+    ],
+  }),
   beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
     if (data.user) throw redirect({ to: "/admin" });

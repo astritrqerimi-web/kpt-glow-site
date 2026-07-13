@@ -13,6 +13,15 @@ import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   ssr: false,
+  head: () => ({
+    meta: [
+      { title: "Paneli i Administrimit — KPT Consulting" },
+      { name: "description", content: "Paneli i brendshëm i administrimit të KPT Consulting për menaxhimin e shërbimeve, lajmeve, mesazheve dhe përmbajtjes." },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Paneli i Administrimit — KPT Consulting" },
+      { property: "og:description", content: "Zonë e kufizuar për administratorët e KPT Consulting." },
+    ],
+  }),
   beforeLoad: async () => {
     const { data: u, error: userErr } = await supabase.auth.getUser();
     if (userErr || !u.user) {
