@@ -10,6 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SherbimetRouteImport } from './routes/sherbimet'
+import { Route as RrethNeshRouteImport } from './routes/rreth-nesh'
+import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,6 +23,21 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SherbimetRoute = SherbimetRouteImport.update({
+  id: '/sherbimet',
+  path: '/sherbimet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RrethNeshRoute = RrethNeshRouteImport.update({
+  id: '/rreth-nesh',
+  path: '/rreth-nesh',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KontaktRoute = KontaktRouteImport.update({
+  id: '/kontakt',
+  path: '/kontakt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -55,6 +73,9 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/kontakt': typeof KontaktRoute
+  '/rreth-nesh': typeof RrethNeshRoute
+  '/sherbimet': typeof SherbimetRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/lajme/$slug': typeof LajmeSlugRoute
@@ -63,6 +84,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/kontakt': typeof KontaktRoute
+  '/rreth-nesh': typeof RrethNeshRoute
+  '/sherbimet': typeof SherbimetRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/lajme/$slug': typeof LajmeSlugRoute
@@ -73,6 +97,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/kontakt': typeof KontaktRoute
+  '/rreth-nesh': typeof RrethNeshRoute
+  '/sherbimet': typeof SherbimetRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/lajme/$slug': typeof LajmeSlugRoute
@@ -83,17 +110,32 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/kontakt'
+    | '/rreth-nesh'
+    | '/sherbimet'
     | '/sitemap.xml'
     | '/admin'
     | '/lajme/$slug'
     | '/lajme/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/sitemap.xml' | '/admin' | '/lajme/$slug' | '/lajme'
+  to:
+    | '/'
+    | '/auth'
+    | '/kontakt'
+    | '/rreth-nesh'
+    | '/sherbimet'
+    | '/sitemap.xml'
+    | '/admin'
+    | '/lajme/$slug'
+    | '/lajme'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/kontakt'
+    | '/rreth-nesh'
+    | '/sherbimet'
     | '/sitemap.xml'
     | '/_authenticated/admin'
     | '/lajme/$slug'
@@ -104,6 +146,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  KontaktRoute: typeof KontaktRoute
+  RrethNeshRoute: typeof RrethNeshRoute
+  SherbimetRoute: typeof SherbimetRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   LajmeSlugRoute: typeof LajmeSlugRoute
   LajmeIndexRoute: typeof LajmeIndexRoute
@@ -116,6 +161,27 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sherbimet': {
+      id: '/sherbimet'
+      path: '/sherbimet'
+      fullPath: '/sherbimet'
+      preLoaderRoute: typeof SherbimetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rreth-nesh': {
+      id: '/rreth-nesh'
+      path: '/rreth-nesh'
+      fullPath: '/rreth-nesh'
+      preLoaderRoute: typeof RrethNeshRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kontakt': {
+      id: '/kontakt'
+      path: '/kontakt'
+      fullPath: '/kontakt'
+      preLoaderRoute: typeof KontaktRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -178,6 +244,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  KontaktRoute: KontaktRoute,
+  RrethNeshRoute: RrethNeshRoute,
+  SherbimetRoute: SherbimetRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   LajmeSlugRoute: LajmeSlugRoute,
   LajmeIndexRoute: LajmeIndexRoute,
