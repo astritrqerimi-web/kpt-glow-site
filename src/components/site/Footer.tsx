@@ -59,10 +59,10 @@ export function Footer({ company }: { company: CompanyInfo }) {
           <h4 className="text-sm font-semibold text-foreground">{menuTitle}</h4>
           <ul className="mt-4 space-y-2 text-sm">
             <li><a href="/" className="text-muted-foreground hover:text-primary transition">{t("nav.home")}</a></li>
-            <li><a href="/rreth-nesh" className="text-muted-foreground hover:text-primary transition">{t("nav.about")}</a></li>
-            <li><a href="/sherbimet" className="text-muted-foreground hover:text-primary transition">{t("nav.services")}</a></li>
+            <li><SectionLink section="rreth-nesh">{t("nav.about")}</SectionLink></li>
+            <li><SectionLink section="sherbimet">{t("nav.services")}</SectionLink></li>
             <li><a href="/lajme" className="text-muted-foreground hover:text-primary transition">{t("nav.news")}</a></li>
-            <li><a href="/kontakt" className="text-muted-foreground hover:text-primary transition">{t("nav.contact")}</a></li>
+            <li><SectionLink section="kontakt">{t("nav.contact")}</SectionLink></li>
           </ul>
         </div>
 
