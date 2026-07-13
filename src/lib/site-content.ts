@@ -37,10 +37,15 @@ export interface HeroContent {
 }
 
 export interface AboutContent {
+  eyebrow?: Bilingual;
+  titleA?: Bilingual;
+  titleB?: Bilingual;
+  leadershipLabel?: Bilingual;
   intro: Bilingual;
   services: Bilingual;
   leader: Bilingual;
 }
+
 
 export interface SeoContent {
   title: string;
