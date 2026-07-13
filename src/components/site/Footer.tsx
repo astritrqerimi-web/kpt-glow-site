@@ -114,3 +114,23 @@ function SocialLink({ href, label, children }: { href: string; label: string; ch
     </a>
   );
 }
+
+function SectionLink({ section, children }: { section: string; children: React.ReactNode }) {
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (pathname !== "/") {
+      await navigate({ to: "/" });
+      setTimeout(() => scrollToSection(section), 80);
+    } else {
+      scrollToSection(section);
+    }
+  };
+  return (
+    <a href="/" onClick={onClick} className="text-muted-foreground hover:text-primary transition">
+      {children}
+    </a>
+  );
+}
+
