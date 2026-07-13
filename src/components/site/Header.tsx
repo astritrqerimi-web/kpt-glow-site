@@ -5,32 +5,20 @@ import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 
-type NavItem =
-  | { kind: "hash"; hash: string; key: string }
-  | { kind: "route"; to: string; key: string };
+type NavItem = { to: string; key: string };
 
 const NAV: readonly NavItem[] = [
-  { kind: "hash", hash: "#ballina", key: "nav.home" },
-  { kind: "hash", hash: "#rreth-nesh", key: "nav.about" },
-  { kind: "hash", hash: "#sherbimet", key: "nav.services" },
-  { kind: "route", to: "/lajme", key: "nav.news" },
-  { kind: "hash", hash: "#kontakti", key: "nav.contact" },
+  { to: "/", key: "nav.home" },
+  { to: "/rreth-nesh", key: "nav.about" },
+  { to: "/sherbimet", key: "nav.services" },
+  { to: "/lajme", key: "nav.news" },
+  { to: "/kontakt", key: "nav.contact" },
 ] as const;
-
-function scrollToHash(hash: string) {
-  const id = hash.replace("#", "");
-  const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-    history.replaceState(null, "", hash);
-  }
-}
 
 export function Header() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState<string>("#ballina");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -41,35 +29,8 @@ export function Header() {
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-
-  useEffect(() => {
-    if (pathname !== "/") return;
-    const ids = NAV.filter((n): n is Extract<NavItem, { kind: "hash" }> => n.kind === "hash").map(
-      (n) => n.hash.replace("#", ""),
-    );
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setActive(`#${visible.target.id}`);
-      },
-      { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] },
-    );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, [pathname]);
-
-  const handleNav = (e: React.MouseEvent, hash: string) => {
-    if (window.location.pathname === "/") {
-      e.preventDefault();
-      scrollToHash(hash);
-      setOpen(false);
-    }
-  };
+  const isItemActive = (to: string) =>
+    to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(to + "/");
 
   return (
     <header
@@ -83,14 +44,7 @@ export function Header() {
         <Link
           to="/"
           className="flex items-center gap-3 group"
-          onClick={(e) => {
-            if (window.location.pathname === "/") {
-              e.preventDefault();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-              history.replaceState(null, "", "/");
-            }
-            setOpen(false);
-          }}
+          onClick={() => setOpen(false)}
           aria-label="KPT Consulting"
         >
           <img
@@ -111,32 +65,12 @@ export function Header() {
         <nav className="hidden lg:flex items-center gap-9">
           {NAV.map((item) => {
             const isContact = item.key === "nav.contact";
-            if (item.kind === "route") {
-              const isActive = pathname.startsWith(item.to);
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  onClick={() => setOpen(false)}
-                  className={
-                    isContact
-                      ? "inline-flex items-center rounded-full px-5 py-2.5 text-base lg:text-[17px] font-medium text-white shadow-soft whitespace-nowrap transition-all duration-300 hover:shadow-elegant hover:-translate-y-0.5"
-                      : `relative px-1 py-2 text-base lg:text-[17px] font-medium whitespace-nowrap transition-colors ${
-                          isActive ? "text-primary" : "text-foreground/75 hover:text-foreground"
-                        }`
-                  }
-                  style={isContact ? { background: "var(--gradient-brand)" } : undefined}
-                >
-                  {t(item.key)}
-                </Link>
-              );
-            }
-            const isActive = pathname === "/" && active === item.hash;
+            const isActive = isItemActive(item.to);
             return (
-              <a
-                key={item.hash}
-                href={`/${item.hash}`}
-                onClick={(e) => handleNav(e, item.hash)}
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setOpen(false)}
                 className={
                   isContact
                     ? "inline-flex items-center rounded-full px-5 py-2.5 text-base lg:text-[17px] font-medium text-white shadow-soft whitespace-nowrap transition-all duration-300 hover:shadow-elegant hover:-translate-y-0.5"
@@ -147,7 +81,7 @@ export function Header() {
                 style={isContact ? { background: "var(--gradient-brand)" } : undefined}
               >
                 {t(item.key)}
-              </a>
+              </Link>
             );
           })}
           <LanguageSwitcher variant="desktop" />
@@ -167,32 +101,12 @@ export function Header() {
           <nav className="container-page py-4 flex flex-col gap-1">
             {NAV.map((item) => {
               const isContact = item.key === "nav.contact";
-              if (item.kind === "route") {
-                const isActive = pathname.startsWith(item.to);
-                return (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    onClick={() => setOpen(false)}
-                    className={
-                      isContact
-                        ? "mx-3 mt-1 inline-flex items-center justify-center rounded-full px-5 py-3 text-base font-medium text-white transition-all duration-300"
-                        : `px-3 py-3 rounded-lg text-base font-medium transition ${
-                            isActive ? "text-primary bg-muted" : "text-foreground/85 hover:bg-muted"
-                          }`
-                    }
-                    style={isContact ? { background: "var(--gradient-brand)" } : undefined}
-                  >
-                    {t(item.key)}
-                  </Link>
-                );
-              }
-              const isActive = pathname === "/" && active === item.hash;
+              const isActive = isItemActive(item.to);
               return (
-                <a
-                  key={item.hash}
-                  href={`/${item.hash}`}
-                  onClick={(e) => handleNav(e, item.hash)}
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setOpen(false)}
                   className={
                     isContact
                       ? "mx-3 mt-1 inline-flex items-center justify-center rounded-full px-5 py-3 text-base font-medium text-white transition-all duration-300"
@@ -203,7 +117,7 @@ export function Header() {
                   style={isContact ? { background: "var(--gradient-brand)" } : undefined}
                 >
                   {t(item.key)}
-                </a>
+                </Link>
               );
             })}
             <LanguageSwitcher variant="mobile" />
