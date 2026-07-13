@@ -1,8 +1,10 @@
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Clock } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 import { type CompanyInfo, footerQuery, pick } from "@/lib/site-content";
 import { useI18n } from "@/lib/i18n";
+import { scrollToSection } from "@/lib/scroll-to-section";
 
 export function Footer({ company }: { company: CompanyInfo }) {
   const { t, lang } = useI18n();
