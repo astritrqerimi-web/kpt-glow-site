@@ -44,14 +44,14 @@ import { Hero3DVisual } from "@/components/site/Hero3DVisual";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "KPT Consulting — Kontabilitet, Program dhe Trajnime" },
+      { title: "KPT Consulting — Kontabilitet, Program, Trajnime" },
       {
         name: "description",
         content:
           "Shërbime profesionale të kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve dhe konsulencës financiare në Kosovë.",
       },
-      { property: "og:title", content: "KPT Consulting — Kontabilitet, Program dhe Trajnime" },
-      { property: "og:description", content: "Zgjidhje financiare profesionale për biznesin tuaj në Kosovë." },
+      { property: "og:title", content: "KPT Consulting — Kontabilitet, Program, Trajnime" },
+      { property: "og:description", content: "Shërbime profesionale të kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve dhe konsulencës financiare në Kosovë." },
     ],
   }),
   loader: ({ context }) => {
