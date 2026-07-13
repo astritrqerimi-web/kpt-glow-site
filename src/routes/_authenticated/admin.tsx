@@ -8,6 +8,8 @@ import { HERO_TRUST_ICONS, HERO_TRUST_ICON_NAMES } from "@/components/site/HeroS
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { LogOut, Plus, Trash2, Save, Mail, Home, FileEdit, Settings2, Loader2, ShieldAlert, Star, Newspaper, GripVertical } from "lucide-react";
 import { ArticlesAdmin } from "@/components/admin/ArticlesAdmin";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
+
 import { toast } from "sonner";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 
