@@ -36,6 +36,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useI18n, SERVICE_TRANSLATIONS } from "@/lib/i18n";
 import { Hero3DVisual } from "@/components/site/Hero3DVisual";
+import { sanitizeHtml } from "@/lib/sanitize";
+
 
 /* ---------------- HERO / BALLINA ---------------- */
 export function HeroSection() {
