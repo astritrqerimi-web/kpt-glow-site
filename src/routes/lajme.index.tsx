@@ -34,8 +34,9 @@ export const Route = createFileRoute("/lajme/")({
           "Përditësime ligjore dhe tatimore për biznese — ATK, TVSH, subvencione, ligje dhe njoftime.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.kptconsulting.al/lajme" },
     ],
-    links: [{ rel: "canonical", href: "/lajme" }],
+    links: [{ rel: "canonical", href: "https://www.kptconsulting.al/lajme" }],
   }),
   component: LajmePage,
 });

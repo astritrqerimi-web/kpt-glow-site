@@ -52,6 +52,37 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:title", content: "KPT Consulting — Kontabilitet, Program, Trajnime" },
       { property: "og:description", content: "Shërbime profesionale të kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve dhe konsulencës financiare në Kosovë." },
+      { property: "og:url", content: "https://www.kptconsulting.al/" },
+    ],
+    links: [{ rel: "canonical", href: "https://www.kptconsulting.al/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: "KPT Consulting",
+          image: "https://www.kptconsulting.al/favicon.ico",
+          url: "https://www.kptconsulting.al/",
+          telephone: "+383 45 555 686",
+          email: "info@kptconsulting.al",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "Rr. e Llapit",
+            addressLocality: "Fushë Kosovë",
+            addressCountry: "XK",
+          },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              opens: "09:00",
+              closes: "17:00",
+            },
+          ],
+          areaServed: "Kosovo",
+        }),
+      },
     ],
   }),
   loader: ({ context }) => {
@@ -211,7 +242,7 @@ function TrustCards() {
             >
               <c.icon className="h-6 w-6" strokeWidth={1.8} />
             </div>
-            <h3 className="mt-5 font-display text-xl text-foreground">{c.title}</h3>
+            <h2 className="mt-5 font-display text-xl text-foreground">{c.title}</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{c.desc}</p>
             <div
               aria-hidden

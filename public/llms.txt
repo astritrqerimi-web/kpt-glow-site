@@ -1,0 +1,10 @@
+# KPT Consulting
+
+> Shërbime profesionale të kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve dhe konsulencës financiare në Kosovë.
+
+KPT Consulting ofron kontabilitet, deklarime tatimore (TVSH, ATK), përgatitje të pasqyrave financiare, menaxhim pagash, konsulencë financiare, aplikime për grante dhe trajnime profesionale për biznese në Kosovë.
+
+## Pages
+
+- [Ballina](/): Prezantimi i KPT Consulting, shërbimet kryesore dhe kontakti.
+- [Lajme & Njoftime](/lajme): Përditësime tatimore, ligjore, ATK, TVSH, subvencione dhe njoftime profesionale.
