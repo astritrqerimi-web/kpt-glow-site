@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { z } from "zod";
+import { scrollToSection } from "@/lib/scroll-to-section";
 import {
   ArrowRight,
   CheckCircle2,
@@ -85,8 +86,9 @@ export function HeroSection() {
             </p>
 
             <div className="mt-10 flex flex-wrap gap-3 animate-fade-up" style={{ animationDelay: "240ms" }}>
-              <Link
-                to="/kontakt"
+              <button
+                type="button"
+                onClick={() => scrollToSection("kontakt")}
                 className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-8 py-4 text-sm font-semibold text-white shadow-elegant transition-all duration-300 hover:shadow-hover hover:-translate-y-0.5"
                 style={{ background: "var(--gradient-brand-strong)" }}
               >
@@ -99,14 +101,15 @@ export function HeroSection() {
                 />
                 <span className="relative">{ctaContact}</span>
                 <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-              <Link
-                to="/sherbimet"
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("sherbimet")}
                 className="group inline-flex items-center gap-2 rounded-full border border-border bg-background/70 backdrop-blur px-8 py-4 text-sm font-semibold text-foreground shadow-soft transition-all duration-300 hover:border-primary/40 hover:bg-background hover:-translate-y-0.5"
               >
                 {ctaServices}
                 <ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-1" />
-              </Link>
+              </button>
             </div>
           </div>
 

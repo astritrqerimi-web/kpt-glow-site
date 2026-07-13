@@ -1,8 +1,10 @@
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Clock } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 import { type CompanyInfo, footerQuery, pick } from "@/lib/site-content";
 import { useI18n } from "@/lib/i18n";
+import { scrollToSection } from "@/lib/scroll-to-section";
 
 export function Footer({ company }: { company: CompanyInfo }) {
   const { t, lang } = useI18n();
@@ -59,10 +61,10 @@ export function Footer({ company }: { company: CompanyInfo }) {
           <h4 className="text-sm font-semibold text-foreground">{menuTitle}</h4>
           <ul className="mt-4 space-y-2 text-sm">
             <li><a href="/" className="text-muted-foreground hover:text-primary transition">{t("nav.home")}</a></li>
-            <li><a href="/rreth-nesh" className="text-muted-foreground hover:text-primary transition">{t("nav.about")}</a></li>
-            <li><a href="/sherbimet" className="text-muted-foreground hover:text-primary transition">{t("nav.services")}</a></li>
+            <li><SectionLink section="rreth-nesh">{t("nav.about")}</SectionLink></li>
+            <li><SectionLink section="sherbimet">{t("nav.services")}</SectionLink></li>
             <li><a href="/lajme" className="text-muted-foreground hover:text-primary transition">{t("nav.news")}</a></li>
-            <li><a href="/kontakt" className="text-muted-foreground hover:text-primary transition">{t("nav.contact")}</a></li>
+            <li><SectionLink section="kontakt">{t("nav.contact")}</SectionLink></li>
           </ul>
         </div>
 
@@ -112,3 +114,23 @@ function SocialLink({ href, label, children }: { href: string; label: string; ch
     </a>
   );
 }
+
+function SectionLink({ section, children }: { section: string; children: React.ReactNode }) {
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (pathname !== "/") {
+      await navigate({ to: "/" });
+      setTimeout(() => scrollToSection(section), 80);
+    } else {
+      scrollToSection(section);
+    }
+  };
+  return (
+    <a href="/" onClick={onClick} className="text-muted-foreground hover:text-primary transition">
+      {children}
+    </a>
+  );
+}
+

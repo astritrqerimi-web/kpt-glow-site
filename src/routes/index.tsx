@@ -4,8 +4,18 @@ import {
   companyQuery,
   trustQuery,
   heroTrustQuery,
+  aboutQuery,
+  servicesQuery,
+  servicesSectionQuery,
+  contactSectionQuery,
 } from "@/lib/site-content";
-import { HeroSection, TrustCards } from "@/components/sections/HomeSections";
+import {
+  HeroSection,
+  TrustCards,
+  AboutSection,
+  ServicesSection,
+  ContactSection,
+} from "@/components/sections/HomeSections";
 import { LatestNewsSection } from "@/components/site/LatestNewsSection";
 
 export const Route = createFileRoute("/")({
@@ -57,6 +67,10 @@ export const Route = createFileRoute("/")({
     context.queryClient.ensureQueryData(companyQuery());
     context.queryClient.ensureQueryData(trustQuery());
     context.queryClient.ensureQueryData(heroTrustQuery());
+    context.queryClient.ensureQueryData(aboutQuery());
+    context.queryClient.ensureQueryData(servicesQuery());
+    context.queryClient.ensureQueryData(servicesSectionQuery());
+    context.queryClient.ensureQueryData(contactSectionQuery());
   },
   component: HomePage,
 });
@@ -66,7 +80,17 @@ function HomePage() {
     <>
       <HeroSection />
       <TrustCards />
+      <section id="rreth-nesh" className="scroll-mt-24">
+        <AboutSection />
+      </section>
+      <section id="sherbimet" className="scroll-mt-24">
+        <ServicesSection />
+      </section>
       <LatestNewsSection />
+      <section id="kontakt" className="scroll-mt-24">
+        <ContactSection />
+      </section>
     </>
   );
 }
+

@@ -6,8 +6,5 @@ KPT Consulting ofron kontabilitet, deklarime tatimore (TVSH, ATK), përgatitje t
 
 ## Pages
 
-- [Ballina](/): Prezantimi i KPT Consulting dhe pikat kryesore të shërbimeve.
-- [Rreth Nesh](/rreth-nesh): Ekspertiza, vlerat dhe udhëheqja e KPT Consulting.
-- [Shërbimet](/sherbimet): Kontabilitet, tatime, regjistrim biznesi, konsulencë financiare dhe grante.
-- [Kontakti](/kontakt): Adresa, telefoni, emaili dhe formulari i kontaktit.
+- [Ballina](/): Prezantimi i KPT Consulting, rreth nesh, shërbimet dhe kontakti në një faqe.
 - [Lajme & Njoftime](/lajme): Përditësime tatimore, ligjore, ATK, TVSH, subvencione dhe njoftime profesionale.
