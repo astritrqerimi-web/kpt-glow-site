@@ -335,17 +335,34 @@ function ReplyModal({ message, onClose, onSent }: { message: any; onClose: () =>
   const send = async () => {
     if (!body.trim()) { toast.error("Shkruani përgjigjen."); return; }
     setSending(true);
-    const { data, error } = await supabase.functions.invoke("send-smtp", {
-      body: { mode: "reply", to: message.email, subject, message: body },
-    });
-    setSending(false);
-    if (error || (data as any)?.error) {
-      toast.error(((data as any)?.error) || error?.message || "Dërgimi dështoi.");
-      return;
+    try {
+      const { data, error } = await supabase.functions.invoke("send-smtp", {
+        body: { mode: "reply", to: message.email, subject, message: body },
+      });
+
+      let detail: string | null = (data as any)?.error ?? null;
+      if (error) {
+        // FunctionsHttpError carries the raw Response — read the real message from it.
+        const res = (error as any)?.context;
+        if (res && typeof res.text === "function") {
+          try {
+            const txt = await res.text();
+            try { detail = JSON.parse(txt)?.error ?? txt; } catch { detail = txt; }
+          } catch { /* ignore */ }
+        }
+        detail = detail || error.message;
+      }
+
+      if (detail) { toast.error(detail); return; }
+      toast.success("Email u dërgua me sukses");
+      onSent();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Dërgimi dështoi.");
+    } finally {
+      setSending(false);
     }
-    toast.success("Email u dërgua me sukses");
-    onSent();
   };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>

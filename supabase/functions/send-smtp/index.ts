@@ -48,33 +48,80 @@ function htmlWrap(subject: string, bodyHtml: string): string {
   </div></body></html>`;
 }
 
+const EMAIL_RE = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
+
+/** Accepts "Name <mail@x.com>", "mail@x.com", " mail@x.com " → "mail@x.com" or null */
+function extractEmail(raw?: string | null): string | null {
+  if (!raw) return null;
+  const v = raw.trim();
+  const angled = v.match(/<([^>]+)>/);
+  const candidate = (angled ? angled[1] : v).trim();
+  return EMAIL_RE.test(candidate) ? candidate : null;
+}
+
+/** Normalizes an SMTP host: strips scheme, port and path. Rejects email addresses. */
+function normalizeHost(raw?: string | null): string | null {
+  if (!raw) return null;
+  let v = raw.trim().replace(/^[a-z]+:\/\//i, "");
+  if (v.includes("@")) return null; // an email address is NOT a mail server hostname
+  v = v.split("/")[0].split(":")[0].trim();
+  if (!v || !/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(v)) return null;
+  return v;
+}
+
+
+function json(payload: unknown, status = 200) {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: { ...cors, "Content-Type": "application/json" },
+  });
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
 
+  let client: SMTPClient | null = null;
   try {
-    const host = Deno.env.get("SMTP_HOST");
+    const rawHost = Deno.env.get("SMTP_HOST");
     const portStr = Deno.env.get("SMTP_PORT") ?? "465";
     const user = Deno.env.get("SMTP_USER");
     const password = Deno.env.get("SMTP_PASSWORD");
-    const fromAddr = Deno.env.get("SMTP_FROM") ?? user;
     const secure = (Deno.env.get("SMTP_SECURE") ?? "true").toLowerCase() !== "false";
-    if (!host || !user || !password || !fromAddr) {
-      return new Response(JSON.stringify({ error: "SMTP nuk është konfiguruar. Shtoni SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_FROM." }), { status: 500, headers: { ...cors, "Content-Type": "application/json" } });
+
+    const host = normalizeHost(rawHost);
+    const fromAddr = extractEmail(Deno.env.get("SMTP_FROM")) ?? extractEmail(user);
+
+    const configProblems: string[] = [];
+    if (!rawHost) configProblems.push("SMTP_HOST mungon.");
+    else if (!host) configProblems.push(`SMTP_HOST nuk është hostname i vlefshëm (p.sh. mail.kptconsulting.al) — vlera aktuale nuk pranohet.`);
+    if (!user) configProblems.push("SMTP_USER mungon.");
+    if (!password) configProblems.push("SMTP_PASSWORD mungon.");
+    if (!fromAddr) configProblems.push("SMTP_FROM duhet të jetë një adresë email e vlefshme (p.sh. info@kptconsulting.al).");
+    if (!Number(portStr)) configProblems.push("SMTP_PORT duhet të jetë numër (465 ose 587).");
+
+    if (configProblems.length) {
+      console.error("send-smtp config error", configProblems);
+      return json({ error: `Konfigurimi SMTP është i pasaktë: ${configProblems.join(" ")}` }, 500);
     }
 
-    const body = (await req.json()) as Payload;
+    let body: Payload;
+    try {
+      body = (await req.json()) as Payload;
+    } catch {
+      return json({ error: "Kërkesa nuk është JSON i vlefshëm." }, 400);
+    }
     if (!body?.mode || !body.subject || !body.message) {
-      return new Response(JSON.stringify({ error: "Fusha të mangëta." }), { status: 400, headers: { ...cors, "Content-Type": "application/json" } });
+      return json({ error: "Fusha të mangëta (mode, subject, message)." }, 400);
     }
 
     let toAddr = "";
     let subject = body.subject.slice(0, 200);
     let htmlBody = "";
-    let replyTo: string | undefined = body.replyTo;
+    let replyTo: string | undefined = extractEmail(body.replyTo) ?? undefined;
 
     if (body.mode === "contact") {
       // Public: notify the site owner. Recipient is always SMTP_FROM (the admin inbox).
-      toAddr = fromAddr;
+      toAddr = fromAddr!;
       subject = `[Kontakt] ${subject}`;
       const rows = [
         ["Emri", body.from_name ?? "-"],
@@ -85,54 +132,54 @@ Deno.serve(async (req) => {
       htmlBody = `<table style="width:100%;border-collapse:collapse;margin-bottom:16px">${rows
         .map(([k, v]) => `<tr><td style="padding:6px 0;color:#64748b;width:110px;font-size:13px">${esc(k)}</td><td style="padding:6px 0;font-weight:600">${esc(String(v))}</td></tr>`)
         .join("")}</table><div style="white-space:pre-wrap;padding:16px;background:#f8fafc;border-radius:8px;border:1px solid #e5e7eb">${esc(body.message)}</div>`;
-      if (body.from_email && !replyTo) replyTo = body.from_email;
+      const sender = extractEmail(body.from_email);
+      if (sender && !replyTo) replyTo = sender;
     } else if (body.mode === "reply") {
       // Admin-only: verify bearer token belongs to a user with role 'admin'.
       const authHeader = req.headers.get("Authorization") ?? "";
       const token = authHeader.replace(/^Bearer\s+/i, "");
-      if (!token) {
-        return new Response(JSON.stringify({ error: "Nuk jeni i autentikuar." }), { status: 401, headers: { ...cors, "Content-Type": "application/json" } });
-      }
+      if (!token) return json({ error: "Nuk jeni i autentikuar." }, 401);
+
       const supa = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
       const { data: userData, error: userErr } = await supa.auth.getUser(token);
-      if (userErr || !userData.user) {
-        return new Response(JSON.stringify({ error: "Token jo i vlefshëm." }), { status: 401, headers: { ...cors, "Content-Type": "application/json" } });
-      }
+      if (userErr || !userData.user) return json({ error: "Token jo i vlefshëm." }, 401);
+
       const { data: roleRow } = await supa.from("user_roles").select("role").eq("user_id", userData.user.id).eq("role", "admin").maybeSingle();
-      if (!roleRow) {
-        return new Response(JSON.stringify({ error: "Nuk keni të drejta administratori." }), { status: 403, headers: { ...cors, "Content-Type": "application/json" } });
-      }
-      if (!body.to) {
-        return new Response(JSON.stringify({ error: "Marrësi mungon." }), { status: 400, headers: { ...cors, "Content-Type": "application/json" } });
-      }
-      toAddr = body.to;
+      if (!roleRow) return json({ error: "Nuk keni të drejta administratori." }, 403);
+
+      const recipient = extractEmail(body.to);
+      if (!recipient) return json({ error: `Marrësi nuk është email i vlefshëm: ${body.to ?? "(bosh)"}` }, 400);
+      toAddr = recipient;
       htmlBody = `<div style="white-space:pre-wrap">${esc(body.message)}</div>`;
     } else {
-      return new Response(JSON.stringify({ error: "Mode i pavlefshëm." }), { status: 400, headers: { ...cors, "Content-Type": "application/json" } });
+      return json({ error: "Mode i pavlefshëm." }, 400);
     }
 
-    const client = new SMTPClient({
+    client = new SMTPClient({
       connection: {
-        hostname: host,
+        hostname: host!,
         port: Number(portStr) || 465,
         tls: secure,
-        auth: { username: user, password },
+        auth: { username: user!, password: password! },
       },
     });
 
     await client.send({
-      from: fromAddr,
+      from: fromAddr!,
       to: toAddr,
       subject,
       content: body.message,
       html: htmlWrap(subject, htmlBody),
       replyTo,
     });
-    await client.close();
 
-    return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { ...cors, "Content-Type": "application/json" } });
+    return json({ ok: true }, 200);
   } catch (e) {
-    console.error("send-smtp error", e);
-    return new Response(JSON.stringify({ error: "Dërgimi i email-it dështoi. Provoni përsëri." }), { status: 500, headers: { ...cors, "Content-Type": "application/json" } });
+    const detail = e instanceof Error ? e.message : String(e);
+    console.error("send-smtp error", detail, e);
+    return json({ error: `Dërgimi i email-it dështoi: ${detail}` }, 500);
+  } finally {
+    try { await client?.close(); } catch { /* ignore */ }
   }
 });
+
