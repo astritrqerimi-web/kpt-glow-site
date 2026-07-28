@@ -59,15 +59,16 @@ function extractEmail(raw?: string | null): string | null {
   return EMAIL_RE.test(candidate) ? candidate : null;
 }
 
-/** Normalizes an SMTP host: strips scheme, credentials, port and path. */
+/** Normalizes an SMTP host: strips scheme, port and path. Rejects email addresses. */
 function normalizeHost(raw?: string | null): string | null {
   if (!raw) return null;
   let v = raw.trim().replace(/^[a-z]+:\/\//i, "");
-  if (v.includes("@")) v = v.split("@").pop()!; // someone pasted an email address
+  if (v.includes("@")) return null; // an email address is NOT a mail server hostname
   v = v.split("/")[0].split(":")[0].trim();
   if (!v || !/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(v)) return null;
   return v;
 }
+
 
 function json(payload: unknown, status = 200) {
   return new Response(JSON.stringify(payload), {
