@@ -314,7 +314,12 @@ function buildContactSchema(t: (k: string) => string) {
     .object({
       name: z.string().trim().min(2, t("form.err.name")).max(100),
       email: z.string().trim().email(t("form.err.email")).max(255),
-      phone: z.string().trim().max(30).optional().or(z.literal("")),
+      phone: z
+        .string()
+        .trim()
+        .min(6, t("form.err.phone"))
+        .max(30, t("form.err.phone"))
+        .regex(/^\+?[0-9\s().-]{6,30}$/, t("form.err.phone")),
       service: z.enum(SERVICE_OPTIONS, { message: t("form.err.service") }),
       serviceOther: z.string().trim().max(150).optional().or(z.literal("")),
       message: z.string().trim().min(10, t("form.err.message")).max(5000),
@@ -351,7 +356,7 @@ export function ContactSection() {
     const { error } = await supabase.from("contact_messages").insert({
       name: parsed.data.name,
       email: parsed.data.email,
-      phone: parsed.data.phone || null,
+      phone: parsed.data.phone,
       subject: subjectValue,
       message: parsed.data.message,
     });
@@ -458,6 +463,9 @@ export function ContactSection() {
             </Field>
             <Field label={t("form.phone")} error={errors.phone}>
               <input
+                type="tel"
+                required
+                aria-required="true"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"

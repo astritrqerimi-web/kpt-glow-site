@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const BASE_URL = "https://www.kptconsulting.al";
 
-export const Route = createFileRoute("/sitemap.xml")({
+const routeOptions = {
   server: {
     handlers: {
       GET: async () => {
@@ -65,4 +65,7 @@ export const Route = createFileRoute("/sitemap.xml")({
       },
     },
   },
-});
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const Route = createFileRoute("/sitemap.xml")(routeOptions as any);
