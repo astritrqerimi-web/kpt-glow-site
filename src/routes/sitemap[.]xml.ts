@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const BASE_URL = "https://www.kptconsulting.al";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
