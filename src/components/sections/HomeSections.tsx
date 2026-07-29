@@ -356,7 +356,7 @@ export function ContactSection() {
     const { error } = await supabase.from("contact_messages").insert({
       name: parsed.data.name,
       email: parsed.data.email,
-      phone: parsed.data.phone || null,
+      phone: parsed.data.phone,
       subject: subjectValue,
       message: parsed.data.message,
     });
