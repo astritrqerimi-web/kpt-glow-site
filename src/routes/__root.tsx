@@ -149,6 +149,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
+        <Analytics />
         <SiteChrome>
           <Outlet />
         </SiteChrome>
