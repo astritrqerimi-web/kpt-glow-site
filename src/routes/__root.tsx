@@ -20,6 +20,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { companyQuery } from "@/lib/site-content";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { I18nProvider } from "@/lib/i18n";
+import { GA_MEASUREMENT_ID } from "@/lib/analytics";
+import { Analytics } from "@/components/site/Analytics";
 
 
 function NotFoundComponent() {
@@ -106,6 +108,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@600&display=swap" },
     ],
+    scripts: [
+      { src: `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`, async: true },
+      {
+        children: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','${GA_MEASUREMENT_ID}',{send_page_view:false});`,
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -141,6 +149,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
+        <Analytics />
         <SiteChrome>
           <Outlet />
         </SiteChrome>
