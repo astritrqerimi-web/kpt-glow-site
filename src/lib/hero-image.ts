@@ -26,7 +26,18 @@ export const HERO_WEBP_SRCSET = [
 /** Smallest modern variant — good preload/LCP candidate for mobile. */
 export const HERO_PRELOAD_HREF = avif1024.url;
 
-/** Only the bundled default hero has pre-generated AVIF/WebP variants. */
+/**
+ * URLs that point at the same artwork as the bundled default hero and can
+ * therefore reuse the pre-generated AVIF/WebP variants (e.g. the copy that
+ * lives in the site-images bucket and is referenced from the CMS).
+ */
+const EQUIVALENT_HERO_URLS = new Set<string>([
+  DEFAULT_HERO_URL,
+  "https://ulqjwinmuxijumrvsnaq.supabase.co/storage/v1/object/public/site-images/hero/1783424929273-17c7vx.png",
+]);
+
+/** Only the known default hero artwork has pre-generated AVIF/WebP variants. */
 export function isDefaultHero(url?: string | null) {
-  return !url || url === DEFAULT_HERO_URL;
+  return !url || EQUIVALENT_HERO_URLS.has(url);
 }
+
