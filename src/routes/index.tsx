@@ -21,34 +21,47 @@ import { LatestNewsSection } from "@/components/site/LatestNewsSection";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "KPT Consulting — Kontabilitet, Program, Trajnime" },
+      { title: "KPT Consulting — Kontabilitet, Tatime & Paga në Kosovë" },
       {
         name: "description",
         content:
-          "Shërbime profesionale të kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve dhe konsulencës financiare në Kosovë.",
+          "Shërbime kontabiliteti, konsulencë tatimore, paga, TVSH, regjistrim biznesi dhe konsulencë financiare në Fushë Kosovë e mbarë Kosovën.",
       },
-      { property: "og:title", content: "KPT Consulting — Kontabilitet, Program, Trajnime" },
-      { property: "og:description", content: "Shërbime profesionale të kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve dhe konsulencës financiare në Kosovë." },
+      { name: "keywords", content: "kontabilitet Kosove, sherbime kontabiliteti, konsulence tatimore, paga, TVSH, regjistrim biznesi, konsulence financiare, Fushe Kosove, Prishtine" },
+      { property: "og:title", content: "KPT Consulting — Kontabilitet, Tatime & Paga në Kosovë" },
+      { property: "og:description", content: "Shërbime kontabiliteti, konsulencë tatimore, paga, TVSH, regjistrim biznesi dhe konsulencë financiare në Kosovë." },
       { property: "og:url", content: "https://www.kptconsulting.al/" },
     ],
-    links: [{ rel: "canonical", href: "https://www.kptconsulting.al/" }],
+    links: [
+      { rel: "canonical", href: "https://www.kptconsulting.al/" },
+      { rel: "preload", as: "image", href: HERO_PRELOAD_HREF, type: "image/avif", imageSrcSet: HERO_AVIF_SRCSET, imageSizes: HERO_SIZES, fetchPriority: "high" },
+    ],
     scripts: [
       {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "LocalBusiness",
+          "@type": "AccountingService",
+          "@id": "https://www.kptconsulting.al/#business",
           name: "KPT Consulting",
+          description:
+            "Zyrë kontabiliteti dhe konsulence në Kosovë: kontabilitet, deklarime tatimore, TVSH, paga, regjistrim biznesi dhe konsulencë financiare.",
           image: "https://www.kptconsulting.al/kpt-icon-v2-512.png?v=2",
+          logo: "https://www.kptconsulting.al/kpt-icon-v2-512.png?v=2",
           url: "https://www.kptconsulting.al/",
           telephone: "+383 45 555 686",
           email: "info@kptconsulting.al",
+          priceRange: "€€",
+          currenciesAccepted: "EUR",
           address: {
             "@type": "PostalAddress",
             streetAddress: "Rr. e Llapit",
             addressLocality: "Fushë Kosovë",
+            addressRegion: "Prishtinë",
+            postalCode: "12000",
             addressCountry: "XK",
           },
+          geo: { "@type": "GeoCoordinates", latitude: 42.6383, longitude: 21.0967 },
           openingHoursSpecification: [
             {
               "@type": "OpeningHoursSpecification",
@@ -57,11 +70,49 @@ export const Route = createFileRoute("/")({
               closes: "17:00",
             },
           ],
-          areaServed: "Kosovo",
+          areaServed: [
+            { "@type": "Country", name: "Kosovo" },
+            { "@type": "City", name: "Prishtinë" },
+            { "@type": "City", name: "Fushë Kosovë" },
+            { "@type": "City", name: "Ferizaj" },
+            { "@type": "City", name: "Prizren" },
+            { "@type": "City", name: "Pejë" },
+            { "@type": "City", name: "Gjakovë" },
+            { "@type": "City", name: "Mitrovicë" },
+            { "@type": "City", name: "Gjilan" },
+          ],
+          knowsLanguage: ["sq", "en"],
+          hasOfferCatalog: {
+            "@type": "OfferCatalog",
+            name: "Shërbimet e KPT Consulting",
+            itemListElement: [
+              "Shërbime kontabiliteti",
+              "Konsulencë tatimore",
+              "Përgatitje dhe administrim i pagave",
+              "Regjistrim biznesi",
+              "Shërbime TVSH",
+              "Konsulencë financiare",
+              "Trajnime profesionale",
+            ].map((name) => ({
+              "@type": "Offer",
+              itemOffered: { "@type": "Service", name, areaServed: "Kosovo", provider: { "@id": "https://www.kptconsulting.al/#business" } },
+            })),
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "KPT Consulting",
+          url: "https://www.kptconsulting.al/",
+          inLanguage: ["sq", "en"],
         }),
       },
     ],
   }),
+
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(heroQuery());
     context.queryClient.ensureQueryData(companyQuery());
