@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
-import { scrollToSection } from "@/lib/scroll-to-section";
+import { scrollToSection, scrollToTop } from "@/lib/scroll-to-section";
 
 type NavItem =
   | { kind: "route"; to: string; key: string }
@@ -66,7 +66,11 @@ export function Header() {
         <Link
           key={item.key}
           to={item.to}
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+            if (item.to === "/" && pathname === "/") scrollToTop();
+            else if (item.to === "/") setTimeout(() => scrollToTop(false), 80);
+          }}
           className={cls + activeCls}
           style={style}
         >
@@ -74,6 +78,7 @@ export function Header() {
         </Link>
       );
     }
+
     return (
       <button
         key={item.key}
