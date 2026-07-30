@@ -34,9 +34,14 @@ export function ArticleCard({ article, categories }: Props) {
           <img
             src={article.cover_image_url}
             alt={title}
+            width={640}
+            height={360}
             loading="lazy"
+            decoding="async"
+            sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 380px"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
+
         ) : (
           <div
             className="h-full w-full"
