@@ -17,6 +17,8 @@ import {
   ContactSection,
 } from "@/components/sections/HomeSections";
 import { LatestNewsSection } from "@/components/site/LatestNewsSection";
+import { HERO_PRELOAD_HREF, HERO_AVIF_SRCSET, HERO_SIZES } from "@/lib/hero-image";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
