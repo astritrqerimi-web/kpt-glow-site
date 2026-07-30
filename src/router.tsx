@@ -9,8 +9,13 @@ export const getRouter = () => {
     routeTree,
     context: { queryClient },
     scrollRestoration: true,
-    defaultPreloadStaleTime: 0,
+    // Prefetch the next page's code + data as soon as the user shows intent
+    // (hover/touchstart on a link) — makes in-site navigation feel instant.
+    defaultPreload: "intent",
+    defaultPreloadDelay: 50,
+    defaultPreloadStaleTime: 30_000,
   });
+
 
   return router;
 };

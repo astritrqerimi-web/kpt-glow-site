@@ -170,8 +170,13 @@ function ArticleDetailPage() {
             <img
               src={article.cover_image_url}
               alt={title}
+              width={1200}
+              height={675}
+              fetchPriority="high"
+              decoding="async"
               className="w-full h-auto object-cover"
             />
+
           </div>
         </div>
       )}

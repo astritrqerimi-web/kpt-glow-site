@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { TrendingUp, ShieldCheck } from "lucide-react";
-import heroAsset from "@/assets/hero-3d-finance.png.asset.json";
+import {
+  DEFAULT_HERO_URL,
+  HERO_AVIF_SRCSET,
+  HERO_WEBP_SRCSET,
+  HERO_SIZES,
+  isDefaultHero,
+} from "@/lib/hero-image";
+
 import { useI18n } from "@/lib/i18n";
 
 interface Props {
@@ -58,7 +65,9 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
     };
   }, []);
 
-  const src = imageUrl || heroAsset.url;
+  const src = imageUrl || DEFAULT_HERO_URL;
+  const optimized = isDefaultHero(imageUrl);
+
 
   return (
     <div
@@ -93,21 +102,26 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
           className="group relative overflow-hidden rounded-[1.75rem] sm:rounded-[2.25rem] lg:rounded-[2.5rem] shadow-elegant animate-float-hero transition-transform duration-500 hover:scale-[1.04]"
           style={{ transformStyle: "preserve-3d", background: "transparent" }}
         >
-          <img
-            src={src}
-            alt={alt || "Vizualizim premium 3D — kontabilitet dhe konsulencë biznesi"}
-            width={1536}
-            height={1024}
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-            className="block h-auto w-full select-none rounded-[1.75rem] sm:rounded-[2.25rem] lg:rounded-[2.5rem]"
-            style={{
-              transform: "translateZ(40px)",
-              imageRendering: "auto",
-            }}
-            draggable={false}
-          />
+          <picture>
+            {optimized && <source type="image/avif" srcSet={HERO_AVIF_SRCSET} sizes={HERO_SIZES} />}
+            {optimized && <source type="image/webp" srcSet={HERO_WEBP_SRCSET} sizes={HERO_SIZES} />}
+            <img
+              src={src}
+              alt={alt || "Vizualizim premium 3D — kontabilitet dhe konsulencë biznesi"}
+              width={1536}
+              height={1024}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              className="block h-auto w-full select-none rounded-[1.75rem] sm:rounded-[2.25rem] lg:rounded-[2.5rem]"
+              style={{
+                transform: "translateZ(40px)",
+                imageRendering: "auto",
+              }}
+              draggable={false}
+            />
+          </picture>
+
 
           {/* Dynamic light reflection following pointer */}
           <div
