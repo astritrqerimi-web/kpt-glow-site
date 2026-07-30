@@ -467,9 +467,17 @@ export function ContactSection() {
                 required
                 aria-required="true"
                 value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                onInvalid={(e) => {
+                  const el = e.currentTarget;
+                  if (el.validity.valueMissing) el.setCustomValidity(t("form.err.phoneRequired"));
+                }}
+                onChange={(e) => {
+                  e.currentTarget.setCustomValidity("");
+                  setForm({ ...form, phone: e.target.value });
+                }}
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
+
             </Field>
           </div>
           <Field label={t("form.service")} error={errors.service}>
