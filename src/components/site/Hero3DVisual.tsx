@@ -102,21 +102,26 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
           className="group relative overflow-hidden rounded-[1.75rem] sm:rounded-[2.25rem] lg:rounded-[2.5rem] shadow-elegant animate-float-hero transition-transform duration-500 hover:scale-[1.04]"
           style={{ transformStyle: "preserve-3d", background: "transparent" }}
         >
-          <img
-            src={src}
-            alt={alt || "Vizualizim premium 3D — kontabilitet dhe konsulencë biznesi"}
-            width={1536}
-            height={1024}
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-            className="block h-auto w-full select-none rounded-[1.75rem] sm:rounded-[2.25rem] lg:rounded-[2.5rem]"
-            style={{
-              transform: "translateZ(40px)",
-              imageRendering: "auto",
-            }}
-            draggable={false}
-          />
+          <picture>
+            {optimized && <source type="image/avif" srcSet={HERO_AVIF_SRCSET} sizes={HERO_SIZES} />}
+            {optimized && <source type="image/webp" srcSet={HERO_WEBP_SRCSET} sizes={HERO_SIZES} />}
+            <img
+              src={src}
+              alt={alt || "Vizualizim premium 3D — kontabilitet dhe konsulencë biznesi"}
+              width={1536}
+              height={1024}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              className="block h-auto w-full select-none rounded-[1.75rem] sm:rounded-[2.25rem] lg:rounded-[2.5rem]"
+              style={{
+                transform: "translateZ(40px)",
+                imageRendering: "auto",
+              }}
+              draggable={false}
+            />
+          </picture>
+
 
           {/* Dynamic light reflection following pointer */}
           <div
