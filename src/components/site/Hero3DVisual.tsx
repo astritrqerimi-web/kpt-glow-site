@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { TrendingUp, ShieldCheck } from "lucide-react";
-import heroAsset from "@/assets/hero-3d-finance.png.asset.json";
+import {
+  DEFAULT_HERO_URL,
+  HERO_AVIF_SRCSET,
+  HERO_WEBP_SRCSET,
+  HERO_SIZES,
+  isDefaultHero,
+} from "@/lib/hero-image";
+
 import { useI18n } from "@/lib/i18n";
 
 interface Props {
