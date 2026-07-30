@@ -122,6 +122,8 @@ const translations: Record<Lang, Dict> = {
     "form.err.name": "Emri është i detyrueshëm",
     "form.err.email": "Email-i nuk është valid",
     "form.err.phone": "Numri i telefonit nevojitet",
+    "form.err.phoneRequired": "Numri kontaktues është i nevojshëm.",
+
     "form.err.service": "Ju lutem zgjidhni një shërbim",
     "form.err.serviceOther": "Ju lutem përshkruani kërkesën tuaj",
     "form.err.message": "Mesazhi është shumë i shkurtër",
@@ -246,6 +248,8 @@ const translations: Record<Lang, Dict> = {
     "form.err.name": "Name is required",
     "form.err.email": "Email is not valid",
     "form.err.phone": "Numri i telefonit nevojitet",
+    "form.err.phoneRequired": "Numri kontaktues është i nevojshëm.",
+
     "form.err.service": "Please choose a service",
     "form.err.serviceOther": "Please describe your request",
     "form.err.message": "Message is too short",
