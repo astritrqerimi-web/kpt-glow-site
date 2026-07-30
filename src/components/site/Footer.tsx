@@ -4,7 +4,7 @@ import { useNavigate, useRouterState } from "@tanstack/react-router";
 import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
 import { type CompanyInfo, footerQuery, pick } from "@/lib/site-content";
 import { useI18n } from "@/lib/i18n";
-import { scrollToSection } from "@/lib/scroll-to-section";
+import { scrollToSection, scrollToTop } from "@/lib/scroll-to-section";
 
 export function Footer({ company }: { company: CompanyInfo }) {
   const { t, lang } = useI18n();
@@ -60,7 +60,7 @@ export function Footer({ company }: { company: CompanyInfo }) {
         <div>
           <h4 className="text-sm font-semibold text-foreground">{menuTitle}</h4>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><a href="/" className="text-muted-foreground hover:text-primary transition">{t("nav.home")}</a></li>
+            <li><HomeLink>{t("nav.home")}</HomeLink></li>
             <li><SectionLink section="rreth-nesh">{t("nav.about")}</SectionLink></li>
             <li><SectionLink section="sherbimet">{t("nav.services")}</SectionLink></li>
             <li><a href="/lajme" className="text-muted-foreground hover:text-primary transition">{t("nav.news")}</a></li>
@@ -110,6 +110,25 @@ function SocialLink({ href, label, children }: { href: string; label: string; ch
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
       className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-primary hover:border-primary/40 transition">
+      {children}
+    </a>
+  );
+}
+
+function HomeLink({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (pathname !== "/") {
+      await navigate({ to: "/" });
+      setTimeout(() => scrollToTop(false), 80);
+    } else {
+      scrollToTop();
+    }
+  };
+  return (
+    <a href="/" onClick={onClick} className="text-muted-foreground hover:text-primary transition">
       {children}
     </a>
   );
