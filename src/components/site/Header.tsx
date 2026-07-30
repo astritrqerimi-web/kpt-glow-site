@@ -104,7 +104,11 @@ export function Header() {
         <Link
           to="/"
           className="flex items-center gap-3 group"
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+            if (pathname === "/") scrollToTop();
+            else setTimeout(() => scrollToTop(false), 80);
+          }}
           aria-label="KPT Consulting"
         >
           <img
