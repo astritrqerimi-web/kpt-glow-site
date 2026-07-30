@@ -58,7 +58,9 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
     };
   }, []);
 
-  const src = imageUrl || heroAsset.url;
+  const src = imageUrl || DEFAULT_HERO_URL;
+  const optimized = isDefaultHero(imageUrl);
+
 
   return (
     <div
