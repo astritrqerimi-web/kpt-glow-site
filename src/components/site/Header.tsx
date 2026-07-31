@@ -1,7 +1,7 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
+import { BrandLogo } from "@/components/site/BrandLogo";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 import { scrollToSection, scrollToTop } from "@/lib/scroll-to-section";
@@ -111,9 +111,10 @@ export function Header() {
           }}
           aria-label="KPT Consulting"
         >
-          <img
-            src={logoAsset.url}
+          <BrandLogo
             alt="KPT Consulting"
+            sizes="(max-width: 768px) 56px, 64px"
+            eager
             className="h-14 w-14 md:h-16 md:w-16 object-contain transition-transform duration-500 group-hover:scale-105"
           />
           <div className="flex flex-col leading-tight">

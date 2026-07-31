@@ -2,7 +2,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
+import { BrandLogo } from "@/components/site/BrandLogo";
 import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
@@ -61,7 +61,7 @@ function AuthPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-16">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <img src={logoAsset.url} alt="KPT Consulting" className="mx-auto h-16 w-16 object-contain" />
+          <BrandLogo alt="KPT Consulting" sizes="64px" className="mx-auto h-16 w-16 object-contain" />
           <h1 className="mt-4 font-display text-3xl text-foreground">Paneli i Administrimit</h1>
           <p className="mt-2 text-sm text-muted-foreground">KPT Consulting</p>
         </div>

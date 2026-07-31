@@ -11,7 +11,7 @@ import { ArticlesAdmin } from "@/components/admin/ArticlesAdmin";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
 import { toast } from "sonner";
-import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
+import { BrandLogo } from "@/components/site/BrandLogo";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   ssr: false,
@@ -76,7 +76,7 @@ function AdminPage() {
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
         <div className="container-page flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logoAsset.url} alt="KPT" className="h-9 w-9 object-contain" />
+            <BrandLogo alt="KPT" sizes="36px" className="h-9 w-9 object-contain" />
             <div className="hidden sm:block">
               <div className="text-sm font-semibold">KPT Consulting</div>
               <div className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Paneli i Administrimit</div>
