@@ -1,7 +1,7 @@
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Clock } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
-import logoAsset from "@/assets/kpt-logo-symbol.png.asset.json";
+import { BrandLogo } from "@/components/site/BrandLogo";
 import { type CompanyInfo, footerQuery, pick } from "@/lib/site-content";
 import { useI18n } from "@/lib/i18n";
 import { scrollToSection, scrollToTop } from "@/lib/scroll-to-section";
@@ -29,7 +29,7 @@ export function Footer({ company }: { company: CompanyInfo }) {
       <div className="container-page py-14 grid gap-10 md:grid-cols-5">
         <div className="md:col-span-2">
           <div className="flex items-center gap-3">
-            <img src={logoAsset.url} alt={brand} className="h-11 w-11 object-contain" />
+            <BrandLogo alt={brand} sizes="44px" className="h-11 w-11 object-contain" />
             <div>
               <div className="text-lg text-foreground font-semibold" style={{ fontFamily: "'Manrope', sans-serif" }}>
                 {brand}
