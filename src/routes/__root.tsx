@@ -20,7 +20,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { companyQuery } from "@/lib/site-content";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { I18nProvider } from "@/lib/i18n";
-import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 import { Analytics } from "@/components/site/Analytics";
 
 
