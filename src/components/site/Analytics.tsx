@@ -23,7 +23,6 @@ export function Analytics() {
     const full = `${pathname}${search ? `?${search.replace(/^\?/, "")}` : ""}`;
     if (lastPath.current === full) return;
     lastPath.current = full;
-    loadGtag();
     trackPageView(full);
   }, [pathname, search]);
 

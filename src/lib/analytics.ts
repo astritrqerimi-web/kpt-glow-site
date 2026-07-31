@@ -8,6 +8,7 @@ declare global {
 }
 
 let loaded = false;
+const pending: string[] = [];
 
 /**
  * Loads GA4 lazily (off the critical path). The `gtag` queue stub is created
@@ -25,6 +26,9 @@ export function loadGtag() {
   gtag("js", new Date());
   gtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
 
+  const queued = pending.splice(0, pending.length);
+  queued.forEach(sendPageView);
+
   const s = document.createElement("script");
   s.async = true;
   s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
@@ -32,7 +36,16 @@ export function loadGtag() {
 }
 
 export function trackPageView(path: string) {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") return;
+  if (typeof window === "undefined") return;
+  if (!loaded) {
+    pending.push(path);
+    return;
+  }
+  sendPageView(path);
+}
+
+function sendPageView(path: string) {
+  if (typeof window.gtag !== "function") return;
   window.gtag("event", "page_view", {
     page_path: path,
     page_location: window.location.href,
