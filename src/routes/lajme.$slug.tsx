@@ -34,6 +34,16 @@ export const Route = createFileRoute("/lajme/$slug")({
       articleBySlugQuery(params.slug),
     );
     if (!article || article.status !== "published") throw notFound();
+    // Prefetched so related content is server-rendered (no post-hydration shift).
+    await Promise.all([
+      context.queryClient.ensureQueryData(categoriesQuery()),
+      context.queryClient.ensureQueryData(
+        relatedArticlesQuery(article.category_slug, article.id, 3),
+      ),
+      context.queryClient.ensureQueryData(
+        prevNextArticleQuery(article.published_at ?? article.created_at, article.id),
+      ),
+    ]);
     return { article };
   },
   head: ({ loaderData }) => {
@@ -113,10 +123,9 @@ function ArticleDetailPage() {
   );
 
   const cat = categories.find((c) => c.slug === article.category_slug);
-  const shareUrl =
-    typeof window !== "undefined"
-      ? window.location.href
-      : `https://kpt-glow-site.lovable.app/lajme/${articleUrlSlug(article)}`;
+  // Stable on server and client (a `window.location` read here caused a
+  // hydration mismatch on the article page).
+  const shareUrl = `https://www.kptconsulting.al/lajme/${articleUrlSlug(article)}`;
 
   const title = articleTitle(article, lang);
   const safeHtml = sanitizeHtml(articleContent(article, lang));
