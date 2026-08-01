@@ -17,7 +17,7 @@ import { ParticleBackground } from "@/components/site/ParticleBackground";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
-import { companyQuery } from "@/lib/site-content";
+import { companyQuery, footerQuery } from "@/lib/site-content";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { I18nProvider } from "@/lib/i18n";
 import { Analytics } from "@/components/site/Analytics";
@@ -103,18 +103,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", type: "image/png", sizes: "48x48", href: "/kpt-favicon-v2-48.png?v=2" },
       { rel: "apple-touch-icon", sizes: "180x180", href: "/kpt-apple-touch-icon-v2.png?v=2" },
       { rel: "manifest", href: "/manifest.webmanifest?v=2" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://ulqjwinmuxijumrvsnaq.supabase.co", crossOrigin: "anonymous" },
       { rel: "dns-prefetch", href: "https://ulqjwinmuxijumrvsnaq.supabase.co" },
       { rel: "dns-prefetch", href: "https://www.googletagmanager.com" },
       { rel: "dns-prefetch", href: "https://www.google-analytics.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@600&display=swap" },
-
     ],
     // GA4 is loaded lazily on idle from <Analytics /> so it never blocks first paint.
 
   }),
+  loader: async ({ context }) => {
+    // Site chrome (header/footer) data — awaited so the footer renders at its
+    // final height in the SSR HTML instead of growing after hydration.
+    await Promise.all([
+      context.queryClient.ensureQueryData(companyQuery()),
+      context.queryClient.ensureQueryData(footerQuery()),
+    ]);
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
