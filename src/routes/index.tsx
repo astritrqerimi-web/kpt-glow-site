@@ -8,6 +8,8 @@ import {
   servicesQuery,
   servicesSectionQuery,
   contactSectionQuery,
+  newsHomeQuery,
+  footerQuery,
 } from "@/lib/site-content";
 import {
   HeroSection,
@@ -16,6 +18,7 @@ import {
   ServicesSection,
   ContactSection,
 } from "@/components/sections/HomeSections";
+import { latestArticlesQuery, categoriesQuery } from "@/lib/articles";
 import { LatestNewsSection } from "@/components/site/LatestNewsSection";
 import { HERO_PRELOAD_HREF, HERO_AVIF_SRCSET, HERO_SIZES } from "@/lib/hero-image";
 
@@ -115,15 +118,22 @@ export const Route = createFileRoute("/")({
     ],
   }),
 
-  loader: ({ context }) => {
-    context.queryClient.ensureQueryData(heroQuery());
-    context.queryClient.ensureQueryData(companyQuery());
-    context.queryClient.ensureQueryData(trustQuery());
-    context.queryClient.ensureQueryData(heroTrustQuery());
-    context.queryClient.ensureQueryData(aboutQuery());
-    context.queryClient.ensureQueryData(servicesQuery());
-    context.queryClient.ensureQueryData(servicesSectionQuery());
-    context.queryClient.ensureQueryData(contactSectionQuery());
+  loader: async ({ context }) => {
+    // Awaited so the data is dehydrated into the SSR HTML — the first client
+    // render then matches the server exactly (no post-hydration layout shift).
+    await Promise.all([
+      context.queryClient.ensureQueryData(heroQuery()),
+      context.queryClient.ensureQueryData(companyQuery()),
+      context.queryClient.ensureQueryData(trustQuery()),
+      context.queryClient.ensureQueryData(heroTrustQuery()),
+      context.queryClient.ensureQueryData(aboutQuery()),
+      context.queryClient.ensureQueryData(servicesQuery()),
+      context.queryClient.ensureQueryData(servicesSectionQuery()),
+      context.queryClient.ensureQueryData(contactSectionQuery()),
+      context.queryClient.ensureQueryData(newsHomeQuery()),
+      context.queryClient.ensureQueryData(latestArticlesQuery(4)),
+      context.queryClient.ensureQueryData(categoriesQuery()),
+    ]);
   },
   component: HomePage,
 });

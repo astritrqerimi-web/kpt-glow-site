@@ -227,15 +227,25 @@ export function categoryName(cat: ArticleCategory | undefined, lang: string): st
   return lang === "en" ? cat.name_en : cat.name_al;
 }
 
+const MONTHS_SQ = ["jan", "shk", "mar", "pri", "maj", "qer", "korr", "gush", "sht", "tet", "nën", "dhj"];
+const MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/**
+ * Deterministic date formatting — `toLocaleDateString` resolves differently in
+ * the server runtime than in the browser (different ICU data), which caused a
+ * React hydration mismatch on every article card.
+ */
 export function formatDate(iso: string | null, lang: string): string {
   if (!iso) return "";
   const d = new Date(iso);
-  return d.toLocaleDateString(lang === "en" ? "en-GB" : "sq-AL", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+  if (Number.isNaN(d.getTime())) return "";
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  const year = d.getUTCFullYear();
+  return lang === "en"
+    ? `${MONTHS_EN[d.getUTCMonth()]} ${day}, ${year}`
+    : `${day} ${MONTHS_SQ[d.getUTCMonth()]} ${year}`;
 }
+
 
 /**
  * Language-aware helpers. When EN is selected but a field has no English

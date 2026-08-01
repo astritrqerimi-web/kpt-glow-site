@@ -1,9 +1,19 @@
 import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
+import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import { routeTree } from "./routeTree.gen";
 
 export const getRouter = () => {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        // Data fetched during SSR is dehydrated into the HTML and reused on the
+        // client, so the first client render paints identical markup (no CLS,
+        // no hydration suspense fallback).
+        staleTime: 60_000,
+      },
+    },
+  });
 
   const router = createRouter({
     routeTree,
@@ -16,6 +26,7 @@ export const getRouter = () => {
     defaultPreloadStaleTime: 30_000,
   });
 
+  setupRouterSsrQueryIntegration({ router, queryClient });
 
   return router;
 };

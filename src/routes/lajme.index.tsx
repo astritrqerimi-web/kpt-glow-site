@@ -38,6 +38,21 @@ export const Route = createFileRoute("/lajme/")({
     ],
     links: [{ rel: "canonical", href: "https://www.kptconsulting.al/lajme" }],
   }),
+  loaderDeps: ({ search }) => search,
+  loader: async ({ context, deps }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(categoriesQuery()),
+      context.queryClient.ensureQueryData(
+        articlesListQuery({
+          category: deps.cat,
+          q: deps.q,
+          sort: deps.sort,
+          page: deps.page,
+          pageSize: PAGE_SIZE,
+        }),
+      ),
+    ]);
+  },
   component: LajmePage,
 });
 
