@@ -12,4 +12,21 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          // Keep the backend SDK (and the heavy editor deps) in their own
+          // chunks instead of letting them be hoisted into the entry chunk —
+          // they are only imported dynamically, so public pages never load them.
+          advancedChunks: {
+            groups: [
+              { name: "supabase", test: /node_modules[\\/](@supabase|isomorphic-dompurify)[\\/]/ },
+              { name: "editor", test: /node_modules[\\/](@tiptap|prosemirror-[^\\/]+)[\\/]/ },
+            ],
+          },
+        },
+      },
+    },
+  },
 });
