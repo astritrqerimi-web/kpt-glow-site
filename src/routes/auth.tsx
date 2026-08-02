@@ -1,6 +1,6 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-lazy";
 import { toast } from "sonner";
 import { BrandLogo } from "@/components/site/BrandLogo";
 import { Loader2 } from "lucide-react";
@@ -17,6 +17,7 @@ export const Route = createFileRoute("/auth")({
     ],
   }),
   beforeLoad: async () => {
+    const supabase = await getSupabase();
     const { data } = await supabase.auth.getUser();
     if (data.user) throw redirect({ to: "/admin" });
   },
@@ -31,10 +32,19 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_IN") navigate({ to: "/admin" });
+    let unsubscribe: (() => void) | undefined;
+    let cancelled = false;
+    void getSupabase().then((supabase) => {
+      if (cancelled) return;
+      const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+        if (event === "SIGNED_IN") navigate({ to: "/admin" });
+      });
+      unsubscribe = () => sub.subscription.unsubscribe();
     });
-    return () => sub.subscription.unsubscribe();
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
   }, [navigate]);
 
   const onSubmit = async (e: React.FormEvent) => {
