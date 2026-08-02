@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-lazy";
 import type { Lang } from "@/lib/i18n";
 
 export type Bilingual = string | { al?: string; en?: string } | null | undefined;
@@ -242,6 +242,7 @@ const DEFAULTS = {
 
 
 async function fetchContent<T>(key: string, fallback: T): Promise<T> {
+  const supabase = await getSupabase();
   const { data } = await supabase.from("site_content").select("value").eq("key", key).maybeSingle();
   return ((data?.value as T) ?? fallback);
 }
@@ -324,6 +325,7 @@ export const servicesQuery = (includeInactive = false) =>
   queryOptions({
     queryKey: ["services", includeInactive],
     queryFn: async (): Promise<Service[]> => {
+      const supabase = await getSupabase();
       let q = supabase.from("services").select("*").order("sort_order", { ascending: true });
       if (!includeInactive) q = q.eq("is_active", true);
       const { data, error } = await q;
