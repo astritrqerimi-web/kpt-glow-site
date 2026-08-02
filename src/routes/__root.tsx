@@ -16,7 +16,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ParticleBackground } from "@/components/site/ParticleBackground";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-lazy";
 import { Toaster } from "@/components/ui/sonner";
 import { companyQuery, footerQuery } from "@/lib/site-content";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -144,12 +144,23 @@ function RootComponent() {
   const router = useRouter();
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
-      router.invalidate();
-      if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+    // The auth client is loaded lazily (after first paint) so it stays out of
+    // the critical bundle for public visitors.
+    let unsubscribe: (() => void) | undefined;
+    let cancelled = false;
+    void getSupabase().then((supabase) => {
+      if (cancelled) return;
+      const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+        if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+        router.invalidate();
+        if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+      });
+      unsubscribe = () => sub.subscription.unsubscribe();
     });
-    return () => sub.subscription.unsubscribe();
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
   }, [router, queryClient]);
 
   return (

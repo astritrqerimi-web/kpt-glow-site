@@ -32,7 +32,7 @@ import {
 } from "@/lib/site-content";
 import { ServiceIcon } from "@/components/site/ServiceIcon";
 import { HeroStats } from "@/components/site/HeroStats";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-lazy";
 import { toast } from "sonner";
 import { useI18n, SERVICE_TRANSLATIONS } from "@/lib/i18n";
 import { Hero3DVisual } from "@/components/site/Hero3DVisual";
@@ -353,6 +353,7 @@ export function ContactSection() {
       parsed.data.service === "Tjetër"
         ? `Tjetër: ${parsed.data.serviceOther}`
         : parsed.data.service;
+    const supabase = await getSupabase();
     const { error } = await supabase.from("contact_messages").insert({
       name: parsed.data.name,
       email: parsed.data.email,
