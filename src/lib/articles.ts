@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-lazy";
 
 export type ArticleStatus = "draft" | "published" | "scheduled";
 
@@ -58,9 +58,9 @@ const ARTICLE_COLUMNS =
   "id, slug, category_slug, title, title_en, excerpt, excerpt_en, content_html, content_html_en, cover_image_url, og_image_url, gallery, attachments, tags, author, reading_minutes, status, published_at, scheduled_at, is_featured, is_sticky, seo_title, seo_title_en, seo_description, seo_description_en, comments_enabled, views_count, created_by, created_at, updated_at";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const from = () => (supabase as any).from("articles");
+const from = async () => ((await getSupabase()) as any).from("articles");
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const fromCats = () => (supabase as any).from("article_categories");
+const fromCats = async () => ((await getSupabase()) as any).from("article_categories");
 
 function slugifyTitle(text: string): string {
   return text
@@ -90,7 +90,7 @@ export const categoriesQuery = () =>
   queryOptions({
     queryKey: ["article_categories"],
     queryFn: async (): Promise<ArticleCategory[]> => {
-      const { data, error } = await fromCats().select("*").order("sort_order");
+      const { data, error } = await (await fromCats()).select("*").order("sort_order");
       if (error) throw error;
       return (data ?? []) as ArticleCategory[];
     },
@@ -101,7 +101,7 @@ export const latestArticlesQuery = (limit = 4) =>
   queryOptions({
     queryKey: ["articles", "latest", limit],
     queryFn: async (): Promise<Article[]> => {
-      const { data, error } = await publishedOnly(from().select(ARTICLE_COLUMNS))
+      const { data, error } = await publishedOnly((await from()).select(ARTICLE_COLUMNS))
         .order("published_at", { ascending: false })
         .limit(limit);
       if (error) throw error;
@@ -125,7 +125,7 @@ export const articlesListQuery = (params: ListParams) =>
       const pageSize = params.pageSize ?? 12;
       const page = Math.max(1, params.page ?? 1);
       const ascending = params.sort === "oldest";
-      let query = publishedOnly(from().select(ARTICLE_COLUMNS, { count: "exact" }));
+      let query = publishedOnly((await from()).select(ARTICLE_COLUMNS, { count: "exact" }));
       if (params.category && params.category !== "all") {
         query = query.eq("category_slug", params.category);
       }
@@ -148,14 +148,14 @@ export const articleBySlugQuery = (slug: string) =>
   queryOptions({
     queryKey: ["articles", "slug", slug],
     queryFn: async (): Promise<Article | null> => {
-      const { data, error } = await publishedOnly(from().select(ARTICLE_COLUMNS))
+      const { data, error } = await publishedOnly((await from()).select(ARTICLE_COLUMNS))
         .eq("slug", slug)
         .maybeSingle();
       if (error) throw error;
       if (data) return data as Article;
 
       const { data: fallbackData, error: fallbackError } = await publishedOnly(
-        from().select(ARTICLE_COLUMNS),
+        (await from()).select(ARTICLE_COLUMNS),
       ).order("published_at", { ascending: false });
       if (fallbackError) throw fallbackError;
       return ((fallbackData ?? []) as Article[]).find((article) => articleUrlSlug(article) === slug) ?? null;
@@ -167,7 +167,7 @@ export const relatedArticlesQuery = (categorySlug: string, excludeId: string, li
   queryOptions({
     queryKey: ["articles", "related", categorySlug, excludeId, limit],
     queryFn: async (): Promise<Article[]> => {
-      const { data, error } = await publishedOnly(from().select(ARTICLE_COLUMNS))
+      const { data, error } = await publishedOnly((await from()).select(ARTICLE_COLUMNS))
         .eq("category_slug", categorySlug)
         .neq("id", excludeId)
         .order("published_at", { ascending: false })
@@ -183,7 +183,7 @@ export const prevNextArticleQuery = (publishedAt: string, id: string) =>
     queryKey: ["articles", "prevnext", id, publishedAt],
     queryFn: async (): Promise<{ prev: Article | null; next: Article | null }> => {
       const [prevRes, nextRes] = await Promise.all([
-        from()
+        (await from())
           .select(ARTICLE_COLUMNS)
           .eq("status", "published")
           .not("published_at", "is", null)
@@ -191,7 +191,7 @@ export const prevNextArticleQuery = (publishedAt: string, id: string) =>
           .order("published_at", { ascending: false })
           .limit(1)
           .maybeSingle(),
-        from()
+        (await from())
           .select(ARTICLE_COLUMNS)
           .eq("status", "published")
           .not("published_at", "is", null)
@@ -213,7 +213,7 @@ export const adminArticlesQuery = () =>
   queryOptions({
     queryKey: ["articles", "admin", "all"],
     queryFn: async (): Promise<Article[]> => {
-      const { data, error } = await from()
+      const { data, error } = await (await from())
         .select(ARTICLE_COLUMNS)
         .order("updated_at", { ascending: false });
       if (error) throw error;
