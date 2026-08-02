@@ -90,7 +90,7 @@ export const categoriesQuery = () =>
   queryOptions({
     queryKey: ["article_categories"],
     queryFn: async (): Promise<ArticleCategory[]> => {
-      const { data, error } = (await fromCats()).select("*").order("sort_order");
+      const { data, error } = await (await fromCats()).select("*").order("sort_order");
       if (error) throw error;
       return (data ?? []) as ArticleCategory[];
     },
