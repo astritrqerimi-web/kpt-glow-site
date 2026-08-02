@@ -1,5 +1,9 @@
-@import "@fontsource-variable/inter";
-@import "@fontsource/manrope/600.css";
+/* Only the font faces actually rendered are shipped: the UI stack resolves to
+   system fonts ("Inter" was never matched by the @fontsource "Inter Variable"
+   family, so those 8 unused @font-face rules only bloated the critical CSS).
+   Manrope 600 is the brand wordmark — latin + latin-ext for Albanian glyphs. */
+@import "@fontsource/manrope/latin-600.css";
+@import "@fontsource/manrope/latin-ext-600.css";
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";

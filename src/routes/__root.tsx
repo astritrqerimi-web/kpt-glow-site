@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import manropeWoff2 from "@fontsource/manrope/files/manrope-latin-600-normal.woff2?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -95,6 +96,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/64ccb311-1b6d-4fb6-bc2e-40aeddb29b2d" },
     ],
     links: [
+      { rel: "preload", as: "font", type: "font/woff2", href: manropeWoff2, crossOrigin: "anonymous" },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/kpt-favicon-v2.ico?v=2", sizes: "any" },
       { rel: "shortcut icon", href: "/kpt-favicon-v2.ico?v=2" },
