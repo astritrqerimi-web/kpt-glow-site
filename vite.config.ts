@@ -21,8 +21,15 @@ export default defineConfig({
           // they are only imported dynamically, so public pages never load them.
           advancedChunks: {
             groups: [
-              { name: "supabase", test: /node_modules[\\/](@supabase|isomorphic-dompurify)[\\/]/ },
-              { name: "editor", test: /node_modules[\\/](@tiptap|prosemirror-[^\\/]+)[\\/]/ },
+              // React must win over the groups below, otherwise it gets pulled
+              // into the tiptap chunk and every public page downloads the editor.
+              {
+                name: "react",
+                priority: 100,
+                test: /node_modules[\\/](react|react-dom|scheduler|use-sync-external-store)[\\/]/,
+              },
+              { name: "supabase", priority: 10, test: /node_modules[\\/](@supabase)[\\/]/ },
+              { name: "editor", priority: 10, test: /node_modules[\\/](@tiptap|prosemirror-[^\\/]+)[\\/]/ },
             ],
           },
         },

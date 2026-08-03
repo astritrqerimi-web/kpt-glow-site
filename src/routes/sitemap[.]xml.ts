@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
+// NOTE: @supabase/supabase-js is imported dynamically inside the handler —
+// a static import here ends up in the client entry chunk via the route tree.
 
 const BASE_URL = "https://www.kptconsulting.al";
 
@@ -18,6 +19,7 @@ const routeOptions = {
           const url = process.env.SUPABASE_URL;
           const key = process.env.SUPABASE_PUBLISHABLE_KEY;
           if (url && key) {
+            const { createClient } = await import("@supabase/supabase-js");
             const sb = createClient(url, key, {
               auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
             });
