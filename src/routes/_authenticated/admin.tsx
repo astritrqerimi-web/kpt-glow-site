@@ -25,11 +25,15 @@ export const Route = createFileRoute("/_authenticated/admin")({
     ],
   }),
   beforeLoad: async () => {
-    const { data: u, error: userErr } = await supabase.auth.getUser();
+    // Lazy client: keeps the backend SDK out of the critical route graph that
+    // public pages preload.
+    const { getSupabase } = await import("@/lib/supabase-lazy");
+    const sb = await getSupabase();
+    const { data: u, error: userErr } = await sb.auth.getUser();
     if (userErr || !u.user) {
       throw redirect({ to: "/auth" });
     }
-    const { data: roleRow } = await supabase
+    const { data: roleRow } = await sb
       .from("user_roles")
       .select("role")
       .eq("user_id", u.user.id)
