@@ -1,7 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
-import { z } from "zod";
 import { Search, Newspaper, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { articlesListQuery, categoriesQuery, categoryName } from "@/lib/articles";
@@ -10,15 +8,23 @@ import { useI18n } from "@/lib/i18n";
 
 const PAGE_SIZE = 12;
 
-const searchSchema = z.object({
-  cat: fallback(z.string(), "all").default("all"),
-  q: fallback(z.string(), "").default(""),
-  sort: fallback(z.enum(["newest", "oldest"]), "newest").default("newest"),
-  page: fallback(z.number().int().min(1), 1).default(1),
-});
+type ListSearch = { cat: string; q: string; sort: "newest" | "oldest"; page: number };
+
+// Hand-rolled validator (same defaults/fallbacks as before) so the schema
+// library stays out of the critical bundle.
+function validateListSearch(search: Record<string, unknown>): ListSearch {
+  const page = Number(search.page);
+  return {
+    cat: typeof search.cat === "string" && search.cat ? search.cat : "all",
+    q: typeof search.q === "string" ? search.q : "",
+    sort: search.sort === "oldest" ? "oldest" : "newest",
+    page: Number.isInteger(page) && page >= 1 ? page : 1,
+  };
+}
 
 export const Route = createFileRoute("/lajme/")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: validateListSearch,
+
   head: () => ({
     meta: [
       { title: "Lajme & Njoftime — KPT Consulting" },
@@ -80,9 +86,10 @@ function LajmePage() {
   const totalPages = Math.max(1, Math.ceil((data?.total ?? 0) / PAGE_SIZE));
   const items = data?.items ?? [];
 
-  const setParam = (updates: Partial<z.infer<typeof searchSchema>>) => {
+  const setParam = (updates: Partial<ListSearch>) => {
     navigate({
-      search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, ...updates, page: updates.page ?? 1 }),
+      search: (prev: ListSearch) => ({ ...prev, ...updates, page: updates.page ?? 1 }),
+
     });
   };
 
