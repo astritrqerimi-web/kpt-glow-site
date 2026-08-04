@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { z } from "zod";
+
 import { scrollToSection } from "@/lib/scroll-to-section";
 import {
   ArrowRight,
@@ -33,7 +33,7 @@ import {
 import { ServiceIcon } from "@/components/site/ServiceIcon";
 import { HeroStats } from "@/components/site/HeroStats";
 import { getSupabase } from "@/lib/supabase-lazy";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast-lazy";
 import { useI18n, SERVICE_TRANSLATIONS } from "@/lib/i18n";
 import { Hero3DVisual } from "@/components/site/Hero3DVisual";
 import { sanitizeHtml } from "@/lib/sanitize";
@@ -309,25 +309,47 @@ const SERVICE_LABEL_KEYS: Record<(typeof SERVICE_OPTIONS)[number], string> = {
   "Tjetër": "svc.other",
 };
 
-function buildContactSchema(t: (k: string) => string) {
-  return z
-    .object({
-      name: z.string().trim().min(2, t("form.err.name")).max(100),
-      email: z.string().trim().email(t("form.err.email")).max(255),
-      phone: z
-        .string()
-        .trim()
-        .min(6, t("form.err.phone"))
-        .max(30, t("form.err.phone"))
-        .regex(/^\+?[0-9\s().-]{6,30}$/, t("form.err.phone")),
-      service: z.enum(SERVICE_OPTIONS, { message: t("form.err.service") }),
-      serviceOther: z.string().trim().max(150).optional().or(z.literal("")),
-      message: z.string().trim().min(10, t("form.err.message")).max(5000),
-    })
-    .refine((d) => d.service !== "Tjetër" || (d.serviceOther && d.serviceOther.length >= 2), {
-      path: ["serviceOther"],
-      message: t("form.err.serviceOther"),
-    });
+type ContactForm = {
+  name: string;
+  email: string;
+  phone: string;
+  service: string;
+  serviceOther: string;
+  message: string;
+};
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const PHONE_RE = /^\+?[0-9\s().-]{6,30}$/;
+
+/**
+ * Plain-JS validation mirroring the previous schema exactly (same rules, same
+ * messages). Keeping it dependency-free removes the validation library from
+ * the critical bundle.
+ */
+function validateContact(form: ContactForm, t: (k: string) => string) {
+  const data: ContactForm = {
+    name: form.name.trim(),
+    email: form.email.trim(),
+    phone: form.phone.trim(),
+    service: form.service.trim(),
+    serviceOther: form.serviceOther.trim(),
+    message: form.message.trim(),
+  };
+  const errors: Record<string, string> = {};
+
+  if (data.name.length < 2 || data.name.length > 100) errors.name = t("form.err.name");
+  if (!EMAIL_RE.test(data.email) || data.email.length > 255) errors.email = t("form.err.email");
+  if (data.phone.length < 6 || data.phone.length > 30 || !PHONE_RE.test(data.phone))
+    errors.phone = t("form.err.phone");
+  if (!(SERVICE_OPTIONS as readonly string[]).includes(data.service))
+    errors.service = t("form.err.service");
+  if (data.serviceOther.length > 150) errors.serviceOther = t("form.err.serviceOther");
+  if (data.message.length < 10 || data.message.length > 5000)
+    errors.message = t("form.err.message");
+  if (data.service === "Tjetër" && data.serviceOther.length < 2)
+    errors.serviceOther = t("form.err.serviceOther");
+
+  return { ok: Object.keys(errors).length === 0, errors, data };
 }
 
 export function ContactSection() {
@@ -341,13 +363,12 @@ export function ContactSection() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
-    const parsed = buildContactSchema(t).safeParse(form);
-    if (!parsed.success) {
-      const errs: Record<string, string> = {};
-      for (const issue of parsed.error.issues) errs[String(issue.path[0])] = issue.message;
-      setErrors(errs);
+    const parsed = validateContact(form, t);
+    if (!parsed.ok) {
+      setErrors(parsed.errors);
       return;
     }
+
     setSubmitting(true);
     const subjectValue =
       parsed.data.service === "Tjetër"

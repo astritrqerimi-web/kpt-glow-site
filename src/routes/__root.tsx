@@ -17,7 +17,7 @@ import { Footer } from "@/components/site/Footer";
 import { ParticleBackground } from "@/components/site/ParticleBackground";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { getSupabase } from "@/lib/supabase-lazy";
-import { Toaster } from "@/components/ui/sonner";
+import { LazyToaster } from "@/components/site/LazyToaster";
 import { companyQuery, footerQuery } from "@/lib/site-content";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { I18nProvider } from "@/lib/i18n";
@@ -170,7 +170,7 @@ function RootComponent() {
         <SiteChrome>
           <Outlet />
         </SiteChrome>
-        <Toaster position="top-right" />
+        <LazyToaster position="top-right" />
       </I18nProvider>
     </QueryClientProvider>
 
