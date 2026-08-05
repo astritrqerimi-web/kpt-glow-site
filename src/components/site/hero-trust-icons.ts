@@ -1,0 +1,46 @@
+import {
+  Award,
+  BadgeCheck,
+  Briefcase,
+  CheckCircle2,
+  Clock,
+  Globe,
+  Handshake,
+  Headphones,
+  Heart,
+  LineChart,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Target,
+  ThumbsUp,
+  TrendingUp,
+  Trophy,
+  Users,
+  Users2,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+export const HERO_TRUST_ICONS: Record<string, LucideIcon> = {
+  Users,
+  Users2,
+  LineChart,
+  TrendingUp,
+  ShieldCheck,
+  BadgeCheck,
+  Award,
+  Headphones,
+  Handshake,
+  Briefcase,
+  CheckCircle2,
+  Target,
+  Star,
+  Sparkles,
+  Clock,
+  Globe,
+  Heart,
+  ThumbsUp,
+  Trophy,
+};
+
+export const HERO_TRUST_ICON_NAMES = Object.keys(HERO_TRUST_ICONS);

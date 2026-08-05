@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { resetSiteContentCache, servicesQuery, companyQuery, heroQuery, aboutQuery, seoQuery, trustQuery, heroTrustQuery, newsHomeQuery, servicesSectionQuery, contactSectionQuery, footerQuery, type Bilingual, type TrustItem, type HeroTrustItem, type HeroTrustContent } from "@/lib/site-content";
 import { ServiceIcon, ICON_NAMES } from "@/components/site/ServiceIcon";
-import { HERO_TRUST_ICONS, HERO_TRUST_ICON_NAMES } from "@/components/site/HeroStats";
+import { HERO_TRUST_ICONS, HERO_TRUST_ICON_NAMES } from "@/components/site/hero-trust-icons";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { LogOut, Plus, Trash2, Save, Mail, Home, FileEdit, Settings2, Loader2, ShieldAlert, Star, Newspaper, GripVertical } from "lucide-react";
 import { ArticlesAdmin } from "@/components/admin/ArticlesAdmin";

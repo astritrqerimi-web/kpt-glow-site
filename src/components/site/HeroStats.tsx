@@ -1,53 +1,11 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import {
-  Users,
-  Users2,
-  LineChart,
-  TrendingUp,
-  ShieldCheck,
-  BadgeCheck,
-  Award,
-  Headphones,
-  Handshake,
-  Briefcase,
-  CheckCircle2,
-  Target,
-  Star,
-  Sparkles,
-  Clock,
-  Globe,
-  Heart,
-  ThumbsUp,
-  Trophy,
-} from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { heroTrustQuery } from "@/lib/site-content";
 import { useI18n } from "@/lib/i18n";
+import { HERO_TRUST_ICONS } from "@/components/site/hero-trust-icons";
 
-export const HERO_TRUST_ICONS: Record<string, LucideIcon> = {
-  Users,
-  Users2,
-  LineChart,
-  TrendingUp,
-  ShieldCheck,
-  BadgeCheck,
-  Award,
-  Headphones,
-  Handshake,
-  Briefcase,
-  CheckCircle2,
-  Target,
-  Star,
-  Sparkles,
-  Clock,
-  Globe,
-  Heart,
-  ThumbsUp,
-  Trophy,
-};
-export const HERO_TRUST_ICON_NAMES = Object.keys(HERO_TRUST_ICONS);
-
-interface SvgTrustItem {
+interface MarqueeItem {
   key: string;
   Icon: LucideIcon;
   color: string;
@@ -56,79 +14,27 @@ interface SvgTrustItem {
   width: number;
 }
 
-const SVG_ROW_HEIGHT = 80;
-
-function getSvgItemWidth(value: string, label: string) {
+function getItemWidth(value: string, label: string) {
   const valueWidth = value ? Math.max(28, value.length * 10) : 0;
   const labelWidth = Math.max(92, label.length * 6.45);
   return Math.ceil(119 + valueWidth + labelWidth);
 }
 
-function TrustRowSvg({ items, duplicate }: { items: SvgTrustItem[]; duplicate: boolean }) {
-  const width = items.reduce((total, item) => total + item.width, 0);
-  let offset = 0;
-
+function MarqueeSequence({ items, duplicate }: { items: MarqueeItem[]; duplicate?: boolean }) {
   return (
-    <svg
-      className="trust-marquee__svg"
-      width={width}
-      height={SVG_ROW_HEIGHT}
-      viewBox={`0 0 ${width} ${SVG_ROW_HEIGHT}`}
-      role={duplicate ? undefined : "img"}
-      aria-hidden={duplicate || undefined}
-      aria-label={duplicate ? undefined : items.map((item) => `${item.value} ${item.label}`.trim()).join(", ")}
-      focusable="false"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {items.map((item) => {
-        const x = offset;
-        const iconX = x + 32;
-        const textX = iconX + 48;
-        offset += item.width;
-
-        return (
-          <g key={item.key}>
-            <rect x={iconX} y="22" width="36" height="36" rx="8" fill={item.color} fillOpacity="0.08" />
-            <item.Icon
-              x={iconX + 9}
-              y="31"
-              width="18"
-              height="18"
-              color={item.color}
-              strokeWidth={1.75}
-            />
-            <text
-              x={textX}
-              y="45"
-              fontFamily="var(--font-sans)"
-            >
-              {item.value ? (
-                <tspan fill="var(--color-foreground)" fontFamily="var(--font-display)" fontSize="18" fontWeight="600">
-                  {item.value}
-                </tspan>
-              ) : null}
-              <tspan
-                dx={item.value ? 10 : 0}
-                dy="-1"
-                fill="var(--color-muted-foreground)"
-                fontSize="11"
-                letterSpacing="1.1"
-              >
-                {item.label.toLocaleUpperCase()}
-              </tspan>
-            </text>
-            <line
-              x1={x + item.width - 1}
-              x2={x + item.width - 1}
-              y1="28"
-              y2="52"
-              stroke="var(--color-border)"
-              strokeOpacity="0.6"
-            />
-          </g>
-        );
-      })}
-    </svg>
+    <div className="hero-trust-sequence" aria-hidden={duplicate || undefined}>
+      {items.map(({ key, Icon, color, value, label, width }) => (
+        <div className="hero-trust-item" key={key} style={{ width }}>
+          <span className="hero-trust-icon" style={{ color, backgroundColor: `color-mix(in srgb, ${color} 8%, transparent)` }}>
+            <Icon aria-hidden size={18} strokeWidth={1.75} />
+          </span>
+          <span className="hero-trust-copy">
+            {value ? <strong>{value}</strong> : null}
+            <span>{label.toLocaleUpperCase()}</span>
+          </span>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -146,9 +52,9 @@ export function HeroStats() {
 
   if (items.length === 0) return null;
 
-  const repetitions = items.length >= 6 ? 1 : items.length >= 3 ? 2 : 4;
-  const duration = speed * repetitions;
-  const svgItems: SvgTrustItem[] = Array.from({ length: repetitions }, () => items).flat().map((item, index) => {
+  const copies = items.length >= 6 ? 1 : items.length >= 3 ? 2 : 4;
+  const duration = speed * copies;
+  const marqueeItems: MarqueeItem[] = Array.from({ length: copies }, () => items).flat().map((item, index) => {
     const value = lang === "en" ? item.value_en || item.value_al : item.value_al || item.value_en;
     const label = lang === "en" ? item.label_en || item.label_al : item.label_al || item.label_en;
     return {
@@ -157,14 +63,14 @@ export function HeroStats() {
       color: item.color || "#0F8B8D",
       value,
       label,
-      width: getSvgItemWidth(value, label),
+      width: getItemWidth(value, label),
     };
   });
 
   return (
     <div className="container-page relative z-20 -mt-10 md:-mt-16 lg:-mt-20 mb-10 md:mb-14">
       <div
-        className={`trust-marquee group relative rounded-2xl md:rounded-[20px] shadow-[0_10px_30px_-18px_rgba(15,139,141,0.25)]${pauseOnHover ? " trust-marquee--pausable" : ""}`}
+        className={`hero-trust relative rounded-2xl md:rounded-[20px] shadow-[0_10px_30px_-18px_rgba(15,139,141,0.25)]${pauseOnHover ? " hero-trust-pauses" : ""}`}
       >
         <div
           aria-hidden
@@ -186,13 +92,13 @@ export function HeroStats() {
           style={{ background: "linear-gradient(to left, rgba(255,255,255,0.9), rgba(255,255,255,0))" }}
         />
 
-        <div className="trust-marquee__viewport relative h-[64px] sm:h-[72px] md:h-[80px] flex items-center overflow-hidden rounded-2xl md:rounded-[20px]">
+        <div className="hero-trust-viewport relative h-[64px] sm:h-[72px] md:h-[80px] overflow-hidden rounded-2xl md:rounded-[20px]">
           <div
-            className={`trust-marquee__track${data.direction === "right" ? " trust-marquee__track--right" : ""}`}
+            className={`hero-trust-track${data.direction === "right" ? " hero-trust-track-reverse" : ""}`}
             style={{ animationDuration: `${duration}s` }}
           >
-            <TrustRowSvg items={svgItems} duplicate={false} />
-            <TrustRowSvg items={svgItems} duplicate />
+            <MarqueeSequence items={marqueeItems} />
+            <MarqueeSequence items={marqueeItems} duplicate />
           </div>
         </div>
       </div>
