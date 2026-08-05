@@ -53,7 +53,7 @@ function isH3SwallowedErrorBody(body: string): boolean {
  */
 const CACHEABLE_PATHS = /^\/(?:$|lajme(?:\/|$)|rreth-nesh$|sherbimet$|kontakt$)/;
 const HTML_CACHE_CONTROL =
-  "public, max-age=0, must-revalidate, s-maxage=60, stale-while-revalidate=86400";
+  "public, max-age=0, must-revalidate, s-maxage=60, stale-while-revalidate=86400, stale-if-error=604800";
 
 function isPubliclyCacheable(request: Request): boolean {
   if (request.method !== "GET") return false;

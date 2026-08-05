@@ -222,7 +222,10 @@ function ArticleDetailPage() {
                   <img
                     src={cachedImageUrl(g.url)}
                     alt={g.caption || `${title} ${i + 1}`}
+                    width={800}
+                    height={600}
                     loading="lazy"
+                    decoding="async"
                     className="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   {g.caption && (
