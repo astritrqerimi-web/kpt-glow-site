@@ -29,9 +29,28 @@ import {
   Table as TableIcon,
   Undo,
   Redo,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+  Palette,
+  RemoveFormatting,
 } from "lucide-react";
 
+const FONT_FAMILIES: { label: string; value: string }[] = [
+  { label: "Parazgjedhur", value: "" },
+  { label: "Manrope", value: "Manrope, sans-serif" },
+  { label: "Inter", value: "Inter, sans-serif" },
+  { label: "Georgia", value: "Georgia, serif" },
+  { label: "Times New Roman", value: "'Times New Roman', serif" },
+  { label: "Arial", value: "Arial, Helvetica, sans-serif" },
+  { label: "Courier New", value: "'Courier New', monospace" },
+];
+
+const FONT_SIZES = ["", "12px", "14px", "16px", "18px", "20px", "24px", "30px", "36px", "48px", "60px", "72px"];
+
 interface Props {
+
   value: string;
   onChange: (html: string) => void;
   articleId?: string;
