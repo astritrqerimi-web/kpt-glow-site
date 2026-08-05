@@ -70,61 +70,23 @@ function isHtmlResponse(response: Response): boolean {
   return (response.headers.get("content-type") ?? "").includes("text/html");
 }
 
-type EdgeCache = {
-  match: (request: Request) => Promise<Response | undefined>;
-  put: (request: Request, response: Response) => Promise<void>;
-};
-
-function getEdgeCache(): EdgeCache | null {
-  const c = (globalThis as { caches?: { default?: EdgeCache } }).caches;
-  return c?.default ?? null;
-}
-
-function waitUntil(ctx: unknown, promise: Promise<unknown>) {
-  const maybe = ctx as { waitUntil?: (p: Promise<unknown>) => void } | undefined;
-  if (maybe?.waitUntil) maybe.waitUntil(promise);
-}
-
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
-      const cacheable = isPubliclyCacheable(request);
-      const cache = cacheable ? getEdgeCache() : null;
-
-      if (cache) {
-        try {
-          const hit = await cache.match(request);
-          if (hit) return hit;
-        } catch {
-          // Cache API unavailable in this runtime — fall through to a live render.
-        }
-      }
-
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       const normalized = await normalizeCatastrophicSsrResponse(response);
 
+      // Only annotate the cache-control header: the CDN handles storage. Never
+      // buffer the streamed SSR body through the Cache API — that stalls the
+      // response.
       if (
-        cacheable &&
+        isPubliclyCacheable(request) &&
         normalized.status === 200 &&
         isHtmlResponse(normalized) &&
         !normalized.headers.has("set-cookie")
       ) {
-        const headers = new Headers(normalized.headers);
-        headers.set("cache-control", HTML_CACHE_CONTROL);
-        const withCaching = new Response(normalized.body, {
-          status: normalized.status,
-          statusText: normalized.statusText,
-          headers,
-        });
-        if (cache) {
-          try {
-            waitUntil(ctx, cache.put(request, withCaching.clone()));
-          } catch {
-            // Non-fatal: the response is still served normally.
-          }
-        }
-        return withCaching;
+        normalized.headers.set("cache-control", HTML_CACHE_CONTROL);
       }
 
       return normalized;
