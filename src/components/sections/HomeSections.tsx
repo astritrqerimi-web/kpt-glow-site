@@ -74,22 +74,22 @@ export function HeroSection() {
           <div className="relative">
             <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur px-4 py-1.5 text-xs font-medium text-primary shadow-soft animate-fade-up">
               <Sparkles className="h-3.5 w-3.5" />
-              <span className="uppercase tracking-[0.14em]">{badge}</span>
+              <span className="hero-rich uppercase tracking-[0.14em]" dangerouslySetInnerHTML={{ __html: badgeHtml }} />
             </div>
 
             <h1
               className="mt-6 font-display text-[2.75rem] leading-[1.02] text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem] animate-fade-up"
               style={{ animationDelay: "80ms" }}
             >
-              <span className="text-gradient-brand">{title}</span>
+              <span className="hero-rich text-gradient-brand" dangerouslySetInnerHTML={{ __html: titleHtml }} />
             </h1>
 
-            <p
-              className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg animate-fade-up"
+            <div
+              className="hero-rich mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg animate-fade-up"
               style={{ animationDelay: "160ms" }}
-            >
-              {subtitle}
-            </p>
+              dangerouslySetInnerHTML={{ __html: subtitleHtml }}
+            />
+
 
             <div className="mt-10 flex flex-wrap gap-3 animate-fade-up" style={{ animationDelay: "240ms" }}>
               <button
