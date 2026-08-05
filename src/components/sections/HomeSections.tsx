@@ -48,6 +48,10 @@ export function HeroSection() {
   const badge = pick(hero.badge, lang, t("hero.badge"));
   const ctaContact = pick(hero.ctaContact, lang, t("hero.ctaContact"));
   const ctaServices = pick(hero.ctaServices, lang, t("hero.ctaServices"));
+  const titleHtml = sanitizeHtml(toRichHtml(title));
+  const subtitleHtml = sanitizeHtml(toRichHtml(subtitle));
+  const badgeHtml = sanitizeHtml(toRichHtml(badge));
+
 
   return (
     <>
