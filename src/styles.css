@@ -212,7 +212,7 @@
   animation: shimmer 3s linear infinite;
 }
 
-/* Trust bar: one composited track, followed by one exact content duplicate. */
+/* Trust bar: one composited track containing one SVG row and one exact SVG duplicate. */
 @keyframes trust-marquee-left {
   from { transform: translate3d(0, 0, 0); }
   to { transform: translate3d(-50%, 0, 0); }
@@ -246,10 +246,20 @@
   animation-name: trust-marquee-right;
 }
 
-.trust-marquee__group {
-  display: flex;
+.trust-marquee__svg {
+  display: block;
   flex: none;
-  align-items: center;
+  height: 80px;
+  overflow: visible;
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
+}
+
+@media (max-width: 639px) {
+  .trust-marquee__svg {
+    height: 64px;
+    width: auto;
+  }
 }
 
 @media (hover: hover) {

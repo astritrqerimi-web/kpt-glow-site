@@ -47,6 +47,94 @@ export const HERO_TRUST_ICONS: Record<string, LucideIcon> = {
 };
 export const HERO_TRUST_ICON_NAMES = Object.keys(HERO_TRUST_ICONS);
 
+interface SvgTrustItem {
+  key: string;
+  Icon: LucideIcon;
+  color: string;
+  value: string;
+  label: string;
+  width: number;
+}
+
+const SVG_ROW_HEIGHT = 80;
+
+function getSvgItemWidth(value: string, label: string) {
+  const valueWidth = value ? Math.max(28, value.length * 10) : 0;
+  const labelWidth = Math.max(92, label.length * 6.45);
+  return Math.ceil(119 + valueWidth + labelWidth);
+}
+
+function TrustRowSvg({ items, duplicate }: { items: SvgTrustItem[]; duplicate: boolean }) {
+  const width = items.reduce((total, item) => total + item.width, 0);
+  let offset = 0;
+
+  return (
+    <svg
+      className="trust-marquee__svg"
+      width={width}
+      height={SVG_ROW_HEIGHT}
+      viewBox={`0 0 ${width} ${SVG_ROW_HEIGHT}`}
+      role={duplicate ? undefined : "img"}
+      aria-hidden={duplicate || undefined}
+      aria-label={duplicate ? undefined : items.map((item) => `${item.value} ${item.label}`.trim()).join(", ")}
+      focusable="false"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {items.map((item) => {
+        const x = offset;
+        const iconX = x + 32;
+        const textX = iconX + 48;
+        const valueWidth = item.value ? Math.max(28, item.value.length * 10) : 0;
+        offset += item.width;
+
+        return (
+          <g key={item.key}>
+            <rect x={iconX} y="22" width="36" height="36" rx="8" fill={item.color} fillOpacity="0.08" />
+            <item.Icon
+              x={iconX + 9}
+              y="31"
+              width="18"
+              height="18"
+              color={item.color}
+              strokeWidth={1.75}
+            />
+            {item.value ? (
+              <text
+                x={textX}
+                y="45"
+                fill="var(--color-foreground)"
+                fontFamily="var(--font-display)"
+                fontSize="18"
+                fontWeight="600"
+              >
+                {item.value}
+              </text>
+            ) : null}
+            <text
+              x={textX + valueWidth + (item.value ? 6 : 0)}
+              y="44"
+              fill="var(--color-muted-foreground)"
+              fontFamily="var(--font-sans)"
+              fontSize="11"
+              letterSpacing="1.1"
+            >
+              {item.label.toLocaleUpperCase()}
+            </text>
+            <line
+              x1={x + item.width - 1}
+              x2={x + item.width - 1}
+              y1="28"
+              y2="52"
+              stroke="var(--color-border)"
+              strokeOpacity="0.6"
+            />
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 export function HeroStats() {
   const { data } = useSuspenseQuery(heroTrustQuery());
   const { lang } = useI18n();
@@ -62,41 +150,19 @@ export function HeroStats() {
   if (items.length === 0) return null;
 
   const repetitions = items.length >= 6 ? 1 : items.length >= 3 ? 2 : 4;
-  const sequence = Array.from({ length: repetitions }, () => items).flat();
   const duration = speed * repetitions;
-
-  const renderSequence = (duplicate: boolean) => (
-    <div className="trust-marquee__group" aria-hidden={duplicate || undefined}>
-      {sequence.map((item, index) => {
-        const Icon = HERO_TRUST_ICONS[item.icon] ?? BadgeCheck;
-        const value = lang === "en" ? item.value_en || item.value_al : item.value_al || item.value_en;
-        const label = lang === "en" ? item.label_en || item.label_al : item.label_al || item.label_en;
-        const color = item.color || "#0F8B8D";
-
-        return (
-          <div key={`${item.id ?? item.sort_order}-${index}`} className="flex items-center">
-            <div className="shrink-0 flex items-center gap-2.5 sm:gap-3 px-5 sm:px-8">
-              <span
-                className="inline-flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg"
-                style={{ backgroundColor: `${color}14`, color }}
-              >
-                <Icon className="h-4 w-4 sm:h-[18px] sm:w-[18px]" strokeWidth={1.75} />
-              </span>
-              <div className="leading-tight text-left flex items-baseline gap-1.5">
-                <span className="font-display text-base sm:text-lg font-semibold text-foreground tracking-tight whitespace-nowrap">
-                  {value}
-                </span>
-                <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.1em] text-muted-foreground whitespace-nowrap">
-                  {label}
-                </span>
-              </div>
-            </div>
-            <span aria-hidden className="h-5 sm:h-6 w-px bg-border/60" />
-          </div>
-        );
-      })}
-    </div>
-  );
+  const svgItems: SvgTrustItem[] = Array.from({ length: repetitions }, () => items).flat().map((item, index) => {
+    const value = lang === "en" ? item.value_en || item.value_al : item.value_al || item.value_en;
+    const label = lang === "en" ? item.label_en || item.label_al : item.label_al || item.label_en;
+    return {
+      key: `${item.id ?? item.sort_order}-${index}`,
+      Icon: HERO_TRUST_ICONS[item.icon] ?? BadgeCheck,
+      color: item.color || "#0F8B8D",
+      value,
+      label,
+      width: getSvgItemWidth(value, label),
+    };
+  });
 
   return (
     <div className="container-page relative z-20 -mt-10 md:-mt-16 lg:-mt-20 mb-10 md:mb-14">
@@ -128,8 +194,8 @@ export function HeroStats() {
             className={`trust-marquee__track${data.direction === "right" ? " trust-marquee__track--right" : ""}`}
             style={{ animationDuration: `${duration}s` }}
           >
-            {renderSequence(false)}
-            {renderSequence(true)}
+            <TrustRowSvg items={svgItems} duplicate={false} />
+            <TrustRowSvg items={svgItems} duplicate />
           </div>
         </div>
       </div>
