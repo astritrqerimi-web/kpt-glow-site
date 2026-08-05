@@ -241,7 +241,7 @@
   width: max-content;
   height: 100%;
   transform: translate3d(0, 0, 0);
-  animation: marquee 70s linear infinite;
+  animation: marquee 30s linear infinite;
   will-change: transform;
   backface-visibility: hidden;
 }
@@ -287,7 +287,7 @@
 
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-trust-track { animation: none; }
+  .hero-trust-track { animation-duration: 120s; }
 }
 
 
