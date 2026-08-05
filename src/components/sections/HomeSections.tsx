@@ -123,7 +123,7 @@ export function HeroSection() {
           </div>
         </div>
       </section>
-      <div className="animate-fade-up" style={{ animationDelay: "360ms" }}>
+      <div className="animate-fade-up-stable" style={{ animationDelay: "360ms" }}>
         <HeroStats />
       </div>
     </>

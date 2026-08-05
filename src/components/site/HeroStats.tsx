@@ -74,7 +74,7 @@ export function HeroStats() {
       >
         <div
           aria-hidden
-          className="absolute inset-0 rounded-2xl md:rounded-[20px] border border-white/40 bg-white/45 backdrop-blur-md"
+          className="absolute inset-0 rounded-2xl md:rounded-[20px] border border-white/40 bg-white/45"
           style={{
             backgroundImage:
               "linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.45) 100%)",
