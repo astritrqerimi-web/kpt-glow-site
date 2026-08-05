@@ -175,8 +175,9 @@ export function HeroStats() {
       <style>{`
         @keyframes hero-stats-marquee {
           from { transform: translate3d(0, 0, 0); }
-          to   { transform: translate3d(-50%, 0, 0); }
+          to   { transform: translate3d(calc(var(--marquee-x, 50%) * -1), 0, 0); }
         }
+
         .hero-stats-viewport {
           contain: layout paint;
           transform: translateZ(0);
