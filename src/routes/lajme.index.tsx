@@ -59,7 +59,7 @@ export const Route = createFileRoute("/lajme/")({
     ],
     links: [{ rel: "canonical", href: "https://www.kptconsulting.al/lajme" }],
   }),
-  loaderDeps: ({ search }) => search,
+  loaderDeps: ({ search }) => resolve(search),
   loader: async ({ context, deps }) => {
     await Promise.all([
       context.queryClient.ensureQueryData(categoriesQuery()),
@@ -79,7 +79,7 @@ export const Route = createFileRoute("/lajme/")({
 
 function LajmePage() {
   const { t, lang } = useI18n();
-  const search = Route.useSearch();
+  const search = resolve(Route.useSearch());
   const navigate = useNavigate({ from: "/lajme" });
   const [qInput, setQInput] = useState(search.q);
 
@@ -101,12 +101,21 @@ function LajmePage() {
   const totalPages = Math.max(1, Math.ceil((data?.total ?? 0) / PAGE_SIZE));
   const items = data?.items ?? [];
 
-  const setParam = (updates: Partial<ListSearch>) => {
+  const setParam = (updates: Partial<ReturnType<typeof resolve>>) => {
     navigate({
-      search: (prev: ListSearch) => ({ ...prev, ...updates, page: updates.page ?? 1 }),
-
+      search: (prev: ListSearch) => {
+        const next = { ...resolve(prev), ...updates, page: updates.page ?? 1 };
+        // Keep default values out of the URL (avoids redirect-y, noisy links).
+        return {
+          cat: next.cat === DEFAULTS.cat ? undefined : next.cat,
+          q: next.q ? next.q : undefined,
+          sort: next.sort === DEFAULTS.sort ? undefined : next.sort,
+          page: next.page > 1 ? next.page : undefined,
+        };
+      },
     });
   };
+
 
   const submitSearch = (e: React.FormEvent) => {
     e.preventDefault();
