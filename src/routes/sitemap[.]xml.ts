@@ -61,7 +61,8 @@ const routeOptions = {
         return new Response(xml, {
           headers: {
             "Content-Type": "application/xml",
-            "Cache-Control": "public, max-age=3600",
+            "Cache-Control":
+              "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400, stale-if-error=604800",
           },
         });
       },
