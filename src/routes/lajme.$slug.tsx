@@ -129,7 +129,11 @@ function ArticleDetailPage() {
   const shareUrl = `https://www.kptconsulting.al/lajme/${articleUrlSlug(article)}`;
 
   const title = articleTitle(article, lang);
-  const safeHtml = sanitizeHtml(articleContent(article, lang));
+  // Inline images inside article HTML go through the same long-cache proxy.
+  const safeHtml = sanitizeHtml(articleContent(article, lang)).replace(
+    /https:\/\/[^"'\s]*\/storage\/v1\/object\/public\/site-images\//g,
+    "/api/public/img/",
+  );
 
   return (
     <article className="pt-10 md:pt-16 pb-20">
