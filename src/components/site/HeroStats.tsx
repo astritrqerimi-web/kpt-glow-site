@@ -70,30 +70,38 @@ export function HeroStats() {
 
   return (
     <div className="container-page relative z-20 -mt-10 md:-mt-16 lg:-mt-20 mb-10 md:mb-14">
-      <div
-        className="hero-stats-card group relative overflow-hidden rounded-2xl md:rounded-[20px] border border-white/40 bg-white/45 backdrop-blur-md shadow-[0_10px_30px_-18px_rgba(15,139,141,0.25)]"
-        style={{
-          backgroundImage:
-            "linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.45) 100%)",
-        }}
-      >
+      <div className="hero-stats-card group relative rounded-2xl md:rounded-[20px] shadow-[0_10px_30px_-18px_rgba(15,139,141,0.25)]">
+        {/* Static glass layer — backdrop-filter lives here, NOT on the element
+            that contains the moving track. A blurred, rounded, clipping
+            ancestor forces the compositor to re-blur + re-clip the whole card
+            on every animation frame, which is what caused the stutter. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 rounded-2xl md:rounded-[20px] border border-white/40 bg-white/45 backdrop-blur-md"
+          style={{
+            backgroundImage:
+              "linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.45) 100%)",
+          }}
+        />
+
         {/* Edge fades */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 z-10"
+          className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 z-10 rounded-l-2xl md:rounded-l-[20px]"
           style={{ background: "linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0))" }}
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 z-10"
+          className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 z-10 rounded-r-2xl md:rounded-r-[20px]"
           style={{ background: "linear-gradient(to left, rgba(255,255,255,0.9), rgba(255,255,255,0))" }}
         />
 
-        <div className="h-[64px] sm:h-[72px] md:h-[80px] flex items-center overflow-hidden">
+        <div className="hero-stats-viewport relative h-[64px] sm:h-[72px] md:h-[80px] flex items-center overflow-hidden rounded-2xl md:rounded-[20px]">
           <div
             className="flex w-max animate-hero-stats-marquee items-center"
             style={{ animationDuration: `${speed * reps}s`, animationDirection: direction }}
           >
+
             {loop.map((item, i) => {
               const Icon = HERO_TRUST_ICONS[item.icon] ?? BadgeCheck;
               const value = lang === "en" ? item.value_en || item.value_al : item.value_al || item.value_en;
