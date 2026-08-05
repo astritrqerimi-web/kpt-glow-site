@@ -549,15 +549,7 @@ export function ContactSection() {
         </form>
       </div>
 
-      <div className="mt-10 overflow-hidden rounded-3xl border border-border/60 shadow-elegant">
-        <iframe
-          src={mapsSrc}
-          title="KPT Consulting në Google Maps"
-          className="w-full h-[420px] border-0"
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-        />
-      </div>
+      <LazyMap src={mapsSrc} />
     </section>
   );
 }
