@@ -84,7 +84,6 @@ function TrustRowSvg({ items, duplicate }: { items: SvgTrustItem[]; duplicate: b
         const x = offset;
         const iconX = x + 32;
         const textX = iconX + 48;
-        const valueWidth = item.value ? Math.max(28, item.value.length * 10) : 0;
         offset += item.width;
 
         return (
@@ -98,27 +97,25 @@ function TrustRowSvg({ items, duplicate }: { items: SvgTrustItem[]; duplicate: b
               color={item.color}
               strokeWidth={1.75}
             />
-            {item.value ? (
-              <text
-                x={textX}
-                y="45"
-                fill="var(--color-foreground)"
-                fontFamily="var(--font-display)"
-                fontSize="18"
-                fontWeight="600"
-              >
-                {item.value}
-              </text>
-            ) : null}
             <text
-              x={textX + valueWidth + (item.value ? 6 : 0)}
-              y="44"
-              fill="var(--color-muted-foreground)"
+              x={textX}
+              y="45"
               fontFamily="var(--font-sans)"
-              fontSize="11"
-              letterSpacing="1.1"
             >
-              {item.label.toLocaleUpperCase()}
+              {item.value ? (
+                <tspan fill="var(--color-foreground)" fontFamily="var(--font-display)" fontSize="18" fontWeight="600">
+                  {item.value}
+                </tspan>
+              ) : null}
+              <tspan
+                dx={item.value ? 6 : 0}
+                dy="-1"
+                fill="var(--color-muted-foreground)"
+                fontSize="11"
+                letterSpacing="1.1"
+              >
+                {item.label.toLocaleUpperCase()}
+              </tspan>
             </text>
             <line
               x1={x + item.width - 1}
