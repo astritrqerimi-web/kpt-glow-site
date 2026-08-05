@@ -212,64 +212,91 @@
   animation: shimmer 3s linear infinite;
 }
 
-/* Trust bar: one composited track containing one SVG row and one exact SVG duplicate. */
-@keyframes trust-marquee-left {
+@keyframes hero-trust-forward {
   from { transform: translate3d(0, 0, 0); }
   to { transform: translate3d(-50%, 0, 0); }
 }
 
-@keyframes trust-marquee-right {
+@keyframes hero-trust-reverse {
   from { transform: translate3d(-50%, 0, 0); }
   to { transform: translate3d(0, 0, 0); }
 }
 
-.trust-marquee__viewport {
+.hero-trust-viewport {
   contain: layout paint;
   isolation: isolate;
 }
 
-.trust-marquee__track {
+.hero-trust-track {
   display: flex;
-  flex: none;
+  align-items: center;
   width: max-content;
-  animation-name: trust-marquee-left;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+  height: 100%;
+  animation: hero-trust-forward 50s linear infinite;
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform-style: preserve-3d;
-  -webkit-font-smoothing: antialiased;
 }
 
-.trust-marquee__track--right {
-  animation-name: trust-marquee-right;
-}
+.hero-trust-track-reverse { animation-name: hero-trust-reverse; }
 
-.trust-marquee__svg {
-  display: block;
+.hero-trust-sequence {
+  display: flex;
+  align-items: center;
   flex: none;
-  height: 80px;
-  overflow: visible;
-  shape-rendering: geometricPrecision;
-  text-rendering: geometricPrecision;
+  height: 100%;
 }
 
-@media (max-width: 639px) {
-  .trust-marquee__svg {
-    height: 64px;
-    width: auto;
-  }
+.hero-trust-item {
+  display: flex;
+  align-items: center;
+  flex: none;
+  height: 100%;
+  padding-left: 32px;
+  border-right: 1px solid color-mix(in oklab, var(--color-border) 60%, transparent);
 }
+
+.hero-trust-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.hero-trust-copy {
+  display: flex;
+  align-items: baseline;
+  margin-left: 12px;
+  white-space: nowrap;
+}
+
+.hero-trust-copy strong {
+  color: var(--color-foreground);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.hero-trust-copy span {
+  margin-left: 10px;
+  color: var(--color-muted-foreground);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 1.1px;
+}
+
+.hero-trust-copy span:first-child { margin-left: 0; }
 
 @media (hover: hover) {
-  .trust-marquee--pausable:hover .trust-marquee__track {
-    animation-play-state: paused;
-  }
+  .hero-trust-pauses:hover .hero-trust-track { animation-play-state: paused; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .trust-marquee__track { animation: none !important; }
+  .hero-trust-track { animation: none; }
 }
 
 @keyframes pulse-glow {
