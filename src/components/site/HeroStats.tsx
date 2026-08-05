@@ -108,7 +108,7 @@ function TrustRowSvg({ items, duplicate }: { items: SvgTrustItem[]; duplicate: b
                 </tspan>
               ) : null}
               <tspan
-                dx={item.value ? 6 : 0}
+                dx={item.value ? 10 : 0}
                 dy="-1"
                 fill="var(--color-muted-foreground)"
                 fontSize="11"
