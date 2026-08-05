@@ -38,28 +38,32 @@ export function HeroStats() {
           style={{ background: "linear-gradient(to left, rgba(255,255,255,0.9), rgba(255,255,255,0))" }}
         />
 
-        <div className="hero-trust-viewport relative h-[64px] sm:h-[72px] md:h-[80px] overflow-x-auto overflow-y-hidden rounded-2xl md:rounded-[20px]">
-          <div className="hero-trust-static-row">
-            {items.map((item) => {
-              const Icon = HERO_TRUST_ICONS[item.icon] ?? BadgeCheck;
-              const value = lang === "en" ? item.value_en || item.value_al : item.value_al || item.value_en;
-              const label = lang === "en" ? item.label_en || item.label_al : item.label_al || item.label_en;
+        <div className="hero-trust-viewport relative h-[64px] sm:h-[72px] md:h-[80px] overflow-hidden rounded-2xl md:rounded-[20px]">
+          <div className="hero-trust-track">
+            {[0, 1].map((copy) => (
+              <div className="hero-trust-seq" key={copy} aria-hidden={copy === 1}>
+                {items.map((item) => {
+                  const Icon = HERO_TRUST_ICONS[item.icon] ?? BadgeCheck;
+                  const value = lang === "en" ? item.value_en || item.value_al : item.value_al || item.value_en;
+                  const label = lang === "en" ? item.label_en || item.label_al : item.label_al || item.label_en;
 
-              return (
-                <div className="hero-trust-item" key={item.id ?? item.sort_order}>
-                  <span
-                    className="hero-trust-icon"
-                    style={{ color: item.color || "#0F8B8D", backgroundColor: `color-mix(in srgb, ${item.color || "#0F8B8D"} 8%, transparent)` }}
-                  >
-                    <Icon aria-hidden size={18} strokeWidth={1.75} />
-                  </span>
-                  <span className="hero-trust-copy">
-                    {value ? <strong>{value}</strong> : null}
-                    <span>{label.toLocaleUpperCase()}</span>
-                  </span>
-                </div>
-              );
-            })}
+                  return (
+                    <div className="hero-trust-item" key={`${copy}-${item.id ?? item.sort_order}`}>
+                      <span
+                        className="hero-trust-icon"
+                        style={{ color: item.color || "#0F8B8D", backgroundColor: `color-mix(in srgb, ${item.color || "#0F8B8D"} 8%, transparent)` }}
+                      >
+                        <Icon aria-hidden size={18} strokeWidth={1.75} />
+                      </span>
+                      <span className="hero-trust-copy">
+                        {value ? <strong>{value}</strong> : null}
+                        <span>{label.toLocaleUpperCase()}</span>
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         </div>
       </div>
