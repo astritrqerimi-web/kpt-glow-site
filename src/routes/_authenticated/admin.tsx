@@ -579,9 +579,9 @@ function ContentAdmin() {
       <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
         <h3 className="font-display text-xl mb-4">Ballina — Hero</h3>
         <div className="grid gap-3">
-          <BilingualField label="Titulli kryesor" value={heroDraft.title} onChange={(v) => setHeroDraft({ ...heroDraft, title: v })} />
-          <BilingualField label="Nëntitulli / përshkrimi" value={heroDraft.subtitle} onChange={(v) => setHeroDraft({ ...heroDraft, subtitle: v })} rows={3} />
-          <BilingualField label='Badge sipër titullit ("Kontabilitet • Program • Trajnime")' value={heroDraft.badge} onChange={(v) => setHeroDraft({ ...heroDraft, badge: v })} />
+          <BilingualRichField label="Titulli kryesor" value={heroDraft.title} onChange={(v) => setHeroDraft({ ...heroDraft, title: v })} minHeight={140} />
+          <BilingualRichField label="Nëntitulli / përshkrimi" value={heroDraft.subtitle} onChange={(v) => setHeroDraft({ ...heroDraft, subtitle: v })} minHeight={180} />
+          <BilingualRichField label='Badge sipër titullit ("Kontabilitet • Program • Trajnime")' value={heroDraft.badge} onChange={(v) => setHeroDraft({ ...heroDraft, badge: v })} minHeight={120} />
           <div className="grid md:grid-cols-2 gap-3">
             <BilingualField label="Butoni 1 (CTA primar)" value={heroDraft.ctaContact} onChange={(v) => setHeroDraft({ ...heroDraft, ctaContact: v })} />
             <BilingualField label="Butoni 2 (CTA sekondar)" value={heroDraft.ctaServices} onChange={(v) => setHeroDraft({ ...heroDraft, ctaServices: v })} />
@@ -593,6 +593,8 @@ function ContentAdmin() {
             hint="PNG/JPG deri 5 MB"
             onChange={(url) => setHeroDraft({ ...heroDraft, image: url })}
           />
+          <HeroLivePreview draft={heroDraft} />
+
           <button onClick={() => save("hero", heroDraft)} className="self-start inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
             <Save className="h-4 w-4" /> Ruaj Hero
           </button>
