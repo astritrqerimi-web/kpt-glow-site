@@ -68,3 +68,14 @@ export function sanitizeHtml(html: string): string {
   if (!html) return "";
   return filter.process(html);
 }
+
+/**
+ * Accepts either plain text (legacy content) or admin-authored rich HTML and
+ * always returns HTML, so rich-text fields render identically after migration.
+ */
+export function toRichHtml(value: string | null | undefined): string {
+  if (!value) return "";
+  const looksLikeHtml = /<\/?[a-z][\s\S]*>/i.test(value);
+  if (looksLikeHtml) return value;
+  return `<p>${value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>`;
+}
