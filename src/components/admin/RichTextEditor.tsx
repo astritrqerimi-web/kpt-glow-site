@@ -50,20 +50,22 @@ const FONT_FAMILIES: { label: string; value: string }[] = [
 const FONT_SIZES = ["", "12px", "14px", "16px", "18px", "20px", "24px", "30px", "36px", "48px", "60px", "72px"];
 
 interface Props {
-
   value: string;
   onChange: (html: string) => void;
   articleId?: string;
   placeholder?: string;
+  minHeight?: number;
 }
 
-export function RichTextEditor({ value, onChange, articleId, placeholder }: Props) {
+export function RichTextEditor({ value, onChange, articleId, placeholder, minHeight = 400 }: Props) {
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const editor = useEditor({
     extensions: [
       StarterKit.configure({}),
       Underline,
+      TextStyleKit,
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
       Link.configure({ openOnClick: false, autolink: true, HTMLAttributes: { rel: "noopener noreferrer nofollow", target: "_blank" } }),
       Image.configure({ inline: false, HTMLAttributes: { loading: "lazy" } }),
       Placeholder.configure({ placeholder: placeholder || "Shkruani përmbajtjen këtu…" }),
@@ -76,12 +78,13 @@ export function RichTextEditor({ value, onChange, articleId, placeholder }: Prop
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
     editorProps: {
       attributes: {
-        class:
-          "article-prose min-h-[400px] max-w-none focus:outline-none px-4 py-4",
+        class: "article-prose max-w-none focus:outline-none px-4 py-4",
+        style: `min-height:${minHeight}px`,
       },
     },
     immediatelyRender: false,
   });
+
 
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
