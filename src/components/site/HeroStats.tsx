@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   Users,
@@ -51,7 +50,6 @@ export const HERO_TRUST_ICON_NAMES = Object.keys(HERO_TRUST_ICONS);
 export function HeroStats() {
   const { data } = useSuspenseQuery(heroTrustQuery());
   const { lang } = useI18n();
-  const trackRef = useRef<HTMLDivElement | null>(null);
 
   const items = (data.items ?? [])
     .filter((i) => i.is_active)
@@ -62,40 +60,13 @@ export function HeroStats() {
   const direction = data.direction === "right" ? "reverse" : "normal";
   const pauseOnHover = data.pause_on_hover !== false;
 
-  // Distance is locked to a whole number of pixels measured from the DOM.
-  // A percentage translate is re-resolved against the track's layout width, so
-  // any width change mid-run (web font swap, AL/EN switch, resize, scrollbar)
-  // shifts the element by a fraction of a pixel -> the "shaking" glyphs.
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    let last = -1;
-    const apply = () => {
-      // scrollWidth of the track / 2 == exactly one copy of the list.
-      const half = Math.round(track.scrollWidth / 2);
-      if (half <= 0 || half === last) return; // no restart unless size truly changed
-      last = half;
-      const pxPerSec = 1125 / speed; // same velocity as before, width-independent
-      track.style.setProperty("--marquee-x", `${half}px`);
-      track.style.animationDuration = `${(half / pxPerSec).toFixed(3)}s`;
-    };
-
-    apply();
-    const ro = new ResizeObserver(apply);
-    ro.observe(track);
-    // Font swap changes glyph metrics after first paint.
-    (document as Document & { fonts?: FontFaceSet }).fonts?.ready.then(apply).catch(() => {});
-    return () => ro.disconnect();
-  }, [speed, lang, items.length]);
-
   if (items.length === 0) return null;
 
-  // One "half" repeated enough to overflow wide screens; rendered twice so the
-  // loop is 100% seamless.
+  // Each group is an exact, independent copy. Translating the single track by
+  // half of its own width lands precisely on the second group without any DOM
+  // measurement, rounding, observer callback, or animation restart.
   const reps = items.length >= 6 ? 1 : items.length >= 3 ? 2 : 4;
   const half = Array.from({ length: reps }, () => items).flat();
-  const loop = [...half, ...half];
 
 
   return (
@@ -128,45 +99,43 @@ export function HeroStats() {
 
         <div className="hero-stats-viewport relative h-[64px] sm:h-[72px] md:h-[80px] flex items-center overflow-hidden rounded-2xl md:rounded-[20px]">
           <div
-            ref={trackRef}
             className="flex w-max animate-hero-stats-marquee items-center"
             style={{ animationDuration: `${speed * reps}s`, animationDirection: direction }}
           >
-
-
-            {loop.map((item, i) => {
-              const Icon = HERO_TRUST_ICONS[item.icon] ?? BadgeCheck;
-              const value = lang === "en" ? item.value_en || item.value_al : item.value_al || item.value_en;
-              const label = lang === "en" ? item.label_en || item.label_al : item.label_al || item.label_en;
-              const color = item.color || "#0F8B8D";
-              return (
-                <div key={i} className="flex items-center">
-                  <div className="shrink-0 flex items-center gap-2.5 sm:gap-3 px-5 sm:px-8">
-                    <span
-                      className="inline-flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg"
-                      style={{
-                        backgroundColor: `${color}14`,
-                        color,
-                      }}
-                    >
-                      <Icon className="h-4 w-4 sm:h-[18px] sm:w-[18px]" strokeWidth={1.75} />
-                    </span>
-                    <div className="leading-tight text-left flex items-baseline gap-1.5">
-                      <span className="font-display text-base sm:text-lg font-semibold text-foreground tracking-tight whitespace-nowrap">
-                        {value}
-                      </span>
-                      <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.1em] text-muted-foreground whitespace-nowrap">
-                        {label}
-                      </span>
+            {[0, 1].map((copy) => (
+              <div key={copy} aria-hidden={copy === 1 || undefined} className="flex shrink-0 items-center">
+                {half.map((item, i) => {
+                  const Icon = HERO_TRUST_ICONS[item.icon] ?? BadgeCheck;
+                  const value = lang === "en" ? item.value_en || item.value_al : item.value_al || item.value_en;
+                  const label = lang === "en" ? item.label_en || item.label_al : item.label_al || item.label_en;
+                  const color = item.color || "#0F8B8D";
+                  return (
+                    <div key={i} className="flex items-center">
+                      <div className="shrink-0 flex items-center gap-2.5 sm:gap-3 px-5 sm:px-8">
+                        <span
+                          className="inline-flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg"
+                          style={{
+                            backgroundColor: `${color}14`,
+                            color,
+                          }}
+                        >
+                          <Icon className="h-4 w-4 sm:h-[18px] sm:w-[18px]" strokeWidth={1.75} />
+                        </span>
+                        <div className="leading-tight text-left flex items-baseline gap-1.5">
+                          <span className="font-display text-base sm:text-lg font-semibold text-foreground tracking-tight whitespace-nowrap">
+                            {value}
+                          </span>
+                          <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.1em] text-muted-foreground whitespace-nowrap">
+                            {label}
+                          </span>
+                        </div>
+                      </div>
+                      <span aria-hidden className="h-5 sm:h-6 w-px bg-border/60" />
                     </div>
-                  </div>
-                  <span
-                    aria-hidden
-                    className="h-5 sm:h-6 w-px bg-border/60"
-                  />
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -175,7 +144,7 @@ export function HeroStats() {
       <style>{`
         @keyframes hero-stats-marquee {
           from { transform: translate3d(0, 0, 0); }
-          to   { transform: translate3d(calc(var(--marquee-x, 50%) * -1), 0, 0); }
+          to   { transform: translate3d(-50%, 0, 0); }
         }
 
         .hero-stats-viewport {
