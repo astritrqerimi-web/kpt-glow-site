@@ -27,6 +27,7 @@ import {
 import { ArticleCard } from "@/components/site/ArticleCard";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { useI18n } from "@/lib/i18n";
+import { cachedImageUrl } from "@/lib/image-url";
 
 export const Route = createFileRoute("/lajme/$slug")({
   loader: async ({ params, context }) => {
@@ -177,7 +178,7 @@ function ArticleDetailPage() {
         <div className="container-page mt-10">
           <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-border/60 shadow-elegant">
             <img
-              src={article.cover_image_url}
+              src={cachedImageUrl(article.cover_image_url)}
               alt={title}
               width={1200}
               height={675}
@@ -215,7 +216,7 @@ function ArticleDetailPage() {
                   className="group block overflow-hidden rounded-xl border border-border/60"
                 >
                   <img
-                    src={g.url}
+                    src={cachedImageUrl(g.url)}
                     alt={g.caption || `${title} ${i + 1}`}
                     loading="lazy"
                     className="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
