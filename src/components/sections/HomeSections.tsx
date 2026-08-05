@@ -36,7 +36,7 @@ import { getSupabase } from "@/lib/supabase-lazy";
 import { toast } from "@/lib/toast-lazy";
 import { useI18n, SERVICE_TRANSLATIONS } from "@/lib/i18n";
 import { Hero3DVisual } from "@/components/site/Hero3DVisual";
-import { sanitizeHtml } from "@/lib/sanitize";
+import { sanitizeHtml, toRichHtml } from "@/lib/sanitize";
 
 
 /* ---------------- HERO / BALLINA ---------------- */
