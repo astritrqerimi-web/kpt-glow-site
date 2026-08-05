@@ -86,7 +86,13 @@ export default {
         isHtmlResponse(normalized) &&
         !normalized.headers.has("set-cookie")
       ) {
-        normalized.headers.set("cache-control", HTML_CACHE_CONTROL);
+        const headers = new Headers(normalized.headers);
+        headers.set("cache-control", HTML_CACHE_CONTROL);
+        return new Response(normalized.body, {
+          status: normalized.status,
+          statusText: normalized.statusText,
+          headers,
+        });
       }
 
       return normalized;
