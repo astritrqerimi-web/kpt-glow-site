@@ -20,11 +20,11 @@ function storageBase(): string {
   return `${url.replace(/\/$/, "")}/storage/v1/object/public/${BUCKET}/`;
 }
 
-export const Route = createFileRoute("/api/public/img/$")({
+const routeOptions = {
   server: {
     handlers: {
-      GET: async ({ params }) => {
-        const path = (params as { _splat?: string })._splat ?? "";
+      GET: async ({ params }: { params: { _splat?: string } }) => {
+        const path = params._splat ?? "";
         // Reject traversal / absolute URLs — only plain bucket keys are allowed.
         if (!path || path.includes("..") || path.includes("://")) {
           return new Response("Bad request", { status: 400 });
@@ -53,4 +53,7 @@ export const Route = createFileRoute("/api/public/img/$")({
       },
     },
   },
-});
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const Route = createFileRoute("/api/public/img/$")(routeOptions as any);
