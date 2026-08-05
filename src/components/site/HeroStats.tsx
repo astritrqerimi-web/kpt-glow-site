@@ -89,7 +89,7 @@ export function HeroStats() {
           style={{ background: "linear-gradient(to left, rgba(255,255,255,0.9), rgba(255,255,255,0))" }}
         />
 
-        <div className="h-[64px] sm:h-[72px] md:h-[80px] flex items-center">
+        <div className="h-[64px] sm:h-[72px] md:h-[80px] flex items-center overflow-hidden">
           <div
             className="flex w-max animate-hero-stats-marquee items-center"
             style={{ animationDuration: `${speed}s`, animationDirection: direction }}
