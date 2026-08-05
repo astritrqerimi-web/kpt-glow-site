@@ -11,6 +11,46 @@ interface ImageUploadProps {
   hint?: string;
 }
 
+/**
+ * Re-encodes an uploaded picture to WebP at a sane display width before it ever
+ * reaches storage. Article covers are shown at ~380–760 CSS px, so multi-hundred
+ * KB originals were being downloaded in full by every visitor. Output is visually
+ * identical at the sizes the site actually renders.
+ */
+const MAX_UPLOAD_WIDTH = 1600;
+const WEBP_QUALITY = 0.82;
+
+async function optimizeImage(file: File): Promise<{ blob: Blob; ext: string; type: string }> {
+  const passthrough = { blob: file, ext: file.name.split(".").pop() || "png", type: file.type };
+  // SVG/GIF must keep their original encoding (vectors / animation).
+  if (!/^image\/(png|jpeg|jpg|webp)$/i.test(file.type)) return passthrough;
+  if (typeof createImageBitmap !== "function") return passthrough;
+
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, MAX_UPLOAD_WIDTH / bitmap.width);
+    const width = Math.round(bitmap.width * scale);
+    const height = Math.round(bitmap.height * scale);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return passthrough;
+    ctx.drawImage(bitmap, 0, 0, width, height);
+    bitmap.close?.();
+
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/webp", WEBP_QUALITY),
+    );
+    // Only take the re-encode when it is actually smaller.
+    if (!blob || blob.size >= file.size) return passthrough;
+    return { blob, ext: "webp", type: "image/webp" };
+  } catch {
+    return passthrough;
+  }
+}
+
 export function ImageUpload({ label, value, onChange, folder = "misc", hint }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -23,12 +63,13 @@ export function ImageUpload({ label, value, onChange, folder = "misc", hint }: I
     }
     setUploading(true);
     try {
-      const ext = file.name.split(".").pop() || "png";
-      const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-      const { error } = await supabase.storage.from("site-images").upload(path, file, {
-        cacheControl: "3600",
+      const optimized = await optimizeImage(file);
+      const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${optimized.ext}`;
+      const { error } = await supabase.storage.from("site-images").upload(path, optimized.blob, {
+        // Paths are unique per upload, so they can be cached for a year.
+        cacheControl: "31536000, immutable",
         upsert: false,
-        contentType: file.type,
+        contentType: optimized.type,
       });
       if (error) throw error;
       const { data } = supabase.storage.from("site-images").getPublicUrl(path);
@@ -41,6 +82,7 @@ export function ImageUpload({ label, value, onChange, folder = "misc", hint }: I
       if (inputRef.current) inputRef.current.value = "";
     }
   };
+
 
   return (
     <div className="rounded-xl border border-border/60 bg-background/60 p-3">

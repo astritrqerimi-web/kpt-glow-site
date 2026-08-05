@@ -44,12 +44,90 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+/**
+ * Public marketing pages are identical for every visitor, so their SSR output is
+ * safe to hold at the edge. The browser still revalidates on every navigation
+ * (`max-age=0, must-revalidate`), while the CDN serves a warm copy for a minute
+ * and keeps serving it while it refreshes in the background. This removes the
+ * full backend round trip from the critical path of a cold page load.
+ */
+const CACHEABLE_PATHS = /^\/(?:$|lajme(?:\/|$)|rreth-nesh$|sherbimet$|kontakt$)/;
+const HTML_CACHE_CONTROL =
+  "public, max-age=0, must-revalidate, s-maxage=60, stale-while-revalidate=86400";
+
+function isPubliclyCacheable(request: Request): boolean {
+  if (request.method !== "GET") return false;
+  if (request.headers.get("authorization")) return false;
+  const cookie = request.headers.get("cookie") ?? "";
+  // Any signed-in visitor (admin) always gets a freshly rendered page.
+  if (cookie.includes("sb-") || cookie.includes("supabase")) return false;
+  const { pathname, search } = new URL(request.url);
+  if (search) return false;
+  return CACHEABLE_PATHS.test(pathname);
+}
+
+function isHtmlResponse(response: Response): boolean {
+  return (response.headers.get("content-type") ?? "").includes("text/html");
+}
+
+type EdgeCache = {
+  match: (request: Request) => Promise<Response | undefined>;
+  put: (request: Request, response: Response) => Promise<void>;
+};
+
+function getEdgeCache(): EdgeCache | null {
+  const c = (globalThis as { caches?: { default?: EdgeCache } }).caches;
+  return c?.default ?? null;
+}
+
+function waitUntil(ctx: unknown, promise: Promise<unknown>) {
+  const maybe = ctx as { waitUntil?: (p: Promise<unknown>) => void } | undefined;
+  if (maybe?.waitUntil) maybe.waitUntil(promise);
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const cacheable = isPubliclyCacheable(request);
+      const cache = cacheable ? getEdgeCache() : null;
+
+      if (cache) {
+        try {
+          const hit = await cache.match(request);
+          if (hit) return hit;
+        } catch {
+          // Cache API unavailable in this runtime — fall through to a live render.
+        }
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      const normalized = await normalizeCatastrophicSsrResponse(response);
+
+      if (
+        cacheable &&
+        normalized.status === 200 &&
+        isHtmlResponse(normalized) &&
+        !normalized.headers.has("set-cookie")
+      ) {
+        const headers = new Headers(normalized.headers);
+        headers.set("cache-control", HTML_CACHE_CONTROL);
+        const withCaching = new Response(normalized.body, {
+          status: normalized.status,
+          statusText: normalized.statusText,
+          headers,
+        });
+        if (cache) {
+          try {
+            waitUntil(ctx, cache.put(request, withCaching.clone()));
+          } catch {
+            // Non-fatal: the response is still served normally.
+          }
+        }
+        return withCaching;
+      }
+
+      return normalized;
     } catch (error) {
       console.error(error);
       return new Response(renderErrorPage(), {
@@ -59,3 +137,4 @@ export default {
     }
   },
 };
+
