@@ -134,20 +134,27 @@ export function HeroStats() {
 
       <style>{`
         @keyframes hero-stats-marquee {
-          0% { transform: translate3d(0,0,0); }
-          100% { transform: translate3d(-25%, 0, 0); }
+          from { transform: translate3d(0, 0, 0); }
+          to   { transform: translate3d(-50%, 0, 0); }
         }
         .animate-hero-stats-marquee {
+          display: flex;
+          width: max-content;
           animation-name: hero-stats-marquee;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
-          transform: translateZ(0);
+          will-change: transform;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+          perspective: 1000px;
         }
         ${pauseOnHover ? `@media (hover: hover) { .hero-stats-card:hover .animate-hero-stats-marquee { animation-play-state: paused; } }` : ""}
         @media (prefers-reduced-motion: reduce) {
           .animate-hero-stats-marquee { animation: none !important; }
         }
       `}</style>
+
     </div>
   );
 }
