@@ -50,23 +50,52 @@ export const HERO_TRUST_ICON_NAMES = Object.keys(HERO_TRUST_ICONS);
 export function HeroStats() {
   const { data } = useSuspenseQuery(heroTrustQuery());
   const { lang } = useI18n();
+  const trackRef = useRef<HTMLDivElement | null>(null);
 
   const items = (data.items ?? [])
     .filter((i) => i.is_active)
     .slice()
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
+  const speed = Math.max(5, Number(data.speed) || 50);
+  const direction = data.direction === "right" ? "reverse" : "normal";
+  const pauseOnHover = data.pause_on_hover !== false;
+
+  // Distance is locked to a whole number of pixels measured from the DOM.
+  // A percentage translate is re-resolved against the track's layout width, so
+  // any width change mid-run (web font swap, AL/EN switch, resize, scrollbar)
+  // shifts the element by a fraction of a pixel -> the "shaking" glyphs.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    let last = -1;
+    const apply = () => {
+      // scrollWidth of the track / 2 == exactly one copy of the list.
+      const half = Math.round(track.scrollWidth / 2);
+      if (half <= 0 || half === last) return; // no restart unless size truly changed
+      last = half;
+      const pxPerSec = 1125 / speed; // same velocity as before, width-independent
+      track.style.setProperty("--marquee-x", `${half}px`);
+      track.style.animationDuration = `${(half / pxPerSec).toFixed(3)}s`;
+    };
+
+    apply();
+    const ro = new ResizeObserver(apply);
+    ro.observe(track);
+    // Font swap changes glyph metrics after first paint.
+    (document as Document & { fonts?: FontFaceSet }).fonts?.ready.then(apply).catch(() => {});
+    return () => ro.disconnect();
+  }, [speed, lang, items.length]);
+
   if (items.length === 0) return null;
 
   // One "half" repeated enough to overflow wide screens; rendered twice so the
-  // -50% loop is perfectly seamless.
+  // loop is 100% seamless.
   const reps = items.length >= 6 ? 1 : items.length >= 3 ? 2 : 4;
   const half = Array.from({ length: reps }, () => items).flat();
   const loop = [...half, ...half];
 
-  const speed = Math.max(5, Number(data.speed) || 50);
-  const direction = data.direction === "right" ? "reverse" : "normal";
-  const pauseOnHover = data.pause_on_hover !== false;
 
   return (
     <div className="container-page relative z-20 -mt-10 md:-mt-16 lg:-mt-20 mb-10 md:mb-14">
