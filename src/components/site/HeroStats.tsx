@@ -58,8 +58,11 @@ export function HeroStats() {
 
   if (items.length === 0) return null;
 
-  // Repeat items enough times for a seamless loop
-  const loop = [...items, ...items, ...items, ...items];
+  // One "half" repeated enough to overflow wide screens; rendered twice so the
+  // -50% loop is perfectly seamless.
+  const reps = items.length >= 6 ? 1 : items.length >= 3 ? 2 : 4;
+  const half = Array.from({ length: reps }, () => items).flat();
+  const loop = [...half, ...half];
 
   const speed = Math.max(5, Number(data.speed) || 50);
   const direction = data.direction === "right" ? "reverse" : "normal";
@@ -86,10 +89,10 @@ export function HeroStats() {
           style={{ background: "linear-gradient(to left, rgba(255,255,255,0.9), rgba(255,255,255,0))" }}
         />
 
-        <div className="h-[64px] sm:h-[72px] md:h-[80px] flex items-center">
+        <div className="h-[64px] sm:h-[72px] md:h-[80px] flex items-center overflow-hidden">
           <div
             className="flex w-max animate-hero-stats-marquee items-center"
-            style={{ animationDuration: `${speed}s`, animationDirection: direction }}
+            style={{ animationDuration: `${speed * reps}s`, animationDirection: direction }}
           >
             {loop.map((item, i) => {
               const Icon = HERO_TRUST_ICONS[item.icon] ?? BadgeCheck;
@@ -131,20 +134,27 @@ export function HeroStats() {
 
       <style>{`
         @keyframes hero-stats-marquee {
-          0% { transform: translate3d(0,0,0); }
-          100% { transform: translate3d(-25%, 0, 0); }
+          from { transform: translate3d(0, 0, 0); }
+          to   { transform: translate3d(-50%, 0, 0); }
         }
         .animate-hero-stats-marquee {
+          display: flex;
+          width: max-content;
           animation-name: hero-stats-marquee;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
-          transform: translateZ(0);
+          will-change: transform;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+          perspective: 1000px;
         }
         ${pauseOnHover ? `@media (hover: hover) { .hero-stats-card:hover .animate-hero-stats-marquee { animation-play-state: paused; } }` : ""}
         @media (prefers-reduced-motion: reduce) {
           .animate-hero-stats-marquee { animation: none !important; }
         }
       `}</style>
+
     </div>
   );
 }
