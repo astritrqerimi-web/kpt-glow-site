@@ -8,19 +8,34 @@ import { useI18n } from "@/lib/i18n";
 
 const PAGE_SIZE = 12;
 
-type ListSearch = { cat: string; q: string; sort: "newest" | "oldest"; page: number };
+type ListSearch = { cat?: string; q?: string; sort?: "newest" | "oldest"; page?: number };
 
-// Hand-rolled validator (same defaults/fallbacks as before) so the schema
-// library stays out of the critical bundle.
-function validateListSearch(search: Record<string, unknown>): ListSearch {
-  const page = Number(search.page);
+const DEFAULTS = { cat: "all", q: "", sort: "newest" as const, page: 1 };
+
+/** Resolves the effective (defaulted) values from a sparse search object. */
+function resolve(search: ListSearch) {
   return {
-    cat: typeof search.cat === "string" && search.cat ? search.cat : "all",
-    q: typeof search.q === "string" ? search.q : "",
-    sort: search.sort === "oldest" ? "oldest" : "newest",
-    page: Number.isInteger(page) && page >= 1 ? page : 1,
+    cat: search.cat ?? DEFAULTS.cat,
+    q: search.q ?? DEFAULTS.q,
+    sort: search.sort ?? DEFAULTS.sort,
+    page: search.page ?? DEFAULTS.page,
   };
 }
+
+// Hand-rolled validator (same defaults/fallbacks as before) so the schema
+// library stays out of the critical bundle. Default values are intentionally
+// omitted from the URL so /lajme never 307-redirects to a fully-expanded query.
+function validateListSearch(search: Record<string, unknown>): ListSearch {
+  const page = Number(search.page);
+  const out: ListSearch = {};
+  if (typeof search.cat === "string" && search.cat && search.cat !== DEFAULTS.cat)
+    out.cat = search.cat;
+  if (typeof search.q === "string" && search.q) out.q = search.q;
+  if (search.sort === "oldest") out.sort = "oldest";
+  if (Number.isInteger(page) && page > 1) out.page = page;
+  return out;
+}
+
 
 export const Route = createFileRoute("/lajme/")({
   validateSearch: validateListSearch,
@@ -44,7 +59,7 @@ export const Route = createFileRoute("/lajme/")({
     ],
     links: [{ rel: "canonical", href: "https://www.kptconsulting.al/lajme" }],
   }),
-  loaderDeps: ({ search }) => search,
+  loaderDeps: ({ search }) => resolve(search),
   loader: async ({ context, deps }) => {
     await Promise.all([
       context.queryClient.ensureQueryData(categoriesQuery()),
@@ -64,7 +79,7 @@ export const Route = createFileRoute("/lajme/")({
 
 function LajmePage() {
   const { t, lang } = useI18n();
-  const search = Route.useSearch();
+  const search = resolve(Route.useSearch());
   const navigate = useNavigate({ from: "/lajme" });
   const [qInput, setQInput] = useState(search.q);
 
@@ -86,12 +101,21 @@ function LajmePage() {
   const totalPages = Math.max(1, Math.ceil((data?.total ?? 0) / PAGE_SIZE));
   const items = data?.items ?? [];
 
-  const setParam = (updates: Partial<ListSearch>) => {
+  const setParam = (updates: Partial<ReturnType<typeof resolve>>) => {
     navigate({
-      search: (prev: ListSearch) => ({ ...prev, ...updates, page: updates.page ?? 1 }),
-
+      search: (prev: ListSearch) => {
+        const next = { ...resolve(prev), ...updates, page: updates.page ?? 1 };
+        // Keep default values out of the URL (avoids redirect-y, noisy links).
+        return {
+          cat: next.cat === DEFAULTS.cat ? undefined : next.cat,
+          q: next.q ? next.q : undefined,
+          sort: next.sort === DEFAULTS.sort ? undefined : next.sort,
+          page: next.page > 1 ? next.page : undefined,
+        };
+      },
     });
   };
+
 
   const submitSearch = (e: React.FormEvent) => {
     e.preventDefault();
