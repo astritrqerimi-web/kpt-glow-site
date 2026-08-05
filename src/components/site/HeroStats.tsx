@@ -92,7 +92,7 @@ export function HeroStats() {
         <div className="h-[64px] sm:h-[72px] md:h-[80px] flex items-center overflow-hidden">
           <div
             className="flex w-max animate-hero-stats-marquee items-center"
-            style={{ animationDuration: `${speed}s`, animationDirection: direction }}
+            style={{ animationDuration: `${speed * reps}s`, animationDirection: direction }}
           >
             {loop.map((item, i) => {
               const Icon = HERO_TRUST_ICONS[item.icon] ?? BadgeCheck;
