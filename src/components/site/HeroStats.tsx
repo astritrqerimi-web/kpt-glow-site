@@ -58,8 +58,11 @@ export function HeroStats() {
 
   if (items.length === 0) return null;
 
-  // Repeat items enough times for a seamless loop
-  const loop = [...items, ...items, ...items, ...items];
+  // One "half" repeated enough to overflow wide screens; rendered twice so the
+  // -50% loop is perfectly seamless.
+  const reps = items.length >= 6 ? 1 : items.length >= 3 ? 2 : 4;
+  const half = Array.from({ length: reps }, () => items).flat();
+  const loop = [...half, ...half];
 
   const speed = Math.max(5, Number(data.speed) || 50);
   const direction = data.direction === "right" ? "reverse" : "normal";
