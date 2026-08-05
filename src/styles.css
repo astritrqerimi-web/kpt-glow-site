@@ -240,9 +240,14 @@
   align-items: center;
   width: max-content;
   height: 100%;
-  animation: marquee 25s linear infinite;
+  animation: marquee 70s linear infinite;
   will-change: transform;
   backface-visibility: hidden;
+}
+
+.hero-trust-viewport:hover .hero-trust-track,
+.hero-trust-track:hover {
+  animation-play-state: paused;
 }
 
 .hero-trust-seq {
