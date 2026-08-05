@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { scrollToSection } from "@/lib/scroll-to-section";
 import {
@@ -549,18 +549,61 @@ export function ContactSection() {
         </form>
       </div>
 
-      <div className="mt-10 overflow-hidden rounded-3xl border border-border/60 shadow-elegant">
+      <LazyMap src={mapsSrc} />
+    </section>
+  );
+}
+
+/**
+ * The Google Maps embed pulls dozens of extra requests and a large JS payload.
+ * Mounting it only when the container scrolls near the viewport keeps it off
+ * the initial load. The placeholder reserves the exact same box (same rounded
+ * border, same 420px height), so there is no visual change and no layout shift.
+ */
+function LazyMap({ src }: { src: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || show) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setShow(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setShow(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [show]);
+
+  return (
+    <div
+      ref={ref}
+      className="mt-10 overflow-hidden rounded-3xl border border-border/60 shadow-elegant"
+    >
+      {show ? (
         <iframe
-          src={mapsSrc}
+          src={src}
           title="KPT Consulting në Google Maps"
           className="w-full h-[420px] border-0"
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
         />
-      </div>
-    </section>
+      ) : (
+        <div className="w-full h-[420px]" aria-hidden />
+      )}
+    </div>
   );
 }
+
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
