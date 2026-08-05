@@ -452,10 +452,12 @@ function BilingualRichField({
   label,
   value,
   onChange,
+  minHeight,
 }: {
   label: string;
   value: Bilingual;
   onChange: (v: { al: string; en: string }) => void;
+  minHeight?: number;
 }) {
   const v = bg(value);
   return (
@@ -465,19 +467,68 @@ function BilingualRichField({
         <div>
           <div className="mb-1 flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">🇦🇱 Shqip</div>
           <div className="rounded-lg border border-input bg-background overflow-hidden">
-            <RichTextEditor value={v.al} onChange={(html) => onChange({ ...v, al: html })} />
+            <RichTextEditor value={v.al} onChange={(html) => onChange({ ...v, al: html })} minHeight={minHeight} />
           </div>
         </div>
         <div>
           <div className="mb-1 flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">🇬🇧 English</div>
           <div className="rounded-lg border border-input bg-background overflow-hidden">
-            <RichTextEditor value={v.en} onChange={(html) => onChange({ ...v, en: html })} />
+            <RichTextEditor value={v.en} onChange={(html) => onChange({ ...v, en: html })} minHeight={minHeight} />
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+function HeroLivePreview({ draft }: { draft: any }) {
+  const [lang, setLang] = useState<"al" | "en">("al");
+  const val = (b: Bilingual) => (lang === "al" ? bg(b).al : bg(b).en);
+  const badgeHtml = sanitizeHtml(toRichHtml(val(draft.badge)));
+  const titleHtml = sanitizeHtml(toRichHtml(val(draft.title)));
+  const subtitleHtml = sanitizeHtml(toRichHtml(val(draft.subtitle)));
+  return (
+    <div className="rounded-xl border border-border/60 bg-background/60 p-4">
+      <div className="mb-3 flex items-center justify-between">
+        <div className="text-xs font-medium">Live preview</div>
+        <div className="flex gap-1 rounded-full border border-border p-0.5">
+          {(["al", "en"] as const).map((l) => (
+            <button
+              key={l}
+              type="button"
+              onClick={() => setLang(l)}
+              className={`rounded-full px-3 py-1 text-[11px] uppercase ${lang === l ? "bg-primary/15 text-primary" : "text-muted-foreground"}`}
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="rounded-xl border border-border/40 bg-background p-5">
+        <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-1.5 text-xs font-medium text-primary shadow-soft">
+          <span className="hero-rich uppercase tracking-[0.14em]" dangerouslySetInnerHTML={{ __html: badgeHtml }} />
+        </div>
+        <h1 className="mt-4 font-display text-3xl leading-[1.05] md:text-5xl">
+          <span className="hero-rich text-gradient-brand" dangerouslySetInnerHTML={{ __html: titleHtml }} />
+        </h1>
+        <div
+          className="hero-rich mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base"
+          dangerouslySetInnerHTML={{ __html: subtitleHtml }}
+        />
+        <div className="mt-6 flex flex-wrap gap-3">
+          <span className="rounded-full px-6 py-3 text-sm font-semibold text-white" style={{ background: "var(--gradient-brand-strong)" }}>
+            {val(draft.ctaContact)}
+          </span>
+          <span className="rounded-full border border-border px-6 py-3 text-sm font-semibold">{val(draft.ctaServices)}</span>
+        </div>
+        {draft.image ? (
+          <img src={draft.image} alt="Hero" loading="lazy" decoding="async" className="mt-6 w-full max-w-md rounded-2xl" />
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 
 
 
