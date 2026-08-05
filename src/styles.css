@@ -212,6 +212,56 @@
   animation: shimmer 3s linear infinite;
 }
 
+/* Trust bar: one composited track, followed by one exact content duplicate. */
+@keyframes trust-marquee-left {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes trust-marquee-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+
+.trust-marquee__viewport {
+  contain: layout paint;
+  isolation: isolate;
+}
+
+.trust-marquee__track {
+  display: flex;
+  flex: none;
+  width: max-content;
+  animation-name: trust-marquee-left;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-font-smoothing: antialiased;
+}
+
+.trust-marquee__track--right {
+  animation-name: trust-marquee-right;
+}
+
+.trust-marquee__group {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+@media (hover: hover) {
+  .trust-marquee--pausable:hover .trust-marquee__track {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trust-marquee__track { animation: none !important; }
+}
+
 @keyframes pulse-glow {
   0%, 100% { opacity: 0.55; transform: scale(1); }
   50% { opacity: 0.85; transform: scale(1.05); }
