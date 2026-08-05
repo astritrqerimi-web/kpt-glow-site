@@ -230,14 +230,26 @@
 
 .hero-trust-viewport::-webkit-scrollbar { display: none; }
 
-.hero-trust-static-row {
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.hero-trust-track {
   display: flex;
   align-items: center;
   width: max-content;
-  min-width: 100%;
   height: 100%;
-  transform: none;
-  animation: none;
+  animation: marquee 25s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.hero-trust-seq {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex: none;
 }
 
 .hero-trust-item {
@@ -248,9 +260,12 @@
   min-width: max-content;
   padding-inline: 32px;
   border-right: 1px solid color-mix(in oklab, var(--color-border) 60%, transparent);
-  transform: none;
-  transition: none;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-trust-track { animation: none; }
+}
+
 
 .hero-trust-icon {
   display: grid;
