@@ -9,6 +9,7 @@ import {
   formatDate,
 } from "@/lib/articles";
 import { useI18n } from "@/lib/i18n";
+import { cachedImageUrl } from "@/lib/image-url";
 
 interface Props {
   article: Article;
@@ -32,7 +33,7 @@ export function ArticleCard({ article, categories }: Props) {
       <div className="relative aspect-[16/9] overflow-hidden bg-muted">
         {article.cover_image_url ? (
           <img
-            src={article.cover_image_url}
+            src={cachedImageUrl(article.cover_image_url)}
             alt={title}
             width={640}
             height={360}
