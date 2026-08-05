@@ -504,7 +504,7 @@
 .hero-rich { display: block; }
 .hero-rich > *:first-child { margin-top: 0; }
 .hero-rich > *:last-child { margin-bottom: 0; }
-.hero-rich p { margin: 0; }
+.hero-rich p { margin: 0; line-height: inherit; }
 .hero-rich p + p { margin-top: 0.75rem; }
 .hero-rich ul, .hero-rich ol { padding-left: 1.25rem; margin: 0.5rem 0; text-align: left; }
 .hero-rich ul { list-style: disc; }
