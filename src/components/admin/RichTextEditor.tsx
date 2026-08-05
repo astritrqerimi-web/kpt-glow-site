@@ -180,6 +180,90 @@ export function RichTextEditor({ value, onChange, articleId, placeholder, minHei
           <Code2 className="h-4 w-4" />
         </ToolbarButton>
         <Divider />
+        <ToolbarButton
+          active={editor.isActive({ textAlign: "left" })}
+          onClick={() => editor.chain().focus().setTextAlign("left").run()}
+          title="Majtas"
+        >
+          <AlignLeft className="h-4 w-4" />
+        </ToolbarButton>
+        <ToolbarButton
+          active={editor.isActive({ textAlign: "center" })}
+          onClick={() => editor.chain().focus().setTextAlign("center").run()}
+          title="Në qendër"
+        >
+          <AlignCenter className="h-4 w-4" />
+        </ToolbarButton>
+        <ToolbarButton
+          active={editor.isActive({ textAlign: "right" })}
+          onClick={() => editor.chain().focus().setTextAlign("right").run()}
+          title="Djathtas"
+        >
+          <AlignRight className="h-4 w-4" />
+        </ToolbarButton>
+        <ToolbarButton
+          active={editor.isActive({ textAlign: "justify" })}
+          onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+          title="Justify"
+        >
+          <AlignJustify className="h-4 w-4" />
+        </ToolbarButton>
+        <Divider />
+        <select
+          aria-label="Fonti"
+          title="Fonti"
+          value={(editor.getAttributes("textStyle").fontFamily as string) || ""}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (!v) editor.chain().focus().unsetFontFamily().run();
+            else editor.chain().focus().setFontFamily(v).run();
+          }}
+          className="h-8 rounded-md border border-border bg-background px-1.5 text-xs text-foreground/80"
+        >
+          {FONT_FAMILIES.map((f) => (
+            <option key={f.label} value={f.value}>
+              {f.label}
+            </option>
+          ))}
+        </select>
+        <select
+          aria-label="Madhësia"
+          title="Madhësia e tekstit"
+          value={(editor.getAttributes("textStyle").fontSize as string) || ""}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (!v) editor.chain().focus().unsetFontSize().run();
+            else editor.chain().focus().setFontSize(v).run();
+          }}
+          className="h-8 rounded-md border border-border bg-background px-1.5 text-xs text-foreground/80"
+        >
+          {FONT_SIZES.map((s) => (
+            <option key={s || "default"} value={s}>
+              {s || "Auto"}
+            </option>
+          ))}
+        </select>
+        <label
+          title="Ngjyra e tekstit"
+          className="inline-flex h-8 items-center gap-1 rounded-md px-1.5 text-foreground/70 hover:bg-muted cursor-pointer"
+        >
+          <Palette className="h-4 w-4" />
+          <input
+            type="color"
+            aria-label="Ngjyra e tekstit"
+            value={(editor.getAttributes("textStyle").color as string) || "#111827"}
+            onChange={(e) => editor.chain().focus().setColor(e.target.value).run()}
+            className="h-5 w-6 cursor-pointer border-0 bg-transparent p-0"
+          />
+        </label>
+        <ToolbarButton
+          onClick={() => editor.chain().focus().unsetColor().unsetFontFamily().unsetFontSize().unsetAllMarks().run()}
+          title="Pastro formatimin"
+        >
+          <RemoveFormatting className="h-4 w-4" />
+        </ToolbarButton>
+        <Divider />
+
         <ToolbarButton active={editor.isActive("link")} onClick={addLink} title="Link">
           <LinkIcon className="h-4 w-4" />
         </ToolbarButton>
