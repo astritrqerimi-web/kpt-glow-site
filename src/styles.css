@@ -501,6 +501,7 @@
 .ProseMirror:focus { outline: none; }
 
 /* ---------- Hero rich-text (admin-authored HTML) ---------- */
+.hero-rich { display: block; }
 .hero-rich > *:first-child { margin-top: 0; }
 .hero-rich > *:last-child { margin-bottom: 0; }
 .hero-rich p { margin: 0; }
