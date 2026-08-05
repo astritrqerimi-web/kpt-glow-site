@@ -28,6 +28,22 @@ export default defineConfig({
                 priority: 100,
                 test: /node_modules[\\/](react|react-dom|scheduler|use-sync-external-store)[\\/]/,
               },
+              // Vite's __vitePreload helper is used by every dynamic import. If
+              // it is placed inside a vendor chunk, the entry statically imports
+              // that chunk and each page modulepreloads it.
+              {
+                name: "preload-helper",
+                priority: 200,
+                test: /preload-helper/,
+              },
+              // tslib is shared between the backend SDK and other vendors. If it
+              // lands inside the supabase chunk, the entry chunk statically
+              // imports that 200KB chunk and every public page modulepreloads it.
+              {
+                name: "tslib",
+                priority: 100,
+                test: /node_modules[\\/]tslib[\\/]/,
+              },
               { name: "supabase", priority: 10, test: /node_modules[\\/](@supabase)[\\/]/ },
               { name: "editor", priority: 10, test: /node_modules[\\/](@tiptap|prosemirror-[^\\/]+)[\\/]/ },
             ],
