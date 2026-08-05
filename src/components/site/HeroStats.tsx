@@ -145,23 +145,33 @@ export function HeroStats() {
           from { transform: translate3d(0, 0, 0); }
           to   { transform: translate3d(-50%, 0, 0); }
         }
+        .hero-stats-viewport {
+          contain: layout paint;
+          transform: translateZ(0);
+        }
         .animate-hero-stats-marquee {
           display: flex;
           width: max-content;
+          flex: none;
           animation-name: hero-stats-marquee;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
           will-change: transform;
           transform: translate3d(0, 0, 0);
+          transform-style: preserve-3d;
           backface-visibility: hidden;
           -webkit-backface-visibility: hidden;
-          perspective: 1000px;
+          /* Text inside a composited, moving layer must not use subpixel
+             antialiasing — that is what makes glyphs "shimmer" frame to frame. */
+          -webkit-font-smoothing: antialiased;
         }
+        .animate-hero-stats-marquee * { backface-visibility: hidden; }
         ${pauseOnHover ? `@media (hover: hover) { .hero-stats-card:hover .animate-hero-stats-marquee { animation-play-state: paused; } }` : ""}
         @media (prefers-reduced-motion: reduce) {
           .animate-hero-stats-marquee { animation: none !important; }
         }
       `}</style>
+
 
     </div>
   );
