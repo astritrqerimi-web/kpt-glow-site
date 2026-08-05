@@ -241,11 +241,55 @@ const DEFAULTS = {
 };
 
 
-async function fetchContent<T>(key: string, fallback: T): Promise<T> {
-  const supabase = await getSupabase();
-  const { data } = await supabase.from("site_content").select("value").eq("key", key).maybeSingle();
-  return ((data?.value as T) ?? fallback);
+/**
+ * All `site_content` rows are fetched in ONE request and shared by every
+ * section query. Previously each section issued its own round trip, so a single
+ * SSR render made ~10 sequentialised HTTPS calls to the backend before the HTML
+ * could be flushed. The batch is memoised for a short window (matching the
+ * existing 60s staleTime) so concurrent callers reuse the same in-flight promise.
+ */
+type ContentMap = Record<string, unknown>;
+
+let contentBatch: { at: number; promise: Promise<ContentMap> } | null = null;
+const CONTENT_BATCH_TTL = 30_000;
+
+function loadAllContent(): Promise<ContentMap> {
+  const now = Date.now();
+  if (contentBatch && now - contentBatch.at < CONTENT_BATCH_TTL) return contentBatch.promise;
+
+  const promise = (async (): Promise<ContentMap> => {
+    const supabase = await getSupabase();
+    const { data, error } = await supabase.from("site_content").select("key,value");
+    if (error) throw error;
+    const map: ContentMap = {};
+    for (const row of (data ?? []) as { key: string; value: unknown }[]) {
+      map[row.key] = row.value;
+    }
+    return map;
+  })().catch((err) => {
+    // Never cache a rejection — the next caller should retry.
+    contentBatch = null;
+    throw err;
+  });
+
+  contentBatch = { at: now, promise };
+  return promise;
 }
+
+/** Drops the memoised batch so the very next read hits the backend (admin saves). */
+export function resetSiteContentCache() {
+  contentBatch = null;
+}
+
+async function fetchContent<T>(key: string, fallback: T): Promise<T> {
+  try {
+    const map = await loadAllContent();
+    return ((map[key] as T) ?? fallback);
+  } catch {
+    return fallback;
+  }
+}
+
 
 export const companyQuery = () =>
   queryOptions({

@@ -6,10 +6,18 @@ export function KosovoFlag({ className }: { className?: string }) {
       src={kosovoFlag.url}
       alt="Flamuri i Kosovës"
       className={className}
+      width={18}
+      height={13}
+      // Tiny decorative flag: it must never compete with the hero LCP image for
+      // bandwidth, and it must not be promoted into a high-priority preload.
+      loading="lazy"
+      decoding="async"
+      fetchPriority="low"
       style={{ objectFit: "cover" }}
     />
   );
 }
+
 
 // Build a 5-pointed star path centered at (cx, cy) with outer radius r
 function starPath(cx: number, cy: number, r: number): string {

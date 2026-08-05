@@ -2,7 +2,7 @@ import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-ro
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { servicesQuery, companyQuery, heroQuery, aboutQuery, seoQuery, trustQuery, heroTrustQuery, newsHomeQuery, servicesSectionQuery, contactSectionQuery, footerQuery, type Bilingual, type TrustItem, type HeroTrustItem, type HeroTrustContent } from "@/lib/site-content";
+import { resetSiteContentCache, servicesQuery, companyQuery, heroQuery, aboutQuery, seoQuery, trustQuery, heroTrustQuery, newsHomeQuery, servicesSectionQuery, contactSectionQuery, footerQuery, type Bilingual, type TrustItem, type HeroTrustItem, type HeroTrustContent } from "@/lib/site-content";
 import { ServiceIcon, ICON_NAMES } from "@/components/site/ServiceIcon";
 import { HERO_TRUST_ICONS, HERO_TRUST_ICON_NAMES } from "@/components/site/HeroStats";
 import { ImageUpload } from "@/components/admin/ImageUpload";
@@ -513,6 +513,7 @@ function ContentAdmin() {
     const { error } = await supabase.from("site_content").upsert({ key, value });
     if (error) return toast.error(error.message);
     toast.success("U ruajt");
+    resetSiteContentCache();
     qc.invalidateQueries({ queryKey: ["site_content"] });
   };
 
@@ -897,6 +898,7 @@ function SettingsAdmin() {
     const { error } = await supabase.from("site_content").upsert({ key, value });
     if (error) return toast.error(error.message);
     toast.success("U ruajt");
+    resetSiteContentCache();
     qc.invalidateQueries({ queryKey: ["site_content"] });
   };
   if (!c || !s) return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
