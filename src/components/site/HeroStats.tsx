@@ -128,9 +128,11 @@ export function HeroStats() {
 
         <div className="hero-stats-viewport relative h-[64px] sm:h-[72px] md:h-[80px] flex items-center overflow-hidden rounded-2xl md:rounded-[20px]">
           <div
+            ref={trackRef}
             className="flex w-max animate-hero-stats-marquee items-center"
             style={{ animationDuration: `${speed * reps}s`, animationDirection: direction }}
           >
+
 
             {loop.map((item, i) => {
               const Icon = HERO_TRUST_ICONS[item.icon] ?? BadgeCheck;
