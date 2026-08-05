@@ -499,3 +499,31 @@
   height: 0;
 }
 .ProseMirror:focus { outline: none; }
+
+/* ---------- Hero rich-text (admin-authored HTML) ---------- */
+.hero-rich { display: block; }
+.hero-rich > *:first-child { margin-top: 0; }
+.hero-rich > *:last-child { margin-bottom: 0; }
+.hero-rich p { margin: 0; line-height: inherit !important; }
+.hero-rich p + p { margin-top: 0.75rem; }
+.hero-rich ul, .hero-rich ol { padding-left: 1.25rem; margin: 0.5rem 0; text-align: left; }
+.hero-rich ul { list-style: disc; }
+.hero-rich ol { list-style: decimal; }
+.hero-rich li { margin: 0.2rem 0; }
+.hero-rich a { text-decoration: underline; text-underline-offset: 3px; }
+.hero-rich img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 0.75rem 0;
+}
+/* Let inline colors win over the gradient text-fill on the hero title */
+.hero-rich [style*="color"] { -webkit-text-fill-color: currentColor; }
+/* Gradient text must be clipped on the actual text-bearing block */
+.hero-rich.text-gradient-brand { background: none; color: inherit; }
+.hero-rich.text-gradient-brand > * {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

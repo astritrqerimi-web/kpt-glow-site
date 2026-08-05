@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { resetSiteContentCache, servicesQuery, companyQuery, heroQuery, aboutQuery, seoQuery, trustQuery, heroTrustQuery, newsHomeQuery, servicesSectionQuery, contactSectionQuery, footerQuery, type Bilingual, type TrustItem, type HeroTrustItem, type HeroTrustContent } from "@/lib/site-content";
 import { ServiceIcon, ICON_NAMES } from "@/components/site/ServiceIcon";
+import { sanitizeHtml, toRichHtml } from "@/lib/sanitize";
 import { HERO_TRUST_ICONS, HERO_TRUST_ICON_NAMES } from "@/components/site/hero-trust-icons";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { LogOut, Plus, Trash2, Save, Mail, Home, FileEdit, Settings2, Loader2, ShieldAlert, Star, Newspaper, GripVertical } from "lucide-react";
@@ -452,10 +453,12 @@ function BilingualRichField({
   label,
   value,
   onChange,
+  minHeight,
 }: {
   label: string;
   value: Bilingual;
   onChange: (v: { al: string; en: string }) => void;
+  minHeight?: number;
 }) {
   const v = bg(value);
   return (
@@ -465,19 +468,68 @@ function BilingualRichField({
         <div>
           <div className="mb-1 flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">🇦🇱 Shqip</div>
           <div className="rounded-lg border border-input bg-background overflow-hidden">
-            <RichTextEditor value={v.al} onChange={(html) => onChange({ ...v, al: html })} />
+            <RichTextEditor value={v.al} onChange={(html) => onChange({ ...v, al: html })} minHeight={minHeight} />
           </div>
         </div>
         <div>
           <div className="mb-1 flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">🇬🇧 English</div>
           <div className="rounded-lg border border-input bg-background overflow-hidden">
-            <RichTextEditor value={v.en} onChange={(html) => onChange({ ...v, en: html })} />
+            <RichTextEditor value={v.en} onChange={(html) => onChange({ ...v, en: html })} minHeight={minHeight} />
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+function HeroLivePreview({ draft }: { draft: any }) {
+  const [lang, setLang] = useState<"al" | "en">("al");
+  const val = (b: Bilingual) => (lang === "al" ? bg(b).al : bg(b).en);
+  const badgeHtml = sanitizeHtml(toRichHtml(val(draft.badge)));
+  const titleHtml = sanitizeHtml(toRichHtml(val(draft.title)));
+  const subtitleHtml = sanitizeHtml(toRichHtml(val(draft.subtitle)));
+  return (
+    <div className="rounded-xl border border-border/60 bg-background/60 p-4">
+      <div className="mb-3 flex items-center justify-between">
+        <div className="text-xs font-medium">Live preview</div>
+        <div className="flex gap-1 rounded-full border border-border p-0.5">
+          {(["al", "en"] as const).map((l) => (
+            <button
+              key={l}
+              type="button"
+              onClick={() => setLang(l)}
+              className={`rounded-full px-3 py-1 text-[11px] uppercase ${lang === l ? "bg-primary/15 text-primary" : "text-muted-foreground"}`}
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="rounded-xl border border-border/40 bg-background p-5">
+        <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-1.5 text-xs font-medium text-primary shadow-soft">
+          <span className="hero-rich uppercase tracking-[0.14em]" dangerouslySetInnerHTML={{ __html: badgeHtml }} />
+        </div>
+        <h1 className="mt-4 font-display text-3xl leading-[1.05] md:text-5xl">
+          <span className="hero-rich text-gradient-brand" dangerouslySetInnerHTML={{ __html: titleHtml }} />
+        </h1>
+        <div
+          className="hero-rich mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base"
+          dangerouslySetInnerHTML={{ __html: subtitleHtml }}
+        />
+        <div className="mt-6 flex flex-wrap gap-3">
+          <span className="rounded-full px-6 py-3 text-sm font-semibold text-white" style={{ background: "var(--gradient-brand-strong)" }}>
+            {val(draft.ctaContact)}
+          </span>
+          <span className="rounded-full border border-border px-6 py-3 text-sm font-semibold">{val(draft.ctaServices)}</span>
+        </div>
+        {draft.image ? (
+          <img src={draft.image} alt="Hero" loading="lazy" decoding="async" className="mt-6 w-full max-w-md rounded-2xl" />
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 
 
 
@@ -579,9 +631,9 @@ function ContentAdmin() {
       <section className="rounded-2xl border border-border/60 bg-background/80 backdrop-blur p-5 shadow-soft">
         <h3 className="font-display text-xl mb-4">Ballina — Hero</h3>
         <div className="grid gap-3">
-          <BilingualField label="Titulli kryesor" value={heroDraft.title} onChange={(v) => setHeroDraft({ ...heroDraft, title: v })} />
-          <BilingualField label="Nëntitulli / përshkrimi" value={heroDraft.subtitle} onChange={(v) => setHeroDraft({ ...heroDraft, subtitle: v })} rows={3} />
-          <BilingualField label='Badge sipër titullit ("Kontabilitet • Program • Trajnime")' value={heroDraft.badge} onChange={(v) => setHeroDraft({ ...heroDraft, badge: v })} />
+          <BilingualRichField label="Titulli kryesor" value={heroDraft.title} onChange={(v) => setHeroDraft({ ...heroDraft, title: v })} minHeight={140} />
+          <BilingualRichField label="Nëntitulli / përshkrimi" value={heroDraft.subtitle} onChange={(v) => setHeroDraft({ ...heroDraft, subtitle: v })} minHeight={180} />
+          <BilingualRichField label='Badge sipër titullit ("Kontabilitet • Program • Trajnime")' value={heroDraft.badge} onChange={(v) => setHeroDraft({ ...heroDraft, badge: v })} minHeight={120} />
           <div className="grid md:grid-cols-2 gap-3">
             <BilingualField label="Butoni 1 (CTA primar)" value={heroDraft.ctaContact} onChange={(v) => setHeroDraft({ ...heroDraft, ctaContact: v })} />
             <BilingualField label="Butoni 2 (CTA sekondar)" value={heroDraft.ctaServices} onChange={(v) => setHeroDraft({ ...heroDraft, ctaServices: v })} />
@@ -593,6 +645,8 @@ function ContentAdmin() {
             hint="PNG/JPG deri 5 MB"
             onChange={(url) => setHeroDraft({ ...heroDraft, image: url })}
           />
+          <HeroLivePreview draft={heroDraft} />
+
           <button onClick={() => save("hero", heroDraft)} className="self-start inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm text-white" style={{ background: "var(--gradient-brand)" }}>
             <Save className="h-4 w-4" /> Ruaj Hero
           </button>
