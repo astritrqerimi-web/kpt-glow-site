@@ -563,10 +563,13 @@
 /* Let inline colors win over the gradient text-fill on the hero title */
 .hero-rich [style*="color"] { -webkit-text-fill-color: currentColor; }
 /* Gradient text must be clipped on the actual text-bearing block */
-.hero-rich.text-gradient-brand { background: none; color: inherit; }
+.hero-rich.text-gradient-brand { background: none; color: inherit; padding-bottom: 0; margin-bottom: 0; }
 .hero-rich.text-gradient-brand > * {
   background: var(--gradient-brand);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  /* Keep descenders (the "j" in "tuaj.") fully painted without shifting layout */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
 }
