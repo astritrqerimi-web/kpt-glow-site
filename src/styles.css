@@ -175,6 +175,10 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  /* Extend the painted background box below the baseline so descenders
+     (j, g, p, y) are not clipped by background-clip: text. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
 }
 
 @utility shadow-elegant { box-shadow: var(--shadow-elegant); }
