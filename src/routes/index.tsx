@@ -51,8 +51,8 @@ export const Route = createFileRoute("/")({
           name: "KPT Consulting",
           description:
             "Zyrë kontabiliteti dhe konsulence në Kosovë: kontabilitet, deklarime tatimore, TVSH, paga, regjistrim biznesi dhe konsulencë financiare.",
-          image: "https://www.kptconsulting.al/kpt-icon-v2-512.png?v=2",
-          logo: "https://www.kptconsulting.al/kpt-icon-v2-512.png?v=2",
+          image: "https://www.kptconsulting.al/kpt-favicon-v3-512.png?v=3",
+          logo: "https://www.kptconsulting.al/kpt-favicon-v3-512.png?v=3",
           url: "https://www.kptconsulting.al/",
           telephone: "+383 45 555 686",
           email: "info@kptconsulting.al",
