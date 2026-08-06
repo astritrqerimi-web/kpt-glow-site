@@ -90,7 +90,7 @@ export function HeroSection() {
               className="mt-6 font-display text-[2.75rem] leading-[1.02] text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem] animate-fade-up"
               style={{ animationDelay: "80ms" }}
             >
-              <span className="hero-rich text-gradient-brand" dangerouslySetInnerHTML={{ __html: titleHtml }} />
+              <span className="hero-rich" dangerouslySetInnerHTML={{ __html: titleHtml }} />
             </h1>
 
             <div
