@@ -298,10 +298,18 @@
    speed, same design; only compositing hints change. */
 @supports (-moz-appearance: none) {
   .hero-trust-viewport {
-    /* `contain: paint` clips the animated layer and forces main-thread
-       re-raster in Gecko; layout/style containment keeps the perf win. */
-    contain: layout style;
-    isolation: auto;
+    /* Root cause of the jitter: this rule previously *dropped* paint
+       containment (`contain: layout style` + `isolation: auto`), which in
+       Gecko removes the boundary that lets the compositor rasterize
+       `.hero-trust-track` once and slide it as a texture. Without paint
+       containment + a real stacking context here, every `transform` tick of
+       the track invalidates/re-rasterizes against this ancestor on the main
+       thread each frame — that's the visible stutter. Restoring
+       `contain: layout paint style` + `isolation: isolate` (matching the
+       cross-browser base rule) fixes it; it changes nothing for Chromium
+       since this whole block is gated behind a Gecko-only `@supports` test. */
+    contain: layout paint style;
+    isolation: isolate;
   }
 
   .hero-trust-track {
@@ -309,8 +317,13 @@
     will-change: transform;
     backface-visibility: hidden;
     transform-style: flat;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: geometricPrecision;
+    /* `text-rendering: geometricPrecision` forces Gecko onto its slow,
+       exact-glyph-outline text path, which gets re-evaluated on every
+       composited frame while the track is transformed — a second, subtler
+       source of jitter (and it's a no-op perf trap here since the copy is
+       plain UI text, not vector art needing geometric precision). Drop it
+       and let Gecko use its normal fast/cached glyph raster path. */
+    text-rendering: optimizeSpeed;
     /* keeps the track's own box off fractional pixel boundaries */
     contain: layout style;
   }
