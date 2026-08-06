@@ -39,6 +39,13 @@ import { Hero3DVisual } from "@/components/site/Hero3DVisual";
 import { sanitizeHtml, toRichHtml } from "@/lib/sanitize";
 
 
+/** Wraps the last two words of rich-text HTML in the brand gradient span. */
+function splitTrailingGradient(html: string) {
+  const m = html.match(/^([\s\S]*?)((?:[^\s<>]+\s+)?[^\s<>]+)((?:\s*<\/[^>]+>)*\s*)$/);
+  if (!m) return html;
+  return `${m[1]}<span class="text-gradient-brand">${m[2]}</span>${m[3]}`;
+}
+
 /* ---------------- HERO / BALLINA ---------------- */
 export function HeroSection() {
   const { data: hero } = useSuspenseQuery(heroQuery());
