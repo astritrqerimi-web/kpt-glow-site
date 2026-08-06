@@ -52,7 +52,7 @@ export const Route = createFileRoute("/")({
           description:
             "Zyrë kontabiliteti dhe konsulence në Kosovë: kontabilitet, deklarime tatimore, TVSH, paga, regjistrim biznesi dhe konsulencë financiare.",
           image: "https://www.kptconsulting.al/kpt-favicon-v3-512.png?v=3",
-          logo: "https://www.kptconsulting.al/kpt-favicon-v3-512.png?v=3",
+          logo: "https://www.kptconsulting.al/kpt-favicon-v7-512.png?v=7",
           url: "https://www.kptconsulting.al/",
           telephone: "+383 45 555 686",
           email: "info@kptconsulting.al",
