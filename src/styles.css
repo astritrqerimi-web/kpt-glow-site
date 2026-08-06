@@ -290,29 +290,21 @@
   .hero-trust-track { animation-duration: 120s; }
 }
 
-/* ---- Firefox-only marquee smoothing ----
-   `-moz-osx-font-smoothing` / `-moz-appearance` are Gecko-only, so this block
-   never applies to Chrome/Edge/Safari. In Firefox the track must behave like a
-   single flattened texture: one promoted layer that slides, with no child able
-   to create its own layer or re-rasterize per frame. Same keyframes, same 30s
-   speed, same design; only compositing hints change. */
+/* ---- Firefox-only marquee compositing ----
+   Gecko needs an isolated paint boundary around the clipped viewport and the
+   full track. This lets WebRender cache the row as one surface and composite
+   only that surface while Chromium continues to use the unchanged base path. */
 @supports (-moz-appearance: none) {
   .hero-trust-viewport {
-    /* `contain: paint` clips the animated layer and forces main-thread
-       re-raster in Gecko; layout/style containment keeps the perf win. */
-    contain: layout style;
-    isolation: auto;
+    contain: layout paint style;
+    isolation: isolate;
   }
 
   .hero-trust-track {
-    /* single promoted layer, flattened, rasterized once */
     will-change: transform;
     backface-visibility: hidden;
     transform-style: flat;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: geometricPrecision;
-    /* keeps the track's own box off fractional pixel boundaries */
-    contain: layout style;
+    contain: layout paint style;
   }
 
   /* No child may promote itself or animate — the whole track moves as one. */
