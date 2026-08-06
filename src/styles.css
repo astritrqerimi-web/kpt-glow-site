@@ -291,42 +291,50 @@
 }
 
 /* ---- Firefox-only marquee smoothing ----
-   `-moz-osx-font-smoothing` is implemented only by Gecko, so this block never
-   applies to Chrome/Edge/Safari. Firefox rasterizes the animated layer on the
-   main thread when it is clipped by `contain: paint` + an isolated stacking
-   context, and it re-renders subpixel-antialiased text every frame — both
-   produce the visible shimmer/jitter. Same keyframes, same 30s speed, same
-   design; only the compositing hints change. */
-@supports (-moz-osx-font-smoothing: auto) {
+   `-moz-osx-font-smoothing` / `-moz-appearance` are Gecko-only, so this block
+   never applies to Chrome/Edge/Safari. In Firefox the track must behave like a
+   single flattened texture: one promoted layer that slides, with no child able
+   to create its own layer or re-rasterize per frame. Same keyframes, same 30s
+   speed, same design; only compositing hints change. */
+@supports (-moz-appearance: none) {
   .hero-trust-viewport {
+    /* `contain: paint` clips the animated layer and forces main-thread
+       re-raster in Gecko; layout/style containment keeps the perf win. */
     contain: layout style;
     isolation: auto;
   }
 
   .hero-trust-track {
-    /* backface-visibility + will-change together force an extra layer copy in
-       Gecko; a single promotion hint is enough and avoids the re-raster. */
-    backface-visibility: visible;
-    transform-style: flat;
+    /* single promoted layer, flattened, rasterized once */
     will-change: transform;
-    /* grayscale AA keeps glyph rasterization stable while the layer moves */
+    backface-visibility: hidden;
+    transform-style: flat;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: geometricPrecision;
+    /* keeps the track's own box off fractional pixel boundaries */
+    contain: layout style;
   }
 
+  /* No child may promote itself or animate — the whole track moves as one. */
+  .hero-trust-seq,
   .hero-trust-item,
   .hero-trust-icon,
-  .hero-trust-copy {
-    /* prevent per-element layer creation so the whole track moves as one
-       texture instead of many independently snapped ones */
+  .hero-trust-copy,
+  .hero-trust-copy strong,
+  .hero-trust-copy span {
     will-change: auto;
     transform: none;
+    backface-visibility: visible;
+    filter: none;
+    animation: none !important;
+    transition: none !important;
   }
 
   .hero-trust-item::after {
     transform: translateY(-50%);
   }
 }
+
 
 
 
