@@ -39,6 +39,13 @@ import { Hero3DVisual } from "@/components/site/Hero3DVisual";
 import { sanitizeHtml, toRichHtml } from "@/lib/sanitize";
 
 
+/** Wraps the last two words of rich-text HTML in the brand gradient span. */
+function splitTrailingGradient(html: string) {
+  const m = html.match(/^([\s\S]*?)((?:[^\s<>]+\s+)?[^\s<>]+)((?:\s*<\/[^>]+>)*\s*)$/);
+  if (!m) return html;
+  return `${m[1]}<span class="text-gradient-brand">${m[2]}</span>${m[3]}`;
+}
+
 /* ---------------- HERO / BALLINA ---------------- */
 export function HeroSection() {
   const { data: hero } = useSuspenseQuery(heroQuery());
@@ -48,7 +55,9 @@ export function HeroSection() {
   const badge = pick(hero.badge, lang, t("hero.badge"));
   const ctaContact = pick(hero.ctaContact, lang, t("hero.ctaContact"));
   const ctaServices = pick(hero.ctaServices, lang, t("hero.ctaServices"));
-  const titleHtml = sanitizeHtml(toRichHtml(title));
+  // Same color scheme as the "Gjithçka që biznesi juaj ka nevojë" heading:
+  // body in foreground navy, trailing words in the teal brand gradient.
+  const titleHtml = splitTrailingGradient(sanitizeHtml(toRichHtml(title)));
   const subtitleHtml = sanitizeHtml(toRichHtml(subtitle));
   const badgeHtml = sanitizeHtml(toRichHtml(badge));
 
@@ -81,7 +90,7 @@ export function HeroSection() {
               className="mt-6 font-display text-[2.75rem] leading-[1.02] text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem] animate-fade-up"
               style={{ animationDelay: "80ms" }}
             >
-              <span className="hero-rich text-gradient-brand" dangerouslySetInnerHTML={{ __html: titleHtml }} />
+              <span className="hero-rich" dangerouslySetInnerHTML={{ __html: titleHtml }} />
             </h1>
 
             <div
@@ -199,8 +208,8 @@ export function AboutSection() {
     <section className="container-page pt-8 pb-24">
       <div className="max-w-3xl">
         <div className="text-xs uppercase tracking-[0.2em] text-primary">{eyebrow}</div>
-        <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-gradient-brand">
-          {titleA} {titleB}
+        <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-foreground">
+          {titleA} <span className="text-gradient-brand">{titleB}</span>
         </h2>
       </div>
 
