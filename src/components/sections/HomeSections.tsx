@@ -199,8 +199,8 @@ export function AboutSection() {
     <section className="container-page pt-8 pb-24">
       <div className="max-w-3xl">
         <div className="text-xs uppercase tracking-[0.2em] text-primary">{eyebrow}</div>
-        <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-foreground">
-          {titleA} <span className="text-gradient-brand">{titleB}</span>
+        <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-gradient-brand">
+          {titleA} {titleB}
         </h2>
       </div>
 
