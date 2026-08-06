@@ -290,6 +290,45 @@
   .hero-trust-track { animation-duration: 120s; }
 }
 
+/* ---- Firefox-only marquee smoothing ----
+   `-moz-osx-font-smoothing` is implemented only by Gecko, so this block never
+   applies to Chrome/Edge/Safari. Firefox rasterizes the animated layer on the
+   main thread when it is clipped by `contain: paint` + an isolated stacking
+   context, and it re-renders subpixel-antialiased text every frame — both
+   produce the visible shimmer/jitter. Same keyframes, same 30s speed, same
+   design; only the compositing hints change. */
+@supports (-moz-osx-font-smoothing: auto) {
+  .hero-trust-viewport {
+    contain: layout style;
+    isolation: auto;
+  }
+
+  .hero-trust-track {
+    /* backface-visibility + will-change together force an extra layer copy in
+       Gecko; a single promotion hint is enough and avoids the re-raster. */
+    backface-visibility: visible;
+    transform-style: flat;
+    will-change: transform;
+    /* grayscale AA keeps glyph rasterization stable while the layer moves */
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
+  }
+
+  .hero-trust-item,
+  .hero-trust-icon,
+  .hero-trust-copy {
+    /* prevent per-element layer creation so the whole track moves as one
+       texture instead of many independently snapped ones */
+    will-change: auto;
+    transform: none;
+  }
+
+  .hero-trust-item::after {
+    transform: translateY(-50%);
+  }
+}
+
+
 
 .hero-trust-icon {
   display: grid;
