@@ -74,8 +74,8 @@ const translations: Record<Lang, Dict> = {
 
     // About
     "about.eyebrow": "Rreth Nesh",
-    "about.title.a": "Partneri juaj për",
-    "about.title.b": "zgjidhje financiare",
+    "about.title.a": "Më pak shqetësime me financat.",
+    "about.title.b": "Më shumë fokus për ju në rritjen e biznesit.",
     "about.intro": "KPT Consulting është një kompani e specializuar në kontabilitet, shërbime tatimore dhe konsulencë për biznese. Misioni ynë është të ofrojmë zgjidhje profesionale që ndihmojnë bizneset të menaxhojnë financat me saktësi, transparencë dhe efikasitet.",
     "about.services.text": "Ne ofrojmë shërbime në fushën e kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve, administrimit të pagave, përgatitjes së pasqyrave financiare dhe konsulencës financiare, duke ndërtuar partneritete afatgjata me klientët tanë.",
     "about.leader": "KPT Consulting udhëhiqet nga Mr. Sc Astrit Qerimi, Kontabilist i Certifikuar dhe Këshilltar Tatimor i Certifikuar, me përvojë në ofrimin e zgjidhjeve profesionale financiare dhe tatimore për biznese. Përkushtimi ynë është të ofrojmë shërbime të sakta, të besueshme dhe në përputhje me legjislacionin në fuqi.",
@@ -203,8 +203,8 @@ const translations: Record<Lang, Dict> = {
     "trust.4.desc": "Your trusted partner at every stage of your business journey.",
 
     "about.eyebrow": "About Us",
-    "about.title.a": "Your partner for",
-    "about.title.b": "financial solutions",
+    "about.title.a": "Fewer worries about finances.",
+    "about.title.b": "More focus for you on growing your business.",
     "about.intro": "KPT Consulting is a company specialized in accounting, tax services and business consulting. Our mission is to deliver professional solutions that help businesses manage their finances with accuracy, transparency and efficiency.",
     "about.services.text": "We offer services in accounting, tax filings, business registration, payroll administration, financial statement preparation and financial consulting, building long-term partnerships with our clients.",
     "about.leader": "KPT Consulting is led by Mr. Sc Astrit Qerimi — Certified Accountant and Certified Tax Advisor — with extensive experience delivering professional financial and tax solutions for businesses. Our commitment is to provide accurate, reliable services that are fully compliant with current legislation.",

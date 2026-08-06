@@ -157,8 +157,8 @@ const DEFAULTS = {
   } as HeroContent,
   about: {
     eyebrow: { al: "Rreth Nesh", en: "About Us" },
-    titleA: { al: "Partneri juaj për", en: "Your partner for" },
-    titleB: { al: "zgjidhje financiare", en: "financial solutions" },
+    titleA: { al: "Më pak shqetësime me financat.", en: "Fewer worries about finances." },
+    titleB: { al: "Më shumë fokus për ju në rritjen e biznesit.", en: "More focus for you on growing your business." },
     leadershipLabel: { al: "Udhëheqja", en: "Leadership" },
     intro: {
       al: "<p>KPT Consulting është një kompani e specializuar në kontabilitet, shërbime tatimore dhe konsulencë për biznese. Misioni ynë është të ofrojmë zgjidhje profesionale që ndihmojnë bizneset të menaxhojnë financat me saktësi, transparencë dhe efikasitet.</p>",
