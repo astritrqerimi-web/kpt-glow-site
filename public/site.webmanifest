@@ -2,11 +2,11 @@
   "name": "KPT Consulting",
   "short_name": "KPT",
   "icons": [
-    { "src": "/kpt-favicon-v3-48.png?v=3", "sizes": "48x48", "type": "image/png" },
-    { "src": "/kpt-favicon-v3-96.png?v=3", "sizes": "96x96", "type": "image/png" },
-    { "src": "/kpt-favicon-v3-192.png?v=3", "sizes": "192x192", "type": "image/png" },
-    { "src": "/kpt-favicon-v3-180.png?v=3", "sizes": "180x180", "type": "image/png" },
-    { "src": "/kpt-favicon-v3-512.png?v=3", "sizes": "512x512", "type": "image/png" }
+    { "src": "/favicon-48x48.png?v=4", "sizes": "48x48", "type": "image/png" },
+    { "src": "/kpt-favicon-v4-96.png?v=4", "sizes": "96x96", "type": "image/png" },
+    { "src": "/kpt-favicon-v4-192.png?v=4", "sizes": "192x192", "type": "image/png" },
+    { "src": "/apple-touch-icon.png?v=4", "sizes": "180x180", "type": "image/png" },
+    { "src": "/icon-512.png?v=4", "sizes": "512x512", "type": "image/png" }
   ],
   "theme_color": "#0f766e",
   "background_color": "#ffffff",
