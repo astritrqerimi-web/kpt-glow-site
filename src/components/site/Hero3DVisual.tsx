@@ -165,12 +165,15 @@ export function Hero3DVisual({ imageUrl, alt }: Props) {
           >
             <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
           </span>
-          <div className="leading-tight">
+          <div className="leading-tight max-w-[9.5rem]">
             <div className="text-[9px] sm:text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
               {t("hero.stat.growth")}
             </div>
-            <div className="font-display text-base sm:text-lg text-foreground">+34%</div>
+            <div className="font-display text-[11px] sm:text-[13px] uppercase tracking-[0.08em] text-foreground">
+              {t("hero.stat.growth.value")}
+            </div>
           </div>
+
         </div>
 
         <div

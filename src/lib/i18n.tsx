@@ -58,7 +58,8 @@ const translations: Record<Lang, Dict> = {
     "hero.happyClients": "Klientë të kënaqur",
     "hero.compliance": "Në përputhje me legjislacionin",
     "hero.certified": "Kontabilist i Certifikuar",
-    "hero.stat.growth": "Rritje mesatare",
+    "hero.stat.growth": "Rritje e bazuar",
+    "hero.stat.growth.value": "Në besim & përkushtim",
     "hero.stat.compliance": "Përputhshmëri",
 
 
@@ -189,7 +190,8 @@ const translations: Record<Lang, Dict> = {
     "hero.happyClients": "Satisfied clients",
     "hero.compliance": "Fully legally compliant",
     "hero.certified": "Certified Accountant",
-    "hero.stat.growth": "Average growth",
+    "hero.stat.growth": "Growth built",
+    "hero.stat.growth.value": "In trust & dedication",
     "hero.stat.compliance": "Compliance",
 
 
