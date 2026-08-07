@@ -414,7 +414,9 @@ export function ContactSection() {
     setForm({ name: "", email: "", phone: "", service: "", serviceOther: "", message: "" });
   };
 
-  const mapsSrc = `https://www.google.com/maps?q=${encodeURIComponent(company.mapsQuery)}&output=embed`;
+  // Google 301-redirects /maps?q=…&output=embed to this canonical embed URL.
+  // Pointing straight at the final URL removes one redirect from page load.
+  const mapsSrc = `https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1s${encodeURIComponent(company.mapsQuery)}`;
 
   return (
     <section className="container-page pb-24">
