@@ -88,6 +88,11 @@ export default {
       ) {
         const headers = new Headers(normalized.headers);
         headers.set("cache-control", HTML_CACHE_CONTROL);
+        // Some hosting layers rewrite `cache-control` for HTML. These CDN-scoped
+        // directives are honoured independently, so the edge still serves a warm
+        // copy even when the browser header is normalised downstream.
+        headers.set("cdn-cache-control", CDN_CACHE_CONTROL);
+        headers.set("cloudflare-cdn-cache-control", CDN_CACHE_CONTROL);
         return new Response(normalized.body, {
           status: normalized.status,
           statusText: normalized.statusText,
