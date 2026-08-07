@@ -54,6 +54,8 @@ function isH3SwallowedErrorBody(body: string): boolean {
 const CACHEABLE_PATHS = /^\/(?:$|lajme(?:\/|$)|rreth-nesh$|sherbimet$|kontakt$)/;
 const HTML_CACHE_CONTROL =
   "public, max-age=0, must-revalidate, s-maxage=60, stale-while-revalidate=86400, stale-if-error=604800";
+const CDN_CACHE_CONTROL =
+  "public, s-maxage=60, stale-while-revalidate=86400, stale-if-error=604800";
 
 function isPubliclyCacheable(request: Request): boolean {
   if (request.method !== "GET") return false;
@@ -88,6 +90,11 @@ export default {
       ) {
         const headers = new Headers(normalized.headers);
         headers.set("cache-control", HTML_CACHE_CONTROL);
+        // Some hosting layers rewrite `cache-control` for HTML. These CDN-scoped
+        // directives are honoured independently, so the edge still serves a warm
+        // copy even when the browser header is normalised downstream.
+        headers.set("cdn-cache-control", CDN_CACHE_CONTROL);
+        headers.set("cloudflare-cdn-cache-control", CDN_CACHE_CONTROL);
         return new Response(normalized.body, {
           status: normalized.status,
           statusText: normalized.statusText,
