@@ -225,6 +225,9 @@ function LajmePage() {
           </div>
         ) : (
           <>
+            <h2 className="mb-8 text-2xl font-semibold tracking-tight text-foreground">
+              {t("news.listTitle")}
+            </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {items.map((a) => (
                 <ArticleCard key={a.id} article={a} categories={categories} />
