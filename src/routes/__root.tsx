@@ -81,6 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "google-site-verification", content: "FYWfkT9NSusCm8__RcflLRZxB8A6FBmgN27gKCPTZNg" },
       { title: "KPT Consulting — Kontabilitet, Program, Trajnime" },
       { name: "description", content: "Shërbime profesionale të kontabilitetit, deklarimeve tatimore, regjistrimit të bizneseve dhe konsulencës financiare në Kosovë." },
       { name: "author", content: "KPT Consulting" },
