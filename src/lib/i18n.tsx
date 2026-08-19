@@ -274,6 +274,7 @@ const translations: Record<Lang, Dict> = {
     "news.viewAll": "View all",
     "news.pageTitle": "News & Announcements",
     "news.pageSubtitle": "Updates from ATK, ministries and legislation affecting business in Kosovo.",
+    "news.listTitle": "Latest articles",
     "news.readMore": "Read full article",
     "news.minRead": "min read",
     "news.filter.all": "All",
