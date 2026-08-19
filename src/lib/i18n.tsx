@@ -149,6 +149,7 @@ const translations: Record<Lang, Dict> = {
     "news.viewAll": "Shiko të gjitha",
     "news.pageTitle": "Lajme & Njoftime",
     "news.pageSubtitle": "Përditësime nga ATK, ministritë dhe legjislacioni që prek biznesin në Kosovë.",
+    "news.listTitle": "Artikujt e fundit",
     "news.readMore": "Lexo artikullin e plotë",
     "news.minRead": "min lexim",
     "news.filter.all": "Të gjitha",
