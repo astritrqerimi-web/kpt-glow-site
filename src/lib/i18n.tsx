@@ -248,8 +248,8 @@ const translations: Record<Lang, Dict> = {
     "form.error": "Sending failed. Please try again.",
     "form.err.name": "Name is required",
     "form.err.email": "Email is not valid",
-    "form.err.phone": "Numri i telefonit nevojitet",
-    "form.err.phoneRequired": "Numri kontaktues është i nevojshëm.",
+    "form.err.phone": "Phone number is required",
+    "form.err.phoneRequired": "A contact phone number is required.",
 
     "form.err.service": "Please choose a service",
     "form.err.serviceOther": "Please describe your request",
