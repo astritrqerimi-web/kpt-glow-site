@@ -277,9 +277,15 @@ function MessagesAdmin() {
     load();
   };
   const setStatus = async (id: string, status: string) => {
+    const prev = items?.find((m: any) => m.id === id)?.status;
     const { error } = await supabase.from("contact_messages").update({ status, is_read: true } as any).eq("id", id);
     if (error) return toast.error(error.message);
     load();
+    if (prev !== status && (status === "confirmed" || status === "cancelled")) {
+      const { data, error: nErr } = await supabase.functions.invoke("send-smtp", { body: { mode: "notify", type: status, message_id: id } });
+      if (nErr || (data as any)?.error) toast.error("Email-i te klienti dështoi. Hapni terminin te \"Terminet\" dhe klikoni \"Ridërgo emailin\".");
+      else if (!(data as any)?.skipped) toast.success("Klienti u njoftua me email");
+    }
   };
   const remove = async (id: string) => {
     if (!confirm("Fshi këtë mesazh?")) return;
