@@ -38,6 +38,56 @@ export type Database = {
         }
         Relationships: []
       }
+      appointment_notifications: {
+        Row: {
+          created_at: string
+          error: string | null
+          id: string
+          idempotency_key: string
+          message_id: string
+          provider_message_id: string | null
+          recipient: string
+          sent_at: string | null
+          status: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          idempotency_key: string
+          message_id: string
+          provider_message_id?: string | null
+          recipient: string
+          sent_at?: string | null
+          status?: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          idempotency_key?: string
+          message_id?: string
+          provider_message_id?: string | null
+          recipient?: string
+          sent_at?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointment_notifications_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "contact_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       appointment_settings: {
         Row: {
           close_time: string
@@ -205,6 +255,7 @@ export type Database = {
           id: string
           internal_notes: string | null
           is_read: boolean
+          lang: string
           message: string
           name: string
           phone: string | null
@@ -219,6 +270,7 @@ export type Database = {
           id?: string
           internal_notes?: string | null
           is_read?: boolean
+          lang?: string
           message: string
           name: string
           phone?: string | null
@@ -233,6 +285,7 @@ export type Database = {
           id?: string
           internal_notes?: string | null
           is_read?: boolean
+          lang?: string
           message?: string
           name?: string
           phone?: string | null
