@@ -147,6 +147,8 @@ export type Database = {
       }
       contact_messages: {
         Row: {
+          appointment_date: string | null
+          appointment_time: string | null
           created_at: string
           email: string
           id: string
@@ -154,9 +156,12 @@ export type Database = {
           message: string
           name: string
           phone: string | null
+          status: string
           subject: string | null
         }
         Insert: {
+          appointment_date?: string | null
+          appointment_time?: string | null
           created_at?: string
           email: string
           id?: string
@@ -164,9 +169,12 @@ export type Database = {
           message: string
           name: string
           phone?: string | null
+          status?: string
           subject?: string | null
         }
         Update: {
+          appointment_date?: string | null
+          appointment_time?: string | null
           created_at?: string
           email?: string
           id?: string
@@ -174,6 +182,7 @@ export type Database = {
           message?: string
           name?: string
           phone?: string | null
+          status?: string
           subject?: string | null
         }
         Relationships: []
