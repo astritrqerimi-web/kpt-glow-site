@@ -272,6 +272,11 @@ function MessagesAdmin() {
     await supabase.from("contact_messages").update({ is_read: !is_read }).eq("id", id);
     load();
   };
+  const setStatus = async (id: string, status: string) => {
+    const { error } = await supabase.from("contact_messages").update({ status, is_read: true } as any).eq("id", id);
+    if (error) return toast.error(error.message);
+    load();
+  };
   const remove = async (id: string) => {
     if (!confirm("Fshi këtë mesazh?")) return;
     await supabase.from("contact_messages").delete().eq("id", id);
@@ -308,11 +313,28 @@ function MessagesAdmin() {
           <div key={m.id} className={`rounded-2xl border p-5 backdrop-blur shadow-soft ${m.is_read ? "border-border/40 bg-background/50" : "border-primary/30 bg-background/85"}`}>
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 flex-1">
+                {m.appointment_date && (
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    {m.status === "new" && <span className="rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-primary-foreground">Termin i ri</span>}
+                    <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                      📅 {String(m.appointment_date).split("-").reverse().join(".")} · {m.appointment_time}
+                    </span>
+                    <select
+                      value={m.status}
+                      onChange={(e) => setStatus(m.id, e.target.value)}
+                      className="rounded-full border border-input bg-background px-2.5 py-0.5 text-xs outline-none"
+                    >
+                      <option value="new">E re</option>
+                      <option value="confirmed">E konfirmuar</option>
+                      <option value="cancelled">E anuluar</option>
+                    </select>
+                  </div>
+                )}
                 <div className="font-semibold">{m.name} <span className="text-xs font-normal text-muted-foreground">· {m.email}</span></div>
                 {m.phone && <div className="text-xs text-muted-foreground">{m.phone}</div>}
                 {m.subject && <div className="mt-1 text-sm font-medium">{m.subject}</div>}
                 <p className="mt-2 text-sm text-foreground/85 whitespace-pre-wrap">{m.message}</p>
-                <div className="mt-2 text-[11px] text-muted-foreground">{new Date(m.created_at).toLocaleString("sq-AL")}</div>
+                <div className="mt-2 text-[11px] text-muted-foreground">Dërguar më: {new Date(m.created_at).toLocaleString("sq-AL")}</div>
               </div>
               <div className="flex flex-col gap-2 shrink-0">
                 <button onClick={() => setReplyTo(m)} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-white shadow-soft" style={{ background: "var(--gradient-brand)" }}>

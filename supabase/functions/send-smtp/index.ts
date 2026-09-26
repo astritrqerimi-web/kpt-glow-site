@@ -31,6 +31,8 @@ interface Payload {
   from_name?: string;    // contact mode: name of the sender for the notification
   from_email?: string;   // contact mode: email of the sender (used as Reply-To)
   phone?: string;        // contact mode
+  appointment_date?: string; // contact mode, YYYY-MM-DD
+  appointment_time?: string; // contact mode, HH:MM
 }
 
 function esc(s: string): string {
@@ -120,18 +122,41 @@ Deno.serve(async (req) => {
     let replyTo: string | undefined = extractEmail(body.replyTo) ?? undefined;
 
     if (body.mode === "contact") {
-      // Public: notify the site owner. Recipient is always SMTP_FROM (the admin inbox).
-      toAddr = fromAddr!;
-      subject = `[Kontakt] ${subject}`;
-      const rows = [
-        ["Emri", body.from_name ?? "-"],
-        ["Email", body.from_email ?? "-"],
-        ["Telefoni", body.phone ?? "-"],
-        ["Subjekti", body.subject],
-      ];
-      htmlBody = `<table style="width:100%;border-collapse:collapse;margin-bottom:16px">${rows
-        .map(([k, v]) => `<tr><td style="padding:6px 0;color:#64748b;width:110px;font-size:13px">${esc(k)}</td><td style="padding:6px 0;font-weight:600">${esc(String(v))}</td></tr>`)
-        .join("")}</table><div style="white-space:pre-wrap;padding:16px;background:#f8fafc;border-radius:8px;border:1px solid #e5e7eb">${esc(body.message)}</div>`;
+      // Public: notify the site owner at the fixed admin inbox.
+      toAddr = "info@kptconsulting.al";
+      const apptDate = /^\d{4}-\d{2}-\d{2}$/.test(body.appointment_date ?? "")
+        ? body.appointment_date!.split("-").reverse().join(".")
+        : "";
+      const apptTime = /^\d{2}:\d{2}$/.test(body.appointment_time ?? "") ? body.appointment_time! : "";
+      const isAppt = !!(apptDate && apptTime);
+      const rows = isAppt
+        ? [
+            ["Emri", body.from_name ?? "-"],
+            ["Email", body.from_email ?? "-"],
+            ["Telefoni", body.phone ?? "-"],
+            ["Shërbimi", body.subject],
+            ["Data e terminit", apptDate],
+            ["Ora", apptTime],
+          ]
+        : [
+            ["Emri", body.from_name ?? "-"],
+            ["Email", body.from_email ?? "-"],
+            ["Telefoni", body.phone ?? "-"],
+            ["Subjekti", body.subject],
+          ];
+      const originalMessage = body.message;
+      if (isAppt) {
+        subject = `Termin i ri – ${(body.from_name ?? "").slice(0, 100)} – ${apptDate} ${apptTime}`;
+        body.message = `Keni pranuar një kërkesë të re për termin në KPT Consulting.\n\n${rows
+          .map(([k, v]) => `${k}: ${v}`)
+          .join("\n")}\nMesazhi: ${originalMessage}`;
+      } else {
+        subject = `[Kontakt] ${subject}`;
+      }
+      htmlBody = (isAppt ? `<p>Keni pranuar një kërkesë të re për termin në KPT Consulting.</p>` : "") +
+        `<table style="width:100%;border-collapse:collapse;margin-bottom:16px">${rows
+        .map(([k, v]) => `<tr><td style="padding:6px 0;color:#64748b;width:130px;font-size:13px">${esc(k)}</td><td style="padding:6px 0;font-weight:600">${esc(String(v))}</td></tr>`)
+        .join("")}</table><div style="font-size:13px;color:#64748b;margin-bottom:6px">Mesazhi:</div><div style="white-space:pre-wrap;padding:16px;background:#f8fafc;border-radius:8px;border:1px solid #e5e7eb">${esc(originalMessage)}</div>`;
       const sender = extractEmail(body.from_email);
       if (sender && !replyTo) replyTo = sender;
     } else if (body.mode === "reply") {
