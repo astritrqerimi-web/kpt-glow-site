@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      appointment_blocks: {
+        Row: {
+          block_date: string
+          block_time: string | null
+          created_at: string
+          id: string
+          reason: string | null
+        }
+        Insert: {
+          block_date: string
+          block_time?: string | null
+          created_at?: string
+          id?: string
+          reason?: string | null
+        }
+        Update: {
+          block_date?: string
+          block_time?: string | null
+          created_at?: string
+          id?: string
+          reason?: string | null
+        }
+        Relationships: []
+      }
+      appointment_settings: {
+        Row: {
+          close_time: string
+          id: number
+          open_time: string
+          slot_minutes: number
+          updated_at: string
+          working_days: number[]
+        }
+        Insert: {
+          close_time?: string
+          id?: number
+          open_time?: string
+          slot_minutes?: number
+          updated_at?: string
+          working_days?: number[]
+        }
+        Update: {
+          close_time?: string
+          id?: number
+          open_time?: string
+          slot_minutes?: number
+          updated_at?: string
+          working_days?: number[]
+        }
+        Relationships: []
+      }
       article_categories: {
         Row: {
           created_at: string
@@ -152,6 +203,7 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          internal_notes: string | null
           is_read: boolean
           message: string
           name: string
@@ -165,6 +217,7 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          internal_notes?: string | null
           is_read?: boolean
           message: string
           name: string
@@ -178,6 +231,7 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          internal_notes?: string | null
           is_read?: boolean
           message?: string
           name?: string
@@ -264,6 +318,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_booked_slots: { Args: { _date: string }; Returns: string[] }
       publish_due_articles: { Args: never; Returns: undefined }
     }
     Enums: {

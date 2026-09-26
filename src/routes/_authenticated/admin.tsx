@@ -8,6 +8,8 @@ import { sanitizeHtml, toRichHtml } from "@/lib/sanitize";
 import { HERO_TRUST_ICONS, HERO_TRUST_ICON_NAMES } from "@/components/site/hero-trust-icons";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { LogOut, Plus, Trash2, Save, Mail, Home, FileEdit, Settings2, Loader2, ShieldAlert, Star, Newspaper, GripVertical } from "lucide-react";
+import { AppointmentsAdmin } from "@/components/admin/AppointmentsAdmin";
+import { CalendarDays } from "lucide-react";
 import { ArticlesAdmin } from "@/components/admin/ArticlesAdmin";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
@@ -48,7 +50,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
 });
 
-type Tab = "services" | "articles" | "messages" | "content" | "settings";
+type Tab = "services" | "articles" | "messages" | "appointments" | "content" | "settings";
 
 function AdminPage() {
   const navigate = useNavigate();
@@ -104,6 +106,7 @@ function AdminPage() {
           <TabBtn active={tab === "services"} onClick={() => setTab("services")} icon={<FileEdit className="h-4 w-4" />}>Shërbimet</TabBtn>
           <TabBtn active={tab === "articles"} onClick={() => setTab("articles")} icon={<Newspaper className="h-4 w-4" />}>Lajmet</TabBtn>
           <TabBtn active={tab === "messages"} onClick={() => setTab("messages")} icon={<Mail className="h-4 w-4" />}>Mesazhet</TabBtn>
+          <TabBtn active={tab === "appointments"} onClick={() => setTab("appointments")} icon={<CalendarDays className="h-4 w-4" />}>Terminet</TabBtn>
           <TabBtn active={tab === "content"} onClick={() => setTab("content")} icon={<FileEdit className="h-4 w-4" />}>Përmbajtja</TabBtn>
           <TabBtn active={tab === "settings"} onClick={() => setTab("settings")} icon={<Settings2 className="h-4 w-4" />}>Cilësimet</TabBtn>
         </div>
@@ -111,6 +114,7 @@ function AdminPage() {
         {tab === "services" && <ServicesAdmin />}
         {tab === "articles" && <ArticlesAdmin />}
         {tab === "messages" && <MessagesAdmin />}
+        {tab === "appointments" && <AppointmentsAdmin />}
         {tab === "content" && <ContentAdmin />}
         {tab === "settings" && <SettingsAdmin />}
       </div>

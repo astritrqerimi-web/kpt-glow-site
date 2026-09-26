@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.validate_appointment_slot() FROM PUBLIC, anon, authenticated;
