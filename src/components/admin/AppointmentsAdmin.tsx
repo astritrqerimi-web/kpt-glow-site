@@ -13,6 +13,9 @@ type Appt = {
 };
 
 const db = supabase as any;
+type NotifyType = "received" | "confirmed" | "cancelled" | "rescheduled";
+type Notif = { id: string; type: NotifyType; status: "sending" | "sent" | "failed"; sent_at: string | null; created_at: string };
+const NOTIFY_LABEL: Record<NotifyType, string> = { received: "Email-i i pranimit të kërkesës", confirmed: "Email-i i konfirmimit", rescheduled: "Email-i i ndryshimit", cancelled: "Email-i i anulimit" };
 const inputCls = "w-full rounded-xl border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
 const DAY_NAMES = ["Hë", "Ma", "Më", "En", "Pr", "Sh", "Di"];
 const MONTHS = ["Janar", "Shkurt", "Mars", "Prill", "Maj", "Qershor", "Korrik", "Gusht", "Shtator", "Tetor", "Nëntor", "Dhjetor"];
@@ -227,17 +230,42 @@ function DetailsModal({ appt, onClose, onSaved }: { appt: Appt; onClose: () => v
   const [notes, setNotes] = useState(appt.internal_notes ?? "");
   const [busy, setBusy] = useState(false);
 
-  const save = async (patch: Record<string, unknown>) => {
+  const [notifs, setNotifs] = useState<Notif[]>([]);
+  const [askNotify, setAskNotify] = useState(false);
+  const loadNotifs = async () => {
+    const { data } = await db.from("appointment_notifications").select("*").eq("message_id", appt.id).order("created_at", { ascending: false });
+    setNotifs(data ?? []);
+  };
+  useEffect(() => { loadNotifs(); }, [appt.id]);
+
+  const notify = async (type: NotifyType, extra: Record<string, string> = {}) => {
+    const { data, error } = await supabase.functions.invoke("send-smtp", { body: { mode: "notify", type, message_id: appt.id, ...extra } });
+    if (error || (data as any)?.error) toast.error("Email-i te klienti nuk u dërgua. Mund ta ridërgoni nga detajet.");
+    else if (!(data as any)?.skipped) toast.success("Klienti u njoftua me email");
+    await loadNotifs();
+  };
+
+  const save = async (patch: Record<string, unknown>, after?: () => Promise<void>) => {
     setBusy(true);
     const { error } = await db.from("contact_messages").update({ ...patch, is_read: true }).eq("id", appt.id);
-    setBusy(false);
     if (error) {
+      setBusy(false);
       if (error.code === "23505" || /slot_unavailable/.test(error.message)) toast.error("Ky orar është i zënë ose i bllokuar.");
       else toast.error(error.message);
       return;
     }
     toast.success("U ruajt");
+    if (after) await after();
+    setBusy(false);
     onSaved();
+  };
+
+  const changed = date !== appt.appointment_date || time !== appt.appointment_time;
+  const saveChanges = (notifyClient: boolean) => {
+    setAskNotify(false);
+    const oldD = appt.appointment_date, oldT = appt.appointment_time;
+    save({ appointment_date: date, appointment_time: time, internal_notes: notes || null },
+      notifyClient && changed ? () => notify("rescheduled", { old_date: oldD, old_time: oldT }) : undefined);
   };
 
   const row = (k: string, v: React.ReactNode) => (
@@ -262,8 +290,8 @@ function DetailsModal({ appt, onClose, onSaved }: { appt: Appt; onClose: () => v
         {row("Statusi", <StatusBadge s={appt.status} />)}
 
         <div className="mt-4 flex flex-wrap gap-2">
-          <button disabled={busy || appt.status === "confirmed"} onClick={() => save({ status: "confirmed" })} className="rounded-full px-4 py-2 text-xs font-medium text-white shadow-soft disabled:opacity-50" style={{ background: "var(--gradient-brand)" }}>Konfirmo</button>
-          <button disabled={busy || appt.status === "cancelled"} onClick={() => save({ status: "cancelled" })} className="rounded-full border border-border px-4 py-2 text-xs hover:bg-destructive/10 hover:text-destructive disabled:opacity-50">Anulo</button>
+          <button disabled={busy || appt.status === "confirmed"} onClick={() => save({ status: "confirmed" }, () => notify("confirmed"))} className="rounded-full px-4 py-2 text-xs font-medium text-white shadow-soft disabled:opacity-50" style={{ background: "var(--gradient-brand)" }}>Konfirmo</button>
+          <button disabled={busy || appt.status === "cancelled"} onClick={() => save({ status: "cancelled" }, () => notify("cancelled"))} className="rounded-full border border-border px-4 py-2 text-xs hover:bg-destructive/10 hover:text-destructive disabled:opacity-50">Anulo</button>
           {appt.status !== "new" && <button disabled={busy} onClick={() => save({ status: "new" })} className="rounded-full border border-border px-4 py-2 text-xs hover:bg-muted">Kthe në "I ri"</button>}
         </div>
 
@@ -274,9 +302,38 @@ function DetailsModal({ appt, onClose, onSaved }: { appt: Appt; onClose: () => v
         <label className="mt-3 block text-xs text-muted-foreground">Shënime të brendshme
           <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} className={inputCls + " mt-1 resize-none"} />
         </label>
-        <button disabled={busy} onClick={() => save({ appointment_date: date, appointment_time: time, internal_notes: notes || null })} className="mt-3 rounded-full border border-primary px-4 py-2 text-xs text-primary hover:bg-primary/10 disabled:opacity-50">
+        <button disabled={busy} onClick={() => (changed ? setAskNotify(true) : saveChanges(false))} className="mt-3 rounded-full border border-primary px-4 py-2 text-xs text-primary hover:bg-primary/10 disabled:opacity-50">
           {busy ? "Duke ruajtur..." : "Ruaj ndryshimet"}
         </button>
+        {askNotify && (
+          <div className="mt-3 rounded-2xl border border-primary/30 bg-primary/5 p-4">
+            <div className="text-sm font-medium">Dëshironi ta njoftoni klientin për ndryshimin e terminit?</div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button disabled={busy} onClick={() => saveChanges(true)} className="rounded-full px-4 py-2 text-xs font-medium text-white shadow-soft disabled:opacity-50" style={{ background: "var(--gradient-brand)" }}>Po, njofto klientin</button>
+              <button disabled={busy} onClick={() => saveChanges(false)} className="rounded-full border border-border px-4 py-2 text-xs hover:bg-muted disabled:opacity-50">Jo, vetëm ruaj ndryshimin</button>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-5">
+          <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground mb-2">Njoftimet me email</div>
+          {(["received", "confirmed", "rescheduled", "cancelled"] as NotifyType[]).map((type) => {
+            const n = notifs.find((x) => x.type === type);
+            const st = n?.status === "sent" ? "Dërguar" : n?.status === "failed" ? "Dështoi" : n?.status === "sending" ? "Duke u dërguar" : "Nuk është dërguar";
+            const cls = n?.status === "sent" ? "text-primary" : n?.status === "failed" ? "text-destructive" : "text-muted-foreground";
+            return (
+              <div key={type} className="flex flex-wrap items-center justify-between gap-2 py-1.5 border-b border-border/40 text-sm">
+                <div>{NOTIFY_LABEL[type]}</div>
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs font-medium ${cls}`}>{st}{n?.sent_at ? ` · ${new Date(n.sent_at).toLocaleString("sq-AL")}` : ""}</span>
+                  {n?.status === "failed" && (
+                    <button disabled={busy} onClick={async () => { setBusy(true); await notify(type); setBusy(false); }} className="rounded-full border border-border px-2.5 py-1 text-[11px] hover:bg-muted">Ridërgo emailin</button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
