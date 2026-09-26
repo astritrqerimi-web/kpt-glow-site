@@ -424,7 +424,10 @@ export function ContactSection() {
         ? `Tjetër: ${parsed.data.serviceOther}`
         : parsed.data.service;
     const supabase = await getSupabase();
+    const newId = crypto.randomUUID();
     const { error } = await supabase.from("contact_messages").insert({
+      id: newId,
+      lang: lang === "en" ? "en" : "sq",
       name: parsed.data.name,
       email: parsed.data.email,
       phone: parsed.data.phone,
@@ -456,6 +459,9 @@ export function ContactSection() {
         appointment_date: parsed.data.apptDate,
         appointment_time: parsed.data.apptTime,
       },
+    }).catch(() => { /* ignore */ });
+    supabase.functions.invoke("send-smtp", {
+      body: { mode: "notify", type: "received", message_id: newId },
     }).catch(() => { /* ignore */ });
     toast.success(t("form.apptSuccess"));
     setForm({ name: "", email: "", phone: "", service: "", serviceOther: "", apptDate: "", apptTime: "", message: "" });

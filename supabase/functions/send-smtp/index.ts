@@ -72,6 +72,125 @@ function normalizeHost(raw?: string | null): string | null {
 }
 
 
+// ---------------- Customer appointment notifications ----------------
+type NotifyType = "received" | "confirmed" | "cancelled" | "rescheduled";
+interface NotifyPayload {
+  mode: "notify";
+  message_id: string;
+  type: NotifyType;
+  old_date?: string;
+  old_time?: string;
+}
+interface SmtpCfg { hostname: string; port: number; tls: boolean; username: string; password: string; from: string }
+
+const OFFICE_ADDRESS = "Rr. e Llapit, L/1, Kati Përdhesë, Objekti A, Nr. 1 – Fushë Kosovë";
+const SIGN_SQ = "Me respekt,\nKPT Consulting\ninfo@kptconsulting.al\n+383 (0) 45 555 686";
+const SIGN_EN = "Kind regards,\nKPT Consulting\ninfo@kptconsulting.al\n+383 (0) 45 555 686";
+const dmy = (iso?: string | null) => (iso && /^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso.split("-").reverse().join(".") : "-");
+
+function buildCustomerEmail(type: NotifyType, lang: "sq" | "en", a: Record<string, any>, oldDate?: string, oldTime?: string) {
+  const name = a.name ?? "";
+  const d = dmy(a.appointment_date), t = a.appointment_time ?? "-", svc = a.subject ?? "-";
+  const en = lang === "en";
+  let subject = "", text = "";
+  if (type === "received") {
+    subject = en ? "Your appointment request was received – KPT Consulting" : "Kërkesa juaj për termin u pranua – KPT Consulting";
+    text = en
+      ? `Hello ${name},\n\nWe have received your appointment request at KPT Consulting.\n\nRequested date: ${d}\nRequested time: ${t}\nService: ${svc}\n\nThis is only an acknowledgement that your request was received. The appointment is considered confirmed only after you receive another email from KPT Consulting confirming it.\n\nWe will contact you as soon as possible.\n\n${SIGN_EN}`
+      : `Përshëndetje ${name},\n\nKemi pranuar kërkesën tuaj për termin në KPT Consulting.\n\nData e kërkuar: ${d}\nOra e kërkuar: ${t}\nShërbimi: ${svc}\n\nKy është vetëm konfirmim i pranimit të kërkesës. Termini konsiderohet i konfirmuar vetëm pasi të merrni një email tjetër nga KPT Consulting që konfirmon terminin.\n\nDo t'ju kontaktojmë sa më shpejt që të jetë e mundur.\n\n${SIGN_SQ}`;
+  } else if (type === "confirmed") {
+    subject = en ? "Your appointment at KPT Consulting is confirmed" : "Termini juaj në KPT Consulting është konfirmuar";
+    text = en
+      ? `Hello ${name},\n\nWe confirm that your appointment at KPT Consulting has been confirmed.\n\nAppointment details:\nDate: ${d}\nTime: ${t}\nService: ${svc}\n\nAddress:\n${OFFICE_ADDRESS}\n\nIf you have any questions or cannot attend at the scheduled time, please contact us in advance.\n\n${SIGN_EN}`
+      : `Përshëndetje ${name},\n\nJu konfirmojmë se termini juaj në KPT Consulting është konfirmuar.\n\nDetajet e terminit:\nData: ${d}\nOra: ${t}\nShërbimi: ${svc}\n\nAdresa:\n${OFFICE_ADDRESS}\n\nNëse keni ndonjë pyetje ose nuk mund të paraqiteni në terminin e caktuar, ju lutemi na kontaktoni paraprakisht.\n\n${SIGN_SQ}`;
+  } else if (type === "cancelled") {
+    subject = en ? "Notice about your appointment – KPT Consulting" : "Njoftim për terminin tuaj – KPT Consulting";
+    text = en
+      ? `Hello ${name},\n\nWe inform you that the appointment scheduled for:\n\nDate: ${d}\nTime: ${t}\n\nhas been cancelled.\n\nTo schedule another appointment, you can contact us or use the appointment form on our website.\n\n${SIGN_EN}`
+      : `Përshëndetje ${name},\n\nJu njoftojmë se termini i planifikuar për:\n\nData: ${d}\nOra: ${t}\n\nështë anuluar.\n\nPër të caktuar një termin tjetër, mund të na kontaktoni ose të përdorni formularin për caktimin e terminit në webfaqen tonë.\n\n${SIGN_SQ}`;
+  } else {
+    subject = en ? "Appointment change – KPT Consulting" : "Ndryshim i terminit – KPT Consulting";
+    const od = dmy(oldDate), ot = oldTime ?? "-";
+    text = en
+      ? `Hello ${name},\n\nYour appointment at KPT Consulting has been changed.\n\nPrevious appointment:\nDate: ${od}\nTime: ${ot}\n\nNew appointment:\nDate: ${d}\nTime: ${t}\n\nService: ${svc}\n\nIf this time does not suit you, please contact us.\n\n${SIGN_EN}`
+      : `Përshëndetje ${name},\n\nTermini juaj në KPT Consulting është ndryshuar.\n\nTermini i mëparshëm:\nData: ${od}\nOra: ${ot}\n\nTermini i ri:\nData: ${d}\nOra: ${t}\n\nShërbimi: ${svc}\n\nNëse ky orar nuk ju përshtatet, ju lutemi na kontaktoni.\n\n${SIGN_SQ}`;
+  }
+  // Escape user content; bold "Label: value" lines for readability.
+  const html = text.split("\n").map((line) => {
+    const e = esc(line);
+    const m = e.match(/^([^:]{2,30}):\s(.+)$/);
+    return m ? `<div><span style="color:#64748b">${m[1]}:</span> <strong>${m[2]}</strong></div>` : e ? `<div>${e}</div>` : `<div style="height:10px"></div>`;
+  }).join("");
+  return { subject, text, html: htmlWrap(subject, html) };
+}
+
+async function handleNotify(body: NotifyPayload, req: Request, smtp: SmtpCfg): Promise<Response> {
+  const TYPES: NotifyType[] = ["received", "confirmed", "cancelled", "rescheduled"];
+  if (!body.message_id || !/^[0-9a-f-]{36}$/i.test(body.message_id) || !TYPES.includes(body.type)) {
+    return json({ error: "Kërkesë e pavlefshme." }, 400);
+  }
+  const supa = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
+
+  const { data: a } = await supa.from("contact_messages").select("*").eq("id", body.message_id).maybeSingle();
+  if (!a || !a.appointment_date) return json({ error: "Termini nuk u gjet." }, 404);
+
+  if (body.type === "received") {
+    // Public trigger: only allowed shortly after submission (the key below makes it one-shot).
+    if (Date.now() - new Date(a.created_at).getTime() > 15 * 60 * 1000) return json({ error: "Skaduar." }, 403);
+  } else {
+    const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+    if (!token) return json({ error: "Nuk jeni i autentikuar." }, 401);
+    const { data: u, error: ue } = await supa.auth.getUser(token);
+    if (ue || !u.user) return json({ error: "Token jo i vlefshëm." }, 401);
+    const { data: role } = await supa.from("user_roles").select("role").eq("user_id", u.user.id).eq("role", "admin").maybeSingle();
+    if (!role) return json({ error: "Nuk keni të drejta administratori." }, 403);
+    if (body.type === "confirmed" && a.status !== "confirmed") return json({ error: "Termini nuk është i konfirmuar." }, 409);
+    if (body.type === "cancelled" && a.status !== "cancelled") return json({ error: "Termini nuk është i anuluar." }, 409);
+  }
+
+  // Recipient always comes from the database record, never from the request.
+  const recipient = extractEmail(a.email);
+  if (!recipient) return json({ error: "Email-i i klientit nuk është i vlefshëm." }, 400);
+
+  let oldDate: string | undefined, oldTime: string | undefined;
+  if (body.type === "rescheduled") {
+    oldDate = /^\d{4}-\d{2}-\d{2}$/.test(body.old_date ?? "") ? body.old_date : undefined;
+    oldTime = /^\d{2}:\d{2}$/.test(body.old_time ?? "") ? body.old_time : undefined;
+  }
+  const key = `${body.type}:${a.id}:${a.appointment_date}:${a.appointment_time}`;
+
+  // Claim the send atomically: new row, or retry a previously failed one.
+  let claimed = false;
+  const ins = await supa.from("appointment_notifications").insert({ message_id: a.id, type: body.type, idempotency_key: key, recipient, status: "sending" });
+  if (!ins.error) claimed = true;
+  else if (ins.error.code === "23505") {
+    const { data: upd } = await supa.from("appointment_notifications")
+      .update({ status: "sending", error: null, recipient, updated_at: new Date().toISOString() })
+      .eq("idempotency_key", key).eq("status", "failed").select("id");
+    claimed = !!upd?.length;
+    if (!claimed) return json({ ok: true, skipped: "already_sent" });
+  } else {
+    console.error("notify claim error", ins.error);
+    return json({ error: "Gabim në server." }, 500);
+  }
+
+  const lang = a.lang === "en" ? "en" : "sq";
+  const mail = buildCustomerEmail(body.type, lang, a, oldDate, oldTime);
+  const client = new SMTPClient({ connection: { hostname: smtp.hostname, port: smtp.port, tls: smtp.tls, auth: { username: smtp.username, password: smtp.password } } });
+  try {
+    await client.send({ from: `KPT Consulting <${smtp.from}>`, to: recipient, subject: mail.subject, content: mail.text, html: mail.html, replyTo: "info@kptconsulting.al" });
+    await supa.from("appointment_notifications").update({ status: "sent", sent_at: new Date().toISOString(), updated_at: new Date().toISOString() }).eq("idempotency_key", key);
+    return json({ ok: true });
+  } catch (e) {
+    const detail = e instanceof Error ? e.message : String(e);
+    console.error("notify send error", detail);
+    await supa.from("appointment_notifications").update({ status: "failed", error: detail.slice(0, 300), updated_at: new Date().toISOString() }).eq("idempotency_key", key);
+    return json({ error: "Dërgimi i email-it dështoi." }, 502);
+  } finally {
+    try { await client.close(); } catch { /* ignore */ }
+  }
+}
+
 function json(payload: unknown, status = 200) {
   return new Response(JSON.stringify(payload), {
     status,
@@ -111,6 +230,11 @@ Deno.serve(async (req) => {
       body = (await req.json()) as Payload;
     } catch {
       return json({ error: "Kërkesa nuk është JSON i vlefshëm." }, 400);
+    }
+    if ((body as unknown as NotifyPayload)?.mode === "notify") {
+      return await handleNotify(body as unknown as NotifyPayload, req, {
+        hostname: host!, port: Number(portStr) || 465, tls: secure, username: user!, password: password!, from: fromAddr!,
+      });
     }
     if (!body?.mode || !body.subject || !body.message) {
       return json({ error: "Fusha të mangëta (mode, subject, message)." }, 400);
