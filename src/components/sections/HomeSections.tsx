@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import { availableSlots, todayISO, DEFAULT_SETTINGS, type ApptSettings, type ApptBlock } from "@/lib/appointments";
 
 import { scrollToSection } from "@/lib/scroll-to-section";
 import {
@@ -329,8 +328,6 @@ type ContactForm = {
   phone: string;
   service: string;
   serviceOther: string;
-  apptDate: string;
-  apptTime: string;
   message: string;
 };
 
@@ -342,7 +339,7 @@ const PHONE_RE = /^\+?[0-9\s().-]{6,30}$/;
  * messages). Keeping it dependency-free removes the validation library from
  * the critical bundle.
  */
-function validateContact(form: ContactForm, t: (k: string) => string, slots: string[]) {
+function validateContact(form: ContactForm, t: (k: string) => string) {
   const data: ContactForm = {
     name: form.name.trim(),
     email: form.email.trim(),
@@ -350,8 +347,6 @@ function validateContact(form: ContactForm, t: (k: string) => string, slots: str
     service: form.service.trim(),
     serviceOther: form.serviceOther.trim(),
     message: form.message.trim(),
-    apptDate: form.apptDate,
-    apptTime: form.apptTime,
   };
   const errors: Record<string, string> = {};
 
@@ -364,8 +359,6 @@ function validateContact(form: ContactForm, t: (k: string) => string, slots: str
   if (data.serviceOther.length > 150) errors.serviceOther = t("form.err.serviceOther");
   if (data.message.length < 10 || data.message.length > 5000)
     errors.message = t("form.err.message");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(data.apptDate) || data.apptDate < todayISO()) errors.apptDate = t("form.err.apptDate");
-  else if (!slots.includes(data.apptTime)) errors.apptTime = t("form.err.apptTime");
   if (data.service === "Tjetër" && data.serviceOther.length < 2)
     errors.serviceOther = t("form.err.serviceOther");
 
@@ -376,42 +369,15 @@ export function ContactSection() {
   const { data: company } = useSuspenseQuery(companyQuery());
   const { data: sec } = useSuspenseQuery(contactSectionQuery());
   const { t, lang } = useI18n();
-  const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", serviceOther: "", apptDate: "", apptTime: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", serviceOther: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const submittingRef = useRef(false);
-  const [apptCfg, setApptCfg] = useState<{ s: ApptSettings; blocks: ApptBlock[] }>({ s: DEFAULT_SETTINGS, blocks: [] });
-  const [booked, setBooked] = useState<string[]>([]);
-  const [bookedTick, setBookedTick] = useState(0);
-  useEffect(() => {
-    let off = false;
-    (async () => {
-      const sb = await getSupabase();
-      const [{ data: s }, { data: blocks }] = await Promise.all([
-        sb.from("appointment_settings").select("working_days,open_time,close_time,slot_minutes").eq("id", 1).maybeSingle(),
-        sb.from("appointment_blocks").select("id,block_date,block_time,reason").gte("block_date", todayISO()),
-      ]);
-      if (!off) setApptCfg({ s: (s as ApptSettings) ?? DEFAULT_SETTINGS, blocks: (blocks as ApptBlock[]) ?? [] });
-    })();
-    return () => { off = true; };
-  }, []);
-  useEffect(() => {
-    if (!form.apptDate) { setBooked([]); return; }
-    let off = false;
-    (async () => {
-      const sb = await getSupabase();
-      const { data } = await sb.rpc("get_booked_slots", { _date: form.apptDate });
-      if (!off) setBooked(((data as unknown as string[]) ?? []));
-    })();
-    return () => { off = true; };
-  }, [form.apptDate, bookedTick]);
-  const slots = availableSlots(apptCfg.s, apptCfg.blocks, booked, form.apptDate);
-
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submittingRef.current) return;
     setErrors({});
-    const parsed = validateContact(form, t, slots);
+    const parsed = validateContact(form, t);
     if (!parsed.ok) {
       setErrors(parsed.errors);
       return;
@@ -433,21 +399,13 @@ export function ContactSection() {
       phone: parsed.data.phone,
       subject: subjectValue,
       message: parsed.data.message,
-      appointment_date: parsed.data.apptDate,
-      appointment_time: parsed.data.apptTime,
     });
     submittingRef.current = false;
     setSubmitting(false);
     if (error) {
-      if (error.code === "23505" || /slot_unavailable/.test(error.message)) {
-        toast.error(t("form.err.slotTaken"));
-        setErrors({ apptTime: t("form.err.slotTaken") });
-        setForm((f) => ({ ...f, apptTime: "" }));
-        setBookedTick((n) => n + 1);
-      } else toast.error(t("form.error"));
+      toast.error(t("form.error"));
       return;
     }
-    setBookedTick((n) => n + 1);
     supabase.functions.invoke("send-smtp", {
       body: {
         mode: "contact",
@@ -456,15 +414,10 @@ export function ContactSection() {
         from_name: parsed.data.name,
         from_email: parsed.data.email,
         phone: parsed.data.phone || "",
-        appointment_date: parsed.data.apptDate,
-        appointment_time: parsed.data.apptTime,
       },
     }).catch(() => { /* ignore */ });
-    supabase.functions.invoke("send-smtp", {
-      body: { mode: "notify", type: "received", message_id: newId },
-    }).catch(() => { /* ignore */ });
     toast.success(t("form.apptSuccess"));
-    setForm({ name: "", email: "", phone: "", service: "", serviceOther: "", apptDate: "", apptTime: "", message: "" });
+    setForm({ name: "", email: "", phone: "", service: "", serviceOther: "", message: "" });
   };
 
   const mapsSrc = `https://www.google.com/maps?q=${encodeURIComponent(company.mapsQuery)}&output=embed`;
@@ -590,35 +543,6 @@ export function ContactSection() {
               ))}
             </select>
           </Field>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label={t("form.apptDate")} error={errors.apptDate}>
-              <input
-                type="date"
-                required
-                min={todayISO()}
-                value={form.apptDate}
-                onChange={(e) => {
-                  const d = e.target.value;
-                  setForm({ ...form, apptDate: d, apptTime: "" });
-                }}
-                className="h-11 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-              />
-            </Field>
-            <Field label={t("form.apptTime")} error={errors.apptTime}>
-              <select
-                required
-                disabled={!form.apptDate}
-                value={form.apptTime}
-                onChange={(e) => setForm({ ...form, apptTime: e.target.value })}
-                className="h-11 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-60"
-              >
-                <option value="" disabled>{!form.apptDate ? t("form.apptSelectDateFirst") : slots.length ? t("form.apptTimePlaceholder") : t("form.apptNoSlots")}</option>
-                {slots.map((slot) => (
-                  <option key={slot} value={slot}>{slot}</option>
-                ))}
-              </select>
-            </Field>
-          </div>
           {form.service === "Tjetër" && (
             <Field label={t("form.serviceOther")} error={errors.serviceOther}>
               <input
