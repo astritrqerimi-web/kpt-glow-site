@@ -470,19 +470,29 @@ export function ContactSection() {
   const mapsSrc = `https://www.google.com/maps?q=${encodeURIComponent(company.mapsQuery)}&output=embed`;
 
   return (
-    <section className="container-page pb-24">
-      <div className="max-w-3xl">
+    <section className="relative isolate overflow-hidden pb-24">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          backgroundImage:
+            "linear-gradient(color-mix(in oklab, var(--color-border) 42%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklab, var(--color-border) 42%, transparent) 1px, transparent 1px), radial-gradient(circle at 78% 12%, color-mix(in oklab, var(--color-accent) 72%, transparent), transparent 34%), radial-gradient(circle at 18% 66%, color-mix(in oklab, var(--color-secondary) 78%, transparent), transparent 31%)",
+          backgroundSize: "56px 56px, 56px 56px, 100% 100%, 100% 100%",
+        }}
+      />
+      <div className="mx-auto w-full max-w-[1086px] px-6 lg:px-8">
+      <div className="max-w-[680px] pt-3">
         <div className="text-xs uppercase tracking-[0.2em] text-primary">{pick(sec.eyebrow, lang, t("contact.eyebrow"))}</div>
-        <h2 className="mt-4 font-display text-4xl md:text-6xl leading-tight text-foreground">
+        <h2 className="mt-4 font-display text-4xl leading-[1.08] text-foreground md:text-[3.25rem]">
           {pick(sec.titleA, lang, t("contact.title.a"))} <span className="text-gradient-brand">{pick(sec.titleB, lang, t("contact.title.b"))}</span>
         </h2>
-        <p className="mt-5 text-lg text-muted-foreground max-w-2xl">
+        <p className="mt-5 max-w-[620px] text-base leading-relaxed text-muted-foreground">
           {pick(sec.subtitle, lang, t("contact.subtitle"))}
         </p>
       </div>
 
-      <div className="mt-12 grid gap-8 lg:grid-cols-5">
-        <div className="lg:col-span-2 space-y-4">
+      <div className="mt-10 grid gap-7 lg:grid-cols-[390px_minmax(0,600px)] lg:justify-center lg:items-start">
+        <div className="space-y-4">
           <ContactCard
             icon={<Phone className="h-5 w-5" />}
             title={t("contact.phone")}
@@ -497,7 +507,7 @@ export function ContactSection() {
           />
           <ContactCard icon={<MapPin className="h-5 w-5" />} title={t("contact.address")} value={company.address} />
 
-          <div className="rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-5 shadow-soft">
+          <div className="min-h-[88px] rounded-2xl border border-border/60 bg-background/95 px-5 py-4 shadow-soft">
             <div className="text-xs uppercase tracking-[0.18em] text-primary mb-3">{pick(sec.followLabel, lang, t("contact.follow"))}</div>
             <div className="flex items-center gap-2 flex-wrap">
               {company.facebook && (
@@ -531,14 +541,14 @@ export function ContactSection() {
 
         <form
           onSubmit={onSubmit}
-          className="lg:col-span-3 rounded-3xl border border-border/60 bg-background/80 backdrop-blur p-6 md:p-8 shadow-elegant space-y-5"
+          className="w-full max-w-[600px] rounded-3xl border border-border/60 bg-background p-6 shadow-elegant space-y-4 md:p-7"
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label={t("form.name")} error={errors.name}>
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="h-11 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </Field>
             <Field label={t("form.email")} error={errors.email}>
@@ -546,7 +556,7 @@ export function ContactSection() {
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="h-11 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </Field>
             <Field label={t("form.phone")} error={errors.phone}>
@@ -563,7 +573,7 @@ export function ContactSection() {
                   e.currentTarget.setCustomValidity("");
                   setForm({ ...form, phone: e.target.value });
                 }}
-                className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="h-11 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
 
             </Field>
@@ -572,7 +582,7 @@ export function ContactSection() {
             <select
               value={form.service}
               onChange={(e) => setForm({ ...form, service: e.target.value, serviceOther: e.target.value === "Tjetër" ? form.serviceOther : "" })}
-              className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="h-11 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             >
               <option value="" disabled>{t("form.servicePlaceholder")}</option>
               {SERVICE_OPTIONS.map((opt) => (
@@ -591,7 +601,7 @@ export function ContactSection() {
                   const d = e.target.value;
                   setForm({ ...form, apptDate: d, apptTime: "" });
                 }}
-                className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="h-11 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </Field>
             <Field label={t("form.apptTime")} error={errors.apptTime}>
@@ -600,7 +610,7 @@ export function ContactSection() {
                 disabled={!form.apptDate}
                 value={form.apptTime}
                 onChange={(e) => setForm({ ...form, apptTime: e.target.value })}
-                className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-60"
+                className="h-11 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-60"
               >
                 <option value="" disabled>{!form.apptDate ? t("form.apptSelectDateFirst") : slots.length ? t("form.apptTimePlaceholder") : t("form.apptNoSlots")}</option>
                 {slots.map((slot) => (
@@ -614,17 +624,17 @@ export function ContactSection() {
               <input
                 value={form.serviceOther}
                 onChange={(e) => setForm({ ...form, serviceOther: e.target.value })}
-                className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="h-11 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                 placeholder={t("form.serviceOtherPlaceholder")}
               />
             </Field>
           )}
           <Field label={t("form.message")} error={errors.message}>
             <textarea
-              rows={6}
+              rows={5}
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
-              className="w-full resize-none rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="min-h-[120px] w-full resize-none rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </Field>
           <button
@@ -645,6 +655,7 @@ export function ContactSection() {
       </div>
 
       <LazyMap src={mapsSrc} />
+      </div>
     </section>
   );
 }
@@ -724,7 +735,7 @@ function ContactCard({
   const inner = (
     <>
       <span
-        className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-white shrink-0"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white shrink-0"
         style={{ background: "var(--gradient-brand)" }}
       >
         {icon}
@@ -736,7 +747,7 @@ function ContactCard({
     </>
   );
   const cls =
-    "flex items-start gap-4 rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-5 shadow-soft transition hover:shadow-elegant hover:-translate-y-0.5";
+    "flex min-h-[72px] items-center gap-4 rounded-2xl border border-border/60 bg-background/95 px-5 py-4 shadow-soft transition hover:shadow-elegant hover:-translate-y-0.5";
   return href ? (
     <a href={href} className={cls}>
       {inner}
