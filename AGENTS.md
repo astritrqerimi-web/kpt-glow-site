@@ -13,3 +13,4 @@
 - Preserve the entities v4 resolution aliases and server-only environment loading in Vite because email rendering must work without exposing credentials.
 - Let /lovable/* requests pass through app middleware unchanged because managed email endpoints authenticate their own callers.
 - Keep all six scaffolded authentication email actions with the managed handler; share email-safe brand tokens between templates so branding stays consistent without altering auth dispatch.
+- Declare managed email route options inline in createFileRoute so TanStack code splitting cannot introduce initialization cycles.

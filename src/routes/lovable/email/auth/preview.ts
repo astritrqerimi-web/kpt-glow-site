@@ -60,7 +60,7 @@ const SAMPLE_DATA: Record<string, object> = {
   },
 }
 
-const previewOptions = {
+export const Route = createFileRoute("/lovable/email/auth/preview")({
   component: () => null,
   server: {
     handlers: {
@@ -110,6 +110,4 @@ const previewOptions = {
       },
     },
   },
-}
-
-export const Route = createFileRoute("/lovable/email/auth/preview")(previewOptions)
+})

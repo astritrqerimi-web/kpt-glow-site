@@ -7,7 +7,7 @@ import { TEMPLATES } from '@/lib/email-templates/registry'
 // Renders all registered templates with their previewData.
 // Gated by LOVABLE_API_KEY — only the Go API calls this.
 
-const previewOptions = {
+export const Route = createFileRoute("/lovable/email/transactional/preview")({
   component: () => null,
   server: {
     handlers: {
@@ -86,6 +86,4 @@ const previewOptions = {
       },
     },
   },
-}
-
-export const Route = createFileRoute("/lovable/email/transactional/preview")(previewOptions)
+})
