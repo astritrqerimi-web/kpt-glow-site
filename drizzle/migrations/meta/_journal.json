@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792711498641,
+      "tag": "0000_restrict_unused_public_appointment_settings_reads",
+      "breakpoints": true
+    }
+  ]
+}
