@@ -2,4 +2,4 @@
 - [x] Add bilingual salary calculator page and navigation link using existing KPT styling.
 - [x] Add protected salary settings editor for bilingual copy, contributions and tax brackets.
 - [x] Test calculation rules, admin parameter updates, languages and screen sizes.
-- [ ] Match the reference calculator hierarchy, add contribution controls and editable bank-account wording, and verify both languages and screen sizes.
+- [x] Match the reference calculator hierarchy, add contribution controls and editable bank-account wording, and verify both languages and screen sizes.
