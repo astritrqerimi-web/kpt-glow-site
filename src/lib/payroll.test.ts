@@ -1,3 +1,4 @@
+/// <reference types="bun" />
 import { describe, test, expect } from "bun:test";
 import { DEFAULT_PAYROLL, calculatePayroll, payrollFromGross, payrollConfigSchema } from "./payroll";
 
