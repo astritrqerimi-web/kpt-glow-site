@@ -80,7 +80,7 @@ export const Route = createFileRoute("/lajme/")({
 function LajmePage() {
   const { t, lang } = useI18n();
   const search = resolve(Route.useSearch());
-  const navigate = useNavigate({ from: "/lajme" });
+  const navigate = useNavigate({ from: "/lajme/" });
   const [qInput, setQInput] = useState(search.q);
 
   useEffect(() => {
