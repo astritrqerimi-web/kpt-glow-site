@@ -15,6 +15,13 @@
       "when": 1792711514662,
       "tag": "0001_restrict_unused_public_appointment_blocks_reads",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792711645057,
+      "tag": "0002_scope_selected_public_content_and_file_listing",
+      "breakpoints": true
     }
   ]
 }
