@@ -130,9 +130,12 @@ export const articlesListQuery = (params: ListParams) =>
         query = query.eq("category_slug", params.category);
       }
       if (params.q && params.q.trim()) {
+        // Quote each complete filter value: commas and parentheses in search
+        // text must remain literal text, never become PostgREST operators.
         const q = params.q.trim().replace(/[%_]/g, "");
+        const value = `"%${q.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}%"`;
         query = query.or(
-          `title.ilike.%${q}%,title_en.ilike.%${q}%,excerpt.ilike.%${q}%,excerpt_en.ilike.%${q}%`,
+          `title.ilike.${value},title_en.ilike.${value},excerpt.ilike.${value},excerpt_en.ilike.${value}`,
         );
       }
       query = query.order("published_at", { ascending });
