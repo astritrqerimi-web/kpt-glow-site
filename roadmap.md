@@ -1,4 +1,4 @@
-- [ ] Verify current Kosovo monthly payroll rules against official sources.
-- [ ] Add bilingual salary calculator page and navigation link using existing KPT styling.
-- [ ] Add protected salary settings editor for bilingual copy, contributions and tax brackets.
-- [ ] Test calculation rules, admin parameter updates, languages and screen sizes.
+- [x] Verify current Kosovo monthly payroll rules against official sources.
+- [x] Add bilingual salary calculator page and navigation link using existing KPT styling.
+- [x] Add protected salary settings editor for bilingual copy, contributions and tax brackets.
+- [x] Test calculation rules, admin parameter updates, languages and screen sizes.

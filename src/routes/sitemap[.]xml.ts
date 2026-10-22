@@ -12,6 +12,7 @@ const routeOptions = {
         const staticEntries = [
           { path: "/", priority: "1.0", changefreq: "weekly" },
           { path: "/lajme", priority: "0.9", changefreq: "daily" },
+          { path: "/llogarite-pagen", priority: "0.8", changefreq: "monthly" },
         ];
 
         let articleEntries: Array<{ path: string; lastmod?: string; priority: string; changefreq: string }> = [];
