@@ -12,6 +12,7 @@ import { AppointmentsAdmin } from "@/components/admin/AppointmentsAdmin";
 import { CalendarDays } from "lucide-react";
 import { ArticlesAdmin } from "@/components/admin/ArticlesAdmin";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { PayrollAdmin } from "@/components/admin/PayrollAdmin";
 
 import { toast } from "sonner";
 import { BrandLogo } from "@/components/site/BrandLogo";
@@ -50,7 +51,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
 });
 
-type Tab = "services" | "articles" | "messages" | "appointments" | "content" | "settings";
+type Tab = "services" | "articles" | "messages" | "appointments" | "content" | "settings" | "payroll";
 
 function AdminPage() {
   const navigate = useNavigate();
@@ -107,6 +108,7 @@ function AdminPage() {
           <TabBtn active={tab === "articles"} onClick={() => setTab("articles")} icon={<Newspaper className="h-4 w-4" />}>Lajmet</TabBtn>
           <TabBtn active={tab === "messages"} onClick={() => setTab("messages")} icon={<Mail className="h-4 w-4" />}>Mesazhet</TabBtn>
           <TabBtn active={tab === "appointments"} onClick={() => setTab("appointments")} icon={<CalendarDays className="h-4 w-4" />}>Terminet</TabBtn>
+          <TabBtn active={tab === "payroll"} onClick={() => setTab("payroll")} icon={<Settings2 className="h-4 w-4" />}>Kalkulatori i pagës</TabBtn>
           <TabBtn active={tab === "content"} onClick={() => setTab("content")} icon={<FileEdit className="h-4 w-4" />}>Përmbajtja</TabBtn>
           <TabBtn active={tab === "settings"} onClick={() => setTab("settings")} icon={<Settings2 className="h-4 w-4" />}>Cilësimet</TabBtn>
         </div>
@@ -115,6 +117,7 @@ function AdminPage() {
         {tab === "articles" && <ArticlesAdmin />}
         {tab === "messages" && <MessagesAdmin />}
         {tab === "appointments" && <AppointmentsAdmin />}
+        {tab === "payroll" && <PayrollAdmin />}
         {tab === "content" && <ContentAdmin />}
         {tab === "settings" && <SettingsAdmin />}
       </div>

@@ -40,6 +40,7 @@ const translations: Record<Lang, Dict> = {
     "nav.about": "Rreth Nesh",
     "nav.services": "Shërbimet",
     "nav.news": "Blog",
+    "nav.payroll": "Llogarite Pagën",
     "nav.contact": "Kontakti",
     "nav.contactUs": "Na Kontaktoni",
     "nav.menu": "Menu",
@@ -286,6 +287,7 @@ const translations: Record<Lang, Dict> = {
     "footer.rights": "All rights reserved.",
 
     // News
+    "nav.payroll": "Calculate Salary",
     "news.eyebrow": "Updates & Announcements",
     "news.homeTitle": "Legal and Tax Updates",
     "news.homeSubtitle": "Be the first to know about legal changes, tax updates and the most important announcements for your business.",
