@@ -15,3 +15,4 @@
 - Keep all six scaffolded authentication email actions with the managed handler; share email-safe brand tokens between templates so branding stays consistent without altering auth dispatch.
 - Declare managed email route options inline in createFileRoute so TanStack code splitting cannot introduce initialization cycles.
 - Salary calculator rules and bilingual copy live in one validated site_content record; a shared cent-based payroll engine drives both conversion modes and tests, while existing admin RLS controls edits.
+- Visitor contribution controls override pension rates only for the current calculation, never persist them; missing new bilingual keys use their defaults so older saved configurations remain valid.

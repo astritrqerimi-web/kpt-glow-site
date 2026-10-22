@@ -2,7 +2,7 @@ import { z } from "zod";
 import { PAYROLL_COPY } from "./payroll-copy";
 
 const bilingual = z.object({ al: z.string().max(4000), en: z.string().max(4000) });
-const textShape = Object.fromEntries(Object.keys(PAYROLL_COPY).map(key => [key, bilingual])) as Record<keyof typeof PAYROLL_COPY, typeof bilingual>;
+const textShape = Object.fromEntries(Object.entries(PAYROLL_COPY).map(([key, copy]) => [key, bilingual.default(copy)])) as Record<keyof typeof PAYROLL_COPY, z.ZodDefault<typeof bilingual>>;
 export const payrollConfigSchema = z.object({
   texts: z.object(textShape),
   employeeRate: z.number().min(5).max(15),
