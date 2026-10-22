@@ -7,6 +7,8 @@ export const PAYROLL_COPY = {
   primary: { al: "Primar", en: "Primary" },
   secondary: { al: "Sekondar", en: "Secondary" },
   employer: { al: "Punëdhënësi", en: "Employer" },
+  fullTime: { al: "Punë me orar të plotë", en: "Full-time employment" },
+  floorHelp: { al: "Për pagat nën minimumin ligjor me orar të plotë, kontributi minimal i punëdhënësit llogaritet mbi pagën minimale. Paga minimale nuk është prag tatimor.", en: "For full-time wages below the statutory minimum, the employer minimum contribution uses the minimum wage base. Minimum wage is not a tax threshold." },
   amount: { al: "Paga mujore", en: "Monthly salary" },
   gross: { al: "Paga bruto", en: "Gross salary" },
   net: { al: "Paga neto — që merr në dorë", en: "Net salary — take-home pay" },

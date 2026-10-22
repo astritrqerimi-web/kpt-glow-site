@@ -26,7 +26,7 @@ export type PayrollConfig = z.infer<typeof payrollConfigSchema>;
 export const DEFAULT_PAYROLL: PayrollConfig = {
   texts: PAYROLL_COPY,
   employeeRate: 5, employerRate: 5, secondaryRate: 10,
-  minimumWage: 0, employerMinimumRate: 5,
+  minimumWage: 350, employerMinimumRate: 5,
   brackets: [{ upTo: 250, rate: 0 }, { upTo: 450, rate: 8 }, { upTo: null, rate: 10 }],
   effectiveFrom: "2024-08-23",
   sourceUrl: "https://www.atk-ks.org/en/notice-to-taxpayers-personal-income-tax-rates-are-changed/",
