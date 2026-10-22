@@ -5,6 +5,8 @@
 //     error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { loadEnv } from "vite";
+import { fileURLToPath } from "node:url";
 
 export default defineConfig({
   tanstackStart: {
@@ -13,6 +15,20 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
+    plugins: [{
+      name: "email-server-environment",
+      config(_config, { mode }) {
+        // Server variables stay in process.env, never in browser defines.
+        Object.assign(process.env, loadEnv(mode, process.cwd(), ""));
+      },
+    }],
+    resolve: {
+      alias: {
+        "entities/lib/decode.js": fileURLToPath(new URL("./node_modules/entities/lib/decode.js", import.meta.url)),
+        "entities/lib/encode.js": fileURLToPath(new URL("./node_modules/entities/lib/encode.js", import.meta.url)),
+        entities: fileURLToPath(new URL("./node_modules/entities", import.meta.url)),
+      },
+    },
     build: {
       rollupOptions: {
         output: {
