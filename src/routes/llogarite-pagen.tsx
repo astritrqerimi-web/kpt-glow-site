@@ -49,7 +49,8 @@ function SalaryCalculator() {
       setCopied(true); setCopyError(false); setTimeout(() => setCopied(false), 2500);
     } catch { setCopyError(true); }
   };
-  return <section className="container-page py-10 md:py-14">
+  return <section data-payroll-page className="container-page py-10 md:py-14">
+    <style>{`@media (min-width: 768px) and (max-width: 1023px) { body:has([data-payroll-page]) footer > .container-page { grid-template-columns: repeat(2, minmax(0, 1fr)); } }`}</style>
     <div className="mx-auto max-w-[1000px]">
       <div className="mb-8">
         <span className="inline-flex items-center gap-2 text-xs font-semibold text-primary"><Calculator className="h-4 w-4" />{text("eyebrow")}</span>
