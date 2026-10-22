@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as LlogaritePagenRouteImport } from './routes/llogarite-pagen'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as LajmeIndexRouteImport } from './routes/lajme.index'
@@ -33,6 +34,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlogaritePagenRoute = LlogaritePagenRouteImport.update({
+  id: '/llogarite-pagen',
+  path: '/llogarite-pagen',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -80,6 +86,7 @@ const LovableEmailTransactionalPreviewRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/llogarite-pagen': typeof LlogaritePagenRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/lajme/$slug': typeof LajmeSlugRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/llogarite-pagen': typeof LlogaritePagenRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/lajme/$slug': typeof LajmeSlugRoute
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/llogarite-pagen': typeof LlogaritePagenRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/lajme/$slug': typeof LajmeSlugRoute
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/llogarite-pagen'
     | '/sitemap.xml'
     | '/admin'
     | '/lajme/$slug'
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/llogarite-pagen'
     | '/sitemap.xml'
     | '/admin'
     | '/lajme/$slug'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/llogarite-pagen'
     | '/sitemap.xml'
     | '/_authenticated/admin'
     | '/lajme/$slug'
@@ -159,6 +171,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  LlogaritePagenRoute: typeof LlogaritePagenRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   LajmeSlugRoute: typeof LajmeSlugRoute
   LajmeIndexRoute: typeof LajmeIndexRoute
@@ -189,6 +202,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llogarite-pagen': {
+      id: '/llogarite-pagen'
+      path: '/llogarite-pagen'
+      fullPath: '/llogarite-pagen'
+      preLoaderRoute: typeof LlogaritePagenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -265,6 +285,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  LlogaritePagenRoute: LlogaritePagenRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   LajmeSlugRoute: LajmeSlugRoute,
   LajmeIndexRoute: LajmeIndexRoute,

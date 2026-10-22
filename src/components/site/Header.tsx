@@ -15,6 +15,7 @@ const NAV: readonly NavItem[] = [
   { kind: "section", section: "rreth-nesh", key: "nav.about" },
   { kind: "section", section: "sherbimet", key: "nav.services" },
   { kind: "route", to: "/lajme", key: "nav.news" },
+  { kind: "route", to: "/llogarite-pagen", key: "nav.payroll" },
   { kind: "section", section: "kontakt", key: "nav.contact" },
 ] as const;
 
@@ -127,13 +128,13 @@ export function Header() {
           </div>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-9">
+        <nav className="hidden xl:flex items-center gap-5">
           {NAV.map((item) => renderItem(item, false))}
           <LanguageSwitcher variant="desktop" />
         </nav>
 
         <button
-          className="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur"
+          className="xl:hidden inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur"
           onClick={() => setOpen((v) => !v)}
           aria-label={t("nav.menu")}
         >
@@ -142,7 +143,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-up">
+        <div className="xl:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-up">
           <nav className="container-page py-4 flex flex-col gap-1">
             {NAV.map((item) => renderItem(item, true))}
             <LanguageSwitcher variant="mobile" />
