@@ -8,6 +8,7 @@ import { TEMPLATES } from '@/lib/email-templates/registry'
 // Gated by LOVABLE_API_KEY — only the Go API calls this.
 
 const previewOptions = {
+  component: () => null,
   server: {
     handlers: {
       POST: async ({ request }: { request: Request }) => {
