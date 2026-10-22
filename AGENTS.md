@@ -12,3 +12,4 @@
 - Managed app emails use the server-only template helper and per-feature triggers; do not create queues or a generic browser send endpoint because this project uses synchronous managed delivery.
 - Preserve the entities v4 resolution aliases and server-only environment loading in Vite because email rendering must work without exposing credentials.
 - Let /lovable/* requests pass through app middleware unchanged because managed email endpoints authenticate their own callers.
+- Keep all six scaffolded authentication email actions with the managed handler; share email-safe brand tokens between templates so branding stays consistent without altering auth dispatch.

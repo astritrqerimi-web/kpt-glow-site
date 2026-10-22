@@ -18,7 +18,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "KPT Consulting Portal"
+const SITE_NAME = "KPT Consulting"
 const ROOT_DOMAIN = "kptconsulting.al"
 
 // Sample data for preview mode ONLY (not used in actual email sending).
@@ -60,10 +60,11 @@ const SAMPLE_DATA: Record<string, object> = {
   },
 }
 
-export const Route = createFileRoute("/lovable/email/auth/preview")({
+const previewOptions = {
+  component: () => null,
   server: {
     handlers: {
-      POST: async ({ request }) => {
+      POST: async ({ request }: { request: Request }) => {
         const apiKey = process.env['LOVABLE_API_KEY']
 
         if (!apiKey) {
@@ -109,4 +110,6 @@ export const Route = createFileRoute("/lovable/email/auth/preview")({
       },
     },
   },
-})
+}
+
+export const Route = createFileRoute("/lovable/email/auth/preview")(previewOptions)

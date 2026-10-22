@@ -9,7 +9,7 @@ import { EmailChangeEmail } from '@/lib/email-templates/email-change'
 import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
-const SITE_NAME = "KPT Consulting Portal"
+const SITE_NAME = "KPT Consulting"
 const SENDER_DOMAIN = "notify.kptconsulting.al"
 const ROOT_DOMAIN = "kptconsulting.al"
 const FROM_DOMAIN = "kptconsulting.al"
@@ -17,10 +17,11 @@ const SITE_URL = `https://${ROOT_DOMAIN}`
 
 // The SDK handler owns verification, dispatch, and retry semantics; this file
 // owns only the email decisions: subjects, templates, and per-type props.
-export const Route = createFileRoute("/lovable/email/auth/webhook")({
+const webhookOptions = {
+  component: () => null,
   server: {
     handlers: {
-      POST: ({ request }) => {
+      POST: ({ request }: { request: Request }) => {
         const handler = createAuthEmailHandler({
           apiKey: process.env['LOVABLE_API_KEY']!,
           from: { name: SITE_NAME, address: `noreply@${FROM_DOMAIN}` },
@@ -84,4 +85,6 @@ export const Route = createFileRoute("/lovable/email/auth/webhook")({
       },
     },
   },
-})
+}
+
+export const Route = createFileRoute("/lovable/email/auth/webhook")(webhookOptions)
