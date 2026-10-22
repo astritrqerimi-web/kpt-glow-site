@@ -16,3 +16,4 @@
 - Declare managed email route options inline in createFileRoute so TanStack code splitting cannot introduce initialization cycles.
 - Salary calculator rules and bilingual copy live in one validated site_content record; a shared cent-based payroll engine drives both conversion modes and tests, while existing admin RLS controls edits.
 - Visitor contribution controls override pension rates only for the current calculation, never persist them; missing new bilingual keys use their defaults so older saved configurations remain valid.
+- Salary AI explanations use a public validated server function, read the saved payroll rules with anonymous read permissions, and calculate amounts on the server before asking Lovable AI to explain them; AI never determines payroll amounts.

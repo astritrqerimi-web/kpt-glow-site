@@ -9,6 +9,7 @@ import { useI18n } from "@/lib/i18n";
 import { pick } from "@/lib/site-content";
 import { PayrollButton } from "@/components/payroll/PayrollButton";
 import { ContributionControl } from "@/components/payroll/ContributionControl";
+import { SalaryExplanation } from "@/components/payroll/SalaryExplanation";
 
 export const Route = createFileRoute("/llogarite-pagen")({
   loader: ({ context }) => context.queryClient.ensureQueryData(payrollQuery()),
@@ -104,6 +105,7 @@ function SalaryCalculator() {
           <div className="mt-4 flex flex-wrap gap-3"><PayrollButton onClick={copy}>{copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}{text(copied ? "copied" : "copy")}</PayrollButton><PayrollButton onClick={() => { setAmount("1000"); setMode("gross"); setEmployer("primary"); setFullTime(true); setRates({}); setCopied(false); setCopyError(false); }}><RotateCcw className="h-4 w-4" />{text("reset")}</PayrollButton></div>
           {copyError && <p role="alert" className="mt-3 text-sm text-destructive">{text("copyFailed")}</p>}
         </div>
+        <SalaryExplanation key={JSON.stringify([normalized,mode,employer,fullTime,calculationConfig,lang])} input={{amount:Number(normalized),mode,employer,fullTime,employeeRate:calculationConfig.employeeRate,employerRate:calculationConfig.employerRate,language:lang}} text={text} />
       </>}
       <div className="mt-7 space-y-3 text-sm text-muted-foreground">
         <p>{text("example")} {money(example.gross)}: {money(example.gross)} − {money(example.employee)} − {money(example.tax)} = <strong className="text-foreground">{money(example.net)}</strong>.</p>
