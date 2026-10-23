@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Download, Loader2 } from "lucide-react";
 import { PayrollButton } from "./PayrollButton";
 import type { PayrollPdfData } from "@/lib/payroll-pdf";
-export function PayrollPdfButton({data,label,loadingLabel,errorLabel}: {data:PayrollPdfData;label:string;loadingLabel:string;errorLabel:string}) {
+export function PayrollPdfButton({data,label,loadingLabel,errorLabel}: {data:PayrollPdfData[];label:string;loadingLabel:string;errorLabel:string}) {
   const [busy,setBusy]=useState(false),[error,setError]=useState(false),[ready,setReady]=useState<Blob|null>(null);
   const download=async () => {
     setError(false);

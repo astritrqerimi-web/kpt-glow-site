@@ -36,6 +36,9 @@ function SalaryCalculator() {
   const [rates, setRates] = useState<{ employeeRate?: number; employerRate?: number }>({});
   const calculationConfig = { ...config, ...rates };
   const text = (key: PayrollCopyKey) => pick(config.texts[key], lang);
+  const ATK_AL_URL = "https://www.atk-ks.org/njoftim-per-tatimpagues-ndryshohen-shkallet-e-tatimit-per-te-ardhurat-personale/";
+  const textIn = (key: PayrollCopyKey, l: typeof lang) => pick(config.texts[key], l);
+  const moneyIn = (value: number, l: typeof lang) => new Intl.NumberFormat(l === "sq" ? "de-DE" : "en-IE", { style: "currency", currency: "EUR" }).format(value / 100);
   const money = (value: number) => new Intl.NumberFormat(lang === "sq" ? "de-DE" : "en-IE", { style: "currency", currency: "EUR" }).format(value / 100);
   const normalized = amount.replace(",", ".");
   const valid = /^\d+(?:\.\d{0,2})?$/.test(normalized) && Number(normalized) <= 10000000;
@@ -46,6 +49,17 @@ function SalaryCalculator() {
     [text("employerPension") + ` (${calculationConfig.employerRate}%)`, result.employerPension],
     [text("taxable"), result.taxable], [text("tax"), -result.tax], [text("net"), result.net], [text("totalCost"), result.totalCost],
   ] as const : [];
+  const pdfPage = (l: typeof lang) => {
+    if (!result) throw new Error("No result");
+    const t = (key: PayrollCopyKey) => textIn(key, l), m = (v: number) => moneyIn(v, l);
+    const rowsBase = [[t("gross"), result.gross], [t("employeePension") + ` (${calculationConfig.employeeRate}%)`, -result.employee], [t("employerPension") + ` (${calculationConfig.employerRate}%)`, result.employerPension], [t("taxable"), result.taxable]] as const;
+    const rowsEnd = [[t("tax"), -result.tax], [t("net"), result.net], [t("totalCost"), result.totalCost]] as const;
+    return {
+      title:t("title"),netLabel:t("net"),net:m(result.net),subtitle:`${t(mode === "gross" ? "grossToNet" : "netToGross")} · ${t(employer)}${fullTime ? ` · ${t("fullTime")}` : ""}`,breakdown:t("breakdown"),
+      rows:[...rowsBase.map(([label,value]) => [label,m(value)] as const), ...(employer === "primary" ? result.bands.map(band => [`${t("bands")}: ${band.upper === Infinity ? `${t("above")} ${m(band.lower)}` : `${m(band.lower)} – ${m(band.upper)}`} (${band.rate}%) · ${m(band.base)} × ${band.rate}%`,m(band.tax)] as const) : [[`${t("bands")}: ${m(result.taxable)} × ${config.secondaryRate}%`,m(result.tax)] as const]), ...rowsEnd.map(([label,value]) => [label,m(value)] as const)],
+      disclaimer:t("disclaimer"),source:t("source"),sourceUrl:l === "sq" ? ATK_AL_URL : config.sourceUrl,
+    };
+  };
   const copy = async () => {
     try {
       if (!result) return;
@@ -104,16 +118,12 @@ function SalaryCalculator() {
           <div className="mt-4 flex flex-wrap gap-3"><PayrollButton onClick={copy}>{copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}{text(copied ? "copied" : "copy")}</PayrollButton><PayrollButton onClick={() => { setAmount("1000"); setMode("gross"); setEmployer("primary"); setFullTime(true); setRates({}); setCopied(false); setCopyError(false); }}><RotateCcw className="h-4 w-4" />{text("reset")}</PayrollButton></div>
           {copyError && <p role="alert" className="mt-3 text-sm text-destructive">{text("copyFailed")}</p>}
         </div>
-        <div className="mt-4"><PayrollPdfButton key={JSON.stringify([result,calculationConfig,lang])} label={text("pdfSave")} loadingLabel={text("pdfLoading")} errorLabel={text("pdfError")} data={{
-          title:text("title"),netLabel:text("net"),net:money(result.net),subtitle:`${text(mode === "gross" ? "grossToNet" : "netToGross")} · ${text(employer)}${fullTime ? ` · ${text("fullTime")}` : ""}`,breakdown:text("breakdown"),
-          rows:[...items.slice(0,4).map(([label,value]) => [label,money(value)] as const), ...(employer === "primary" ? result.bands.map(band => [`${text("bands")}: ${band.upper === Infinity ? `${text("above")} ${money(band.lower)}` : `${money(band.lower)} – ${money(band.upper)}`} (${band.rate}%) · ${money(band.base)} × ${band.rate}%`,money(band.tax)] as const) : [[`${text("bands")}: ${money(result.taxable)} × ${config.secondaryRate}%`,money(result.tax)] as const]), ...items.slice(4).map(([label,value]) => [label,money(value)] as const)],
-          disclaimer:text("disclaimer"),source:text("source"),sourceUrl:lang === "sq" ? "https://www.atk-ks.org/njoftim-per-tatimpagues-ndryshohen-shkallet-e-tatimit-per-te-ardhurat-personale/" : config.sourceUrl,
-        }} /></div>
+        <div className="mt-4"><PayrollPdfButton key={JSON.stringify([result,calculationConfig,lang])} label={text("pdfSave")} loadingLabel={text("pdfLoading")} errorLabel={text("pdfError")} data={(["sq","en"] as const).map(l => pdfPage(l))} /></div>
       </>}
       <div className="mt-7 space-y-3 text-sm text-muted-foreground">
         {result && <p>{text("example")} {money(result.gross)}: {money(result.gross)} − {money(result.employee)} − {money(result.tax)} = <strong className="text-foreground">{money(result.net)}</strong>.</p>}
         <p>{text("help")}</p><p>{text("floorHelp")}</p><p>{text("disclaimer")}</p>
-        <a href={config.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary underline underline-offset-4">{text("source")}<ExternalLink className="h-3 w-3" /></a>
+        <a href={ATK_AL_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary underline underline-offset-4">{text("source")}<ExternalLink className="h-3 w-3" /></a>
       </div>
     </div>
   </section>;
