@@ -42,7 +42,7 @@ const percent = (amountCents: number, rate: number) => Math.round(amountCents * 
 export function payrollFromGross(grossCents: number, config: PayrollConfig, employer: EmployerType, fullTime = true) {
   if (!Number.isSafeInteger(grossCents) || grossCents < 0) throw new Error("Invalid salary");
   const employee = percent(grossCents, config.employeeRate);
-  const employerPension = grossCents === 0 ? 0 : Math.max(percent(grossCents, config.employerRate), fullTime ? percent(cents(config.minimumWage), config.employerMinimumRate) : 0);
+  const employerPension = grossCents === 0 ? 0 : Math.max(percent(grossCents, config.employerRate), fullTime ? percent(cents(config.minimumWage), Math.min(config.employerRate, config.employerMinimumRate)) : 0);
   const taxable = Math.max(0, grossCents - employee);
   let lower = 0;
   const bands = config.brackets.map(b => {
