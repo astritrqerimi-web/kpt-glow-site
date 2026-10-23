@@ -29,11 +29,11 @@ function tokenRgb(token: string): [number,number,number] {
   const pixel=context.getImageData(0,0,1,1).data;
   return [pixel[0],pixel[1],pixel[2]];
 }
-export async function createPayrollPdf(data: PayrollPdfData): Promise<Blob> {
+export async function createPayrollPdf(pages: PayrollPdfData[]): Promise<Blob> {
   const {font,logo}=await loadAssets();
   const doc=new jsPDF({unit:"mm",format:"a4"});
   doc.addFileToVFS("KptSans.ttf",font);doc.addFont("KptSans.ttf","KptSans","normal");doc.setFont("KptSans");
-  doc.setProperties({title:clean(data.title),author:"KPT Consulting L.L.C.",subject:clean(data.breakdown)});
+  doc.setProperties({title:clean(pages[0].title),author:"KPT Consulting L.L.C.",subject:clean(pages[0].breakdown)});
   const primary=tokenRgb("--primary"), foreground=tokenRgb("--foreground"), muted=tokenRgb("--muted-foreground"), border=tokenRgb("--border");
   let y=20;
   const header=() => {
@@ -49,6 +49,8 @@ export async function createPayrollPdf(data: PayrollPdfData): Promise<Blob> {
     for(const line of lines){ensure(size*0.45+2);doc.setTextColor(...color);doc.text(line,16,y);y+=size*0.45+1;}
     y+=3;
   };
+  pages.forEach((data,index) => {
+  if(index>0)doc.addPage();
   header();paragraph(data.title,21);paragraph(data.subtitle,10,muted);
   paragraph(data.netLabel,11,primary);paragraph(data.net,26,primary);
   y+=3;paragraph(data.breakdown,13);
@@ -59,6 +61,7 @@ export async function createPayrollPdf(data: PayrollPdfData): Promise<Blob> {
     doc.setDrawColor(...border);doc.line(16,y+height-1,194,y+height-1);y+=height;
   }
   y+=8;paragraph(data.disclaimer,9,muted);ensure(6);doc.setFontSize(9);doc.setTextColor(...primary);doc.textWithLink(clean(data.source),16,y,{url:data.sourceUrl});doc.setDrawColor(...primary);doc.line(16,y+0.8,16+doc.getTextWidth(clean(data.source)),y+0.8);y+=6;
+  });
   for(let page=1;page<=doc.getNumberOfPages();page++){
     doc.setPage(page);doc.setFontSize(8);doc.setTextColor(...muted);
     doc.text("KPT Consulting L.L.C.",16,286);doc.text(`${page} / ${doc.getNumberOfPages()}`,194,286,{align:"right"});
