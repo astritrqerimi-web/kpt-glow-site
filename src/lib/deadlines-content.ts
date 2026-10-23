@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getSupabase } from "./supabase-lazy";
+import { countdownGroupSchema, type CountdownGroup } from "./deadline-countdown";
 
 export type DeadlineRow = {
   formAl: string;
@@ -39,6 +40,7 @@ export type RatesTable = {
 export type DeadlinesContent = {
   deadlines: DeadlinesTable;
   rates: RatesTable;
+  countdowns: CountdownGroup[];
 };
 
 const MONTH_20 = { al: "Prej 01 deri 20 të çdo muaji", en: "From the 1st to the 20th of each month" };
@@ -53,6 +55,7 @@ const row = (formAl: string, formEn: string, abbr: string, d: { al: string; en: 
 });
 
 export const DEFAULT_DEADLINES: DeadlinesContent = {
+  countdowns: [],
   deadlines: {
     titleAl: "Afatet e Deklarimit",
     titleEn: "Filing Deadlines",
@@ -123,7 +126,19 @@ export function resolveDeadlinesContent(value: unknown): DeadlinesContent {
   const v = value as Partial<DeadlinesContent> | null | undefined;
   const d = v?.deadlines;
   const r = v?.rates;
+  const rows = Array.isArray(d?.rows) && d.rows.every(isRow) ? d.rows : DEFAULT_DEADLINES.deadlines.rows;
+  const savedCountdowns = countdownGroupSchema.array().safeParse(v?.countdowns);
+  const groups: { titleAl: string; titleEn: string; frequency: CountdownGroup["frequency"]; day: number; codes: string[] }[] = [
+    { titleAl: "Afati mujor deri më 15", titleEn: "Monthly deadline — 15th", frequency: "monthly", day: 15, codes: ["WM/CM", "WR"] },
+    { titleAl: "Afati mujor deri më 20", titleEn: "Monthly deadline — 20th", frequency: "monthly", day: 20, codes: ["TV"] },
+    { titleAl: "Afati tremujor deri më 15", titleEn: "Quarterly deadline — 15th after quarter end", frequency: "quarterly", day: 15, codes: ["IS", "IL", "QS", "QL"] },
+    { titleAl: "Afati vjetor — 31 mars", titleEn: "Annual deadline — 31 March", frequency: "annual", day: 31, codes: ["PD", "CD"] },
+  ];
   return {
+    countdowns: savedCountdowns.success ? savedCountdowns.data : groups.map(g => ({
+      titleAl: g.titleAl, titleEn: g.titleEn, frequency: g.frequency, day: g.day, month: 3,
+      forms: g.codes.flatMap(code => { const form = rows.find(row => row.abbr === code) ?? DEFAULT_DEADLINES.deadlines.rows.find(row => row.abbr === code); return form ? [{ formAl: form.formAl, formEn: form.formEn, abbr: form.abbr }] : []; }),
+    })),
     deadlines: {
       titleAl: typeof d?.titleAl === "string" ? d.titleAl : DEFAULT_DEADLINES.deadlines.titleAl,
       titleEn: typeof d?.titleEn === "string" ? d.titleEn : DEFAULT_DEADLINES.deadlines.titleEn,
