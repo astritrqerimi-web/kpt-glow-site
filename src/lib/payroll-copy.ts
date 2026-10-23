@@ -39,10 +39,8 @@ export const PAYROLL_COPY = {
   help: { al: "Punëdhënësi primar përdor shkallët progresive; punëdhënësi sekondar mban tatim me normë fikse. Kontributi i punëmarrësit zbritet para tatimit.", en: "Primary employers use progressive brackets; secondary employers withhold tax at a flat rate. Employee pension contributions are deducted before tax." },
   disclaimer: { al: "Përllogaritje orientuese mujore për paga të zakonshme. Kontributet dhe tatimi rrumbullakohen në centin më të afërt. Për përjashtime, përfitime në natyrë dhe trajtime të veçanta, konsultohuni me KPT Consulting.", en: "Indicative monthly calculation for ordinary salaries. Contributions and tax are rounded to the nearest cent. Consult KPT Consulting for exemptions, benefits in kind and special treatments." },
   source: { al: "Burimi: Administrata Tatimore e Kosovës", en: "Source: Tax Administration of Kosovo" },
-  aiExplain: { al: "Shpjego pagën me AI", en: "Explain salary with AI" },
-  aiTitle: { al: "Shpjegimi i pagës", en: "Salary explanation" },
-  aiLoading: { al: "Duke përgatitur shpjegimin…", en: "Preparing explanation…" },
-  aiError: { al: "Shpjegimi nuk u përgatit. Provoni më vonë.", en: "The explanation could not be prepared. Please try later." },
-  aiDisclaimer: { al: "Shpjegim i gjeneruar me AI; nuk zëvendëson këshillimin profesional.", en: "AI-generated explanation; not a substitute for professional advice." },
+  pdfSave: { al: "Ruaje kalkulimin në PDF", en: "Save calculation as PDF" },
+  pdfLoading: { al: "Duke përgatitur PDF-në…", en: "Preparing PDF…" },
+  pdfError: { al: "PDF-ja nuk u përgatit. Provoni përsëri.", en: "The PDF could not be prepared. Please try again." },
 };
 export type PayrollCopyKey = keyof typeof PAYROLL_COPY;

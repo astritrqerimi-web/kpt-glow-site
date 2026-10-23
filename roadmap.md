@@ -3,4 +3,4 @@
 - [x] Add protected salary settings editor for bilingual copy, contributions and tax brackets.
 - [x] Test calculation rules, admin parameter updates, languages and screen sizes.
 - [x] Match the reference calculator hierarchy, add contribution controls and editable bank-account wording, and verify both languages and screen sizes.
-- [x] Add secure bilingual AI salary explanations based on verified calculator results; test a real Gateway request and visitor flow.
+- [x] Remove salary AI integration and paid per-use calls; add and verify branded AL/EN PDF downloads generated locally.
