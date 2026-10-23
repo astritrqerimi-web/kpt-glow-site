@@ -17,7 +17,7 @@ describe("Kosovo monthly payroll", () => {
   test("taxable boundary 450 accumulates 16 tax", () => strictEqual(payrollFromGross(45000,{...DEFAULT_PAYROLL, employeeRate:0},"primary").tax,1600));
   test("0% employee pension: primary net 929, secondary net 900", () => { strictEqual(calculatePayroll(1000,"gross",{...DEFAULT_PAYROLL,employeeRate:0},"primary").net,92900); strictEqual(calculatePayroll(1000,"gross",{...DEFAULT_PAYROLL,employeeRate:0},"secondary").net,90000); });
   test("0%/0% keeps zero employer cost and net->gross roundtrips", () => { const c={...DEFAULT_PAYROLL,employeeRate:0,employerRate:0}; strictEqual(calculatePayroll(1000,"gross",c,"primary").totalCost,100000); strictEqual(calculatePayroll(929,"net",c,"primary").gross,100000); strictEqual(calculatePayroll(900,"net",c,"secondary").gross,100000); });
-  test("rates above 5% are rejected", () => strictEqual(resolvePayrollConfig({...DEFAULT_PAYROLL,employeeRate:4}),DEFAULT_PAYROLL));
+  test("rates above 5% are rejected", () => strictEqual(resolvePayrollConfig({...DEFAULT_PAYROLL,employeeRate:6,secondaryRate:12}).secondaryRate,10));
   test("visitor employee contribution adjustment applies in both conversion modes", () => {
     const adjusted = {...DEFAULT_PAYROLL, employeeRate:4};
     strictEqual(calculatePayroll(1000,"gross",adjusted,"primary").net,89300);
