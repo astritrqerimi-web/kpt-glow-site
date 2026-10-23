@@ -1,9 +1,14 @@
 import { test } from "node:test";
 import { deepStrictEqual, strictEqual } from "node:assert";
-import { countdownGroupSchema, kosovoDay, nextDeadline, type CountdownGroup } from "./deadline-countdown";
+import { countdownGroupSchema, formatCountdownTitle, kosovoDay, nextDeadline, type CountdownGroup } from "./deadline-countdown";
 import { resolveDeadlinesContent } from "./deadlines-content";
 
 const group = (frequency: CountdownGroup["frequency"], day: number, month = 3): CountdownGroup => ({ titleAl: "", titleEn: "", frequency, day, month, forms: [] });
+test("annual title year placeholder resolves to the upcoming deadline year", () => {
+  strictEqual(formatCountdownTitle("Afati vjetor — 31 mars 20xx", new Date("2027-03-31T00:00:00Z")), "Afati vjetor — 31 mars 2027");
+  strictEqual(formatCountdownTitle("Annual deadline — 31 March 20xx", new Date("2027-03-31T00:00:00Z")), "Annual deadline — 31 March 2027");
+  strictEqual(formatCountdownTitle("Afati mujor deri më 15 të çdo muaji", new Date("2027-03-31T00:00:00Z")), "Afati mujor deri më 15 të çdo muaji");
+});
 test("monthly 15 groups WM/CM and WR and advances to November 16 after weekend", () => {
   const g = resolveDeadlinesContent(null).countdowns[0];
   deepStrictEqual(g.forms.map(f => f.abbr), ["WM/CM", "WR"]);
