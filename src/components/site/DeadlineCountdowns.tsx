@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { CalendarClock } from "lucide-react";
+import { sq, enGB } from "date-fns/locale";
 import { nextDeadline, type CountdownGroup } from "@/lib/deadline-countdown";
 
 export function DeadlineCountdowns({ groups, al }: { groups: CountdownGroup[]; al: boolean }) {
@@ -22,7 +23,7 @@ export function DeadlineCountdowns({ groups, al }: { groups: CountdownGroup[]; a
         return <article key={i} className="min-w-0 rounded-lg border border-border bg-card p-5 shadow-soft">
           <h3 className="flex items-start gap-2 text-base font-semibold tracking-normal"><CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{al ? group.titleAl : group.titleEn}</h3>
           <div className="my-4 flex flex-wrap items-end justify-between gap-3 border-b border-border pb-4">
-            <time dateTime={due?.isoDate} className="text-base font-semibold">{due ? new Intl.DateTimeFormat(al ? "sq-AL" : "en-GB", { timeZone: "UTC", day: "numeric", month: "long", year: "numeric" }).format(due.date) : "—"}</time>
+            <time dateTime={due?.isoDate} className="text-base font-semibold">{due ? `${due.date.getUTCDate()} ${(al ? sq : enGB).localize.month(due.date.getUTCMonth() as 0, { width: "wide" })} ${due.date.getUTCFullYear()}` : "—"}</time>
             <div className="min-h-12 text-right text-primary" aria-live="polite" aria-atomic="true"><span className="block text-3xl font-semibold tabular-nums">{due?.daysRemaining ?? "—"}</span><span className="text-xs">{due?.daysRemaining === 0 ? (al ? "Afati sot" : "Due today") : al ? "ditë të mbetura" : "days remaining"}</span></div>
           </div>
           <ul className="space-y-3">{group.forms.map((form, j) => <li key={j} className="text-sm leading-relaxed [overflow-wrap:anywhere]">{form.abbr && <span className="mr-1 font-semibold text-primary">{form.abbr} —</span>}{al ? form.formAl : form.formEn}</li>)}</ul>
