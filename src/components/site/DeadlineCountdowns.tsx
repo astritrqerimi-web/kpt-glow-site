@@ -22,7 +22,7 @@ export function DeadlineCountdowns({ groups, al }: { groups: CountdownGroup[]; a
         const due = now ? nextDeadline(group, now) : null;
         return <article key={i} className="min-w-0 rounded-lg border border-border bg-card p-5 shadow-soft">
           <h3 className="flex items-start gap-2 text-base font-semibold tracking-normal"><CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{al ? group.titleAl : group.titleEn}</h3>
-          <div className="my-4 flex flex-wrap items-end justify-between gap-3 border-b border-border pb-4">
+          <div className="mt-3 mb-3 flex flex-wrap items-end justify-between gap-3 border-b border-border pb-3">
             <time dateTime={due?.isoDate} className="text-base font-semibold">{due ? `${due.date.getUTCDate()} ${(al ? sq : enGB).localize.month(due.date.getUTCMonth() as 0, { width: "wide" })} ${due.date.getUTCFullYear()}` : "—"}</time>
             <div className="min-h-12 text-right text-primary" aria-live="polite" aria-atomic="true"><span className="block text-3xl font-semibold tabular-nums">{due?.daysRemaining ?? "—"}</span><span className="text-xs">{due?.daysRemaining === 0 ? (al ? "Afati sot" : "Due today") : al ? "ditë të mbetura" : "days remaining"}</span></div>
           </div>
