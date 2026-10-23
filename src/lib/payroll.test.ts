@@ -17,16 +17,16 @@ describe("Kosovo monthly payroll", () => {
   test("taxable boundary 450 accumulates 16 tax", () => strictEqual(payrollFromGross(45000,{...DEFAULT_PAYROLL, employeeRate:0},"primary").tax,1600));
   test("0% employee pension: primary net 910, secondary net 900", () => { strictEqual(calculatePayroll(1000,"gross",{...DEFAULT_PAYROLL,employeeRate:0},"primary").net,91000); strictEqual(calculatePayroll(1000,"gross",{...DEFAULT_PAYROLL,employeeRate:0},"secondary").net,90000); });
   test("0%/0% keeps zero employer cost and net->gross roundtrips", () => { const c={...DEFAULT_PAYROLL,employeeRate:0,employerRate:0}; strictEqual(calculatePayroll(1000,"gross",c,"primary").totalCost,100000); strictEqual(calculatePayroll(910,"net",c,"primary").gross,100000); strictEqual(calculatePayroll(900,"net",c,"secondary").gross,100000); });
-  test("rates above 5% are rejected", () => strictEqual(resolvePayrollConfig({...DEFAULT_PAYROLL,employeeRate:6}),DEFAULT_PAYROLL));
+  test("rates above 5% are rejected", () => strictEqual(resolvePayrollConfig({...DEFAULT_PAYROLL,employeeRate:4}),DEFAULT_PAYROLL));
   test("visitor employee contribution adjustment applies in both conversion modes", () => {
-    const adjusted = {...DEFAULT_PAYROLL, employeeRate:6};
-    strictEqual(calculatePayroll(1000,"gross",adjusted,"primary").net,87500);
-    strictEqual(calculatePayroll(875,"net",adjusted,"primary").gross,100000);
+    const adjusted = {...DEFAULT_PAYROLL, employeeRate:4};
+    strictEqual(calculatePayroll(1000,"gross",adjusted,"primary").net,89300);
+    strictEqual(calculatePayroll(893,"net",adjusted,"primary").gross,100000);
     strictEqual(DEFAULT_PAYROLL.employeeRate,5);
   });
   test("visitor employer contribution adjustment changes employer cost only", () => {
-    const adjusted = calculatePayroll(1000,"gross",{...DEFAULT_PAYROLL,employerRate:6},"primary");
-    strictEqual(adjusted.totalCost,106000);
+    const adjusted = calculatePayroll(1000,"gross",{...DEFAULT_PAYROLL,employerRate:4},"primary");
+    strictEqual(adjusted.totalCost,104000);
     strictEqual(adjusted.net,88400);
   });
   test("older saved text fields preserve custom calculation parameters", () => {
