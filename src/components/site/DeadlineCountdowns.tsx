@@ -8,7 +8,7 @@ export function DeadlineCountdowns({ groups, al }: { groups: CountdownGroup[]; a
   useEffect(() => {
     const update = () => setNow(new Date());
     update();
-    const timer = window.setInterval(update, 30000);
+    const timer = window.setInterval(update, 15000);
     document.addEventListener("visibilitychange", update);
     window.addEventListener("focus", update);
     return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", update); window.removeEventListener("focus", update); };
