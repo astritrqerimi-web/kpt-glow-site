@@ -140,7 +140,7 @@ export function Header() {
           {NAV.map((item) => renderItem(item, false))}
         </nav>
 
-        <div className="col-span-2 row-start-2 flex shrink-0 justify-end sm:ml-auto">
+        <div className="col-span-2 row-start-2 flex shrink-0 justify-end ml-auto min-[1440px]:ml-0 min-[1440px]:-ml-2">
           <LanguageSwitcher variant="desktop" />
         </div>
 
