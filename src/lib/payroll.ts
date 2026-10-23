@@ -5,8 +5,8 @@ const bilingual = z.object({ al: z.string().max(4000), en: z.string().max(4000) 
 const textShape = Object.fromEntries(Object.entries(PAYROLL_COPY).map(([key, copy]) => [key, bilingual.default(copy)])) as Record<keyof typeof PAYROLL_COPY, z.ZodDefault<typeof bilingual>>;
 export const payrollConfigSchema = z.object({
   texts: z.object(textShape),
-  employeeRate: z.number().min(5).max(15),
-  employerRate: z.number().min(5).max(15),
+  employeeRate: z.number().int().min(0).max(5),
+  employerRate: z.number().int().min(0).max(5),
   secondaryRate: z.number().min(0).max(100),
   minimumWage: z.number().min(0).max(100000),
   employerMinimumRate: z.number().min(0).max(100),
@@ -42,7 +42,7 @@ const percent = (amountCents: number, rate: number) => Math.round(amountCents * 
 export function payrollFromGross(grossCents: number, config: PayrollConfig, employer: EmployerType, fullTime = true) {
   if (!Number.isSafeInteger(grossCents) || grossCents < 0) throw new Error("Invalid salary");
   const employee = percent(grossCents, config.employeeRate);
-  const employerPension = grossCents === 0 ? 0 : Math.max(percent(grossCents, config.employerRate), fullTime ? percent(cents(config.minimumWage), config.employerMinimumRate) : 0);
+  const employerPension = grossCents === 0 ? 0 : Math.max(percent(grossCents, config.employerRate), fullTime ? percent(cents(config.minimumWage), Math.min(config.employerRate, config.employerMinimumRate)) : 0);
   const taxable = Math.max(0, grossCents - employee);
   let lower = 0;
   const bands = config.brackets.map(b => {

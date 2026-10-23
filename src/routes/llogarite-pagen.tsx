@@ -41,7 +41,6 @@ function SalaryCalculator() {
   const valid = /^\d+(?:\.\d{0,2})?$/.test(normalized) && Number(normalized) <= 10000000;
   let result: ReturnType<typeof calculatePayroll> | null = null;
   try { if (valid) result = calculatePayroll(Number(normalized), mode, calculationConfig, employer, fullTime); } catch { /* Invalid or unreachable net amount. */ }
-  const example = calculatePayroll(1000, "gross", calculationConfig, employer, fullTime);
   const items = result ? [
     [text("gross"), result.gross], [text("employeePension") + ` (${calculationConfig.employeeRate}%)`, -result.employee],
     [text("employerPension") + ` (${calculationConfig.employerRate}%)`, result.employerPension],
@@ -108,11 +107,11 @@ function SalaryCalculator() {
         <div className="mt-4"><PayrollPdfButton key={JSON.stringify([result,calculationConfig,lang])} label={text("pdfSave")} loadingLabel={text("pdfLoading")} errorLabel={text("pdfError")} data={{
           title:text("title"),netLabel:text("net"),net:money(result.net),subtitle:`${text(mode === "gross" ? "grossToNet" : "netToGross")} · ${text(employer)}${fullTime ? ` · ${text("fullTime")}` : ""}`,breakdown:text("breakdown"),
           rows:[...items.slice(0,4).map(([label,value]) => [label,money(value)] as const), ...(employer === "primary" ? result.bands.map(band => [`${text("bands")}: ${band.upper === Infinity ? `${text("above")} ${money(band.lower)}` : `${money(band.lower)} – ${money(band.upper)}`} (${band.rate}%) · ${money(band.base)} × ${band.rate}%`,money(band.tax)] as const) : [[`${text("bands")}: ${money(result.taxable)} × ${config.secondaryRate}%`,money(result.tax)] as const]), ...items.slice(4).map(([label,value]) => [label,money(value)] as const)],
-          disclaimer:text("disclaimer"),source:`${text("source")} — ${config.sourceUrl}`,
+          disclaimer:text("disclaimer"),source:text("source"),sourceUrl:lang === "sq" ? "https://www.atk-ks.org/njoftim-per-tatimpagues-ndryshohen-shkallet-e-tatimit-per-te-ardhurat-personale/" : config.sourceUrl,
         }} /></div>
       </>}
       <div className="mt-7 space-y-3 text-sm text-muted-foreground">
-        <p>{text("example")} {money(example.gross)}: {money(example.gross)} − {money(example.employee)} − {money(example.tax)} = <strong className="text-foreground">{money(example.net)}</strong>.</p>
+        {result && <p>{text("example")} {money(result.gross)}: {money(result.gross)} − {money(result.employee)} − {money(result.tax)} = <strong className="text-foreground">{money(result.net)}</strong>.</p>}
         <p>{text("help")}</p><p>{text("floorHelp")}</p><p>{text("disclaimer")}</p>
         <a href={config.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary underline underline-offset-4">{text("source")}<ExternalLink className="h-3 w-3" /></a>
       </div>
