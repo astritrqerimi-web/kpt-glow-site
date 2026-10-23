@@ -3,6 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { CalendarClock, Percent } from "lucide-react";
 import { deadlinesQuery } from "@/lib/deadlines-content";
 import { useI18n } from "@/lib/i18n";
+import { DeadlineCountdowns } from "@/components/site/DeadlineCountdowns";
 
 export const Route = createFileRoute("/afatet-e-deklarimit")({
   loader: ({ context }) => context.queryClient.ensureQueryData(deadlinesQuery()),
@@ -43,6 +44,8 @@ function FilingDeadlinesPage() {
               : "Declaration and payment deadlines for taxes and contributions in Kosovo."}
           </p>
         </div>
+
+        <DeadlineCountdowns groups={data.countdowns} al={al} />
 
         <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-soft">
           <table className="w-full min-w-[640px] border-collapse">

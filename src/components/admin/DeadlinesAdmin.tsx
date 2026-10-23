@@ -6,6 +6,8 @@ import { deadlinesQuery, type DeadlinesContent, type DeadlineRow, type RateRow }
 import { PayrollButton } from "@/components/payroll/PayrollButton";
 import { toast } from "sonner";
 import type { Json } from "@/integrations/supabase/types";
+import { CountdownsAdmin } from "./CountdownsAdmin";
+import { countdownGroupSchema } from "@/lib/deadline-countdown";
 
 const fieldClass = "mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring";
 
@@ -28,6 +30,7 @@ export function DeadlinesAdmin() {
     setRates(draft.rates.rows.map((r, j) => (j === i ? { ...r, ...patch } : r)));
 
   const save = async () => {
+    if (!countdownGroupSchema.array().safeParse(draft.countdowns).success) return toast.error("Kontrolloni afatet: dita 1–31 dhe muaji 1–12.");
     setSaving(true);
     const { error } = await supabase.from("site_content").upsert({ key: "filing_deadlines", value: draft as unknown as Json });
     setSaving(false);
@@ -44,6 +47,8 @@ export function DeadlinesAdmin() {
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}Ruaj ndryshimet
         </PayrollButton>
       </div>
+
+      <CountdownsAdmin groups={draft.countdowns} onChange={countdowns => setDraft({ ...draft, countdowns })} />
 
       <section className="border-b border-border pb-8">
         <h3 className="mb-4 text-xl tracking-normal">Afatet e Deklarimit</h3>
