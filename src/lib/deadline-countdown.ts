@@ -33,11 +33,16 @@ function kosovoWallMs(now: Date): number {
   return Date.UTC(part("year"), part("month") - 1, part("day"), part("hour"), part("minute"), part("second"));
 }
 
-export interface RemainingTime { days: number; hours: number; minutes: number }
+export interface RemainingTime { days: number; hours: number; minutes: number; seconds: number }
 
 export function splitRemaining(ms: number): RemainingTime {
-  const totalMinutes = Math.max(0, Math.floor(ms / 60000));
-  return { days: Math.floor(totalMinutes / 1440), hours: Math.floor(totalMinutes / 60) % 24, minutes: totalMinutes % 60 };
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  return {
+    days: Math.floor(totalSeconds / 86400),
+    hours: Math.floor(totalSeconds / 3600) % 24,
+    minutes: Math.floor(totalSeconds / 60) % 60,
+    seconds: totalSeconds % 60,
+  };
 }
 
 export function nextDeadline(group: CountdownGroup, now: Date) {

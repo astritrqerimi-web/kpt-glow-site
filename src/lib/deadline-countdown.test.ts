@@ -43,14 +43,14 @@ test("day counting crosses DST without elapsed-hour errors", () => {
   strictEqual(nextDeadline(group("monthly", 15), new Date("2026-10-23T01:23:00Z")).daysRemaining, 24);
 });
 test("annual weekend postponement can cross year end", () => strictEqual(nextDeadline(group("annual", 31, 12), new Date("2023-01-01T10:00:00Z")).isoDate, "2023-01-02"));
-test("remaining time counts days, hours and minutes until end of due date in Kosovo time", () => {
+test("remaining time counts days, hours, minutes and seconds until end of due date in Kosovo time", () => {
   const g = group("monthly", 15);
   // 2026-11-15 23:00 Kosovo time; due 2026-11-16 — 25 hours remain.
-  deepStrictEqual(nextDeadline(g, new Date("2026-11-15T22:00:00Z")).remaining, { days: 1, hours: 1, minutes: 0 });
+  deepStrictEqual(nextDeadline(g, new Date("2026-11-15T22:00:00Z")).remaining, { days: 1, hours: 1, minutes: 0, seconds: 0 });
   // Late in the due date itself — hours and minutes remain until local midnight.
-  deepStrictEqual(nextDeadline(g, new Date("2026-11-16T20:00:00Z")).remaining, { days: 0, hours: 3, minutes: 0 });
-  // Final minute of the due date — everything reads zero.
-  deepStrictEqual(nextDeadline(g, new Date("2026-11-16T22:59:30Z")).remaining, { days: 0, hours: 0, minutes: 0 });
+  deepStrictEqual(nextDeadline(g, new Date("2026-11-16T20:00:00Z")).remaining, { days: 0, hours: 3, minutes: 0, seconds: 0 });
+  // Half a minute before local midnight — only seconds remain.
+  deepStrictEqual(nextDeadline(g, new Date("2026-11-16T22:59:30Z")).remaining, { days: 0, hours: 0, minutes: 0, seconds: 30 });
 });
 test("admin edited recurrence, names and codes persist through resolution", () => {
   const custom = { ...group("annual", 20, 6), forms: [{ formAl: "Test", formEn: "Test EN", abbr: "X" }] };
