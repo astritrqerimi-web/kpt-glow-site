@@ -5,8 +5,8 @@ const bilingual = z.object({ al: z.string().max(4000), en: z.string().max(4000) 
 const textShape = Object.fromEntries(Object.entries(PAYROLL_COPY).map(([key, copy]) => [key, bilingual.default(copy)])) as Record<keyof typeof PAYROLL_COPY, z.ZodDefault<typeof bilingual>>;
 export const payrollConfigSchema = z.object({
   texts: z.object(textShape),
-  employeeRate: z.number().min(5).max(15),
-  employerRate: z.number().min(5).max(15),
+  employeeRate: z.number().int().min(0).max(5),
+  employerRate: z.number().int().min(0).max(5),
   secondaryRate: z.number().min(0).max(100),
   minimumWage: z.number().min(0).max(100000),
   employerMinimumRate: z.number().min(0).max(100),

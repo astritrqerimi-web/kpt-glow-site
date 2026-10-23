@@ -37,7 +37,7 @@ export const PAYROLL_COPY = {
   invalid: { al: "Shkruani një shumë të vlefshme, jo negative, me maksimum dy shifra pas presjes.", en: "Enter a valid, non-negative amount with at most two decimal places." },
   example: { al: "Shembull: për pagën bruto prej", en: "Example: for a gross salary of" },
   help: { al: "Punëdhënësi primar përdor shkallët progresive; punëdhënësi sekondar mban tatim me normë fikse. Kontributi i punëmarrësit zbritet para tatimit.", en: "Primary employers use progressive brackets; secondary employers withhold tax at a flat rate. Employee pension contributions are deducted before tax." },
-  disclaimer: { al: "Përllogaritje orientuese mujore për paga të zakonshme. Kontributet dhe tatimi rrumbullakohen në centin më të afërt. Për përjashtime, përfitime në natyrë dhe trajtime të veçanta, konsultohuni me KPT Consulting.", en: "Indicative monthly calculation for ordinary salaries. Contributions and tax are rounded to the nearest cent. Consult KPT Consulting for exemptions, benefits in kind and special treatments." },
+  disclaimer: { al: "Përllogaritje orientuese mujore për paga të zakonshme. Kontributet dhe tatimi rrumbullakohen në centin më të afërt. Për shpjegim shtesë dhe trajtime të veçanta, konsultohuni me KPT Consulting.", en: "Indicative monthly calculation for ordinary salaries. Contributions and tax are rounded to the nearest cent. For further explanation and special treatments, consult KPT Consulting." },
   source: { al: "Burimi: Administrata Tatimore e Kosovës", en: "Source: Tax Administration of Kosovo" },
   pdfSave: { al: "Ruaje kalkulimin në PDF", en: "Save calculation as PDF" },
   pdfLoading: { al: "Duke përgatitur PDF-në…", en: "Preparing PDF…" },
