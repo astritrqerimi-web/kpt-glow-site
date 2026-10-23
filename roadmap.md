@@ -1,5 +1,5 @@
-- [ ] Add editable bilingual filing countdown groups and Kosovo-time recurrence rules.
-- [ ] Test countdown boundaries, administrative saving and desktop/mobile display.
+- [x] Add editable bilingual filing countdown groups and Kosovo-time recurrence rules.
+- [x] Test countdown boundaries, administrative saving and desktop/mobile display.
 - [x] Verify current Kosovo monthly payroll rules against official sources.
 - [x] Add bilingual salary calculator page and navigation link using existing KPT styling.
 - [x] Add protected salary settings editor for bilingual copy, contributions and tax brackets.
