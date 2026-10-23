@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AfatetEDeklarimitRouteImport } from './routes/afatet-e-deklarimit'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as LlogaritePagenRouteImport } from './routes/llogarite-pagen'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -29,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AfatetEDeklarimitRoute = AfatetEDeklarimitRouteImport.update({
+  id: '/afatet-e-deklarimit',
+  path: '/afatet-e-deklarimit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -85,6 +91,7 @@ const LovableEmailTransactionalPreviewRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/afatet-e-deklarimit': typeof AfatetEDeklarimitRoute
   '/auth': typeof AuthRoute
   '/llogarite-pagen': typeof LlogaritePagenRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/afatet-e-deklarimit': typeof AfatetEDeklarimitRoute
   '/auth': typeof AuthRoute
   '/llogarite-pagen': typeof LlogaritePagenRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/afatet-e-deklarimit': typeof AfatetEDeklarimitRoute
   '/auth': typeof AuthRoute
   '/llogarite-pagen': typeof LlogaritePagenRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/afatet-e-deklarimit'
     | '/auth'
     | '/llogarite-pagen'
     | '/sitemap.xml'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/afatet-e-deklarimit'
     | '/auth'
     | '/llogarite-pagen'
     | '/sitemap.xml'
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/afatet-e-deklarimit'
     | '/auth'
     | '/llogarite-pagen'
     | '/sitemap.xml'
@@ -170,6 +182,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AfatetEDeklarimitRoute: typeof AfatetEDeklarimitRoute
   AuthRoute: typeof AuthRoute
   LlogaritePagenRoute: typeof LlogaritePagenRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -195,6 +208,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/afatet-e-deklarimit': {
+      id: '/afatet-e-deklarimit'
+      path: '/afatet-e-deklarimit'
+      fullPath: '/afatet-e-deklarimit'
+      preLoaderRoute: typeof AfatetEDeklarimitRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -284,6 +304,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AfatetEDeklarimitRoute: AfatetEDeklarimitRoute,
   AuthRoute: AuthRoute,
   LlogaritePagenRoute: LlogaritePagenRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

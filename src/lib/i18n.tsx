@@ -41,6 +41,7 @@ const translations: Record<Lang, Dict> = {
     "nav.services": "Shërbimet",
     "nav.news": "Blog",
     "nav.payroll": "Llogarite Pagën",
+    "nav.deadlines": "Afatet e Deklarimit",
     "nav.contact": "Kontakti",
     "nav.contactUs": "Na Kontaktoni",
     "nav.menu": "Menu",
@@ -288,6 +289,7 @@ const translations: Record<Lang, Dict> = {
 
     // News
     "nav.payroll": "Calculate Salary",
+    "nav.deadlines": "Filing Deadlines",
     "news.eyebrow": "Updates & Announcements",
     "news.homeTitle": "Legal and Tax Updates",
     "news.homeSubtitle": "Be the first to know about legal changes, tax updates and the most important announcements for your business.",
