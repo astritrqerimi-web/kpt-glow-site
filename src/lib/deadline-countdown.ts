@@ -26,6 +26,20 @@ function adjustedDay(year: number, month: number, day: number): number {
   return date.getTime() / DAY_MS + (weekday === 6 ? 2 : weekday === 0 ? 1 : 0);
 }
 
+// Wall-clock reading in Kosovo time, expressed as if it were UTC (DST-safe civil arithmetic).
+function kosovoWallMs(now: Date): number {
+  const parts = new Intl.DateTimeFormat("en", { timeZone: KOSOVO_TIME_ZONE, hourCycle: "h23", year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric" }).formatToParts(now);
+  const part = (type: string) => Number(parts.find(p => p.type === type)?.value);
+  return Date.UTC(part("year"), part("month") - 1, part("day"), part("hour"), part("minute"), part("second"));
+}
+
+export interface RemainingTime { days: number; hours: number; minutes: number }
+
+export function splitRemaining(ms: number): RemainingTime {
+  const totalMinutes = Math.max(0, Math.floor(ms / 60000));
+  return { days: Math.floor(totalMinutes / 1440), hours: Math.floor(totalMinutes / 60) % 24, minutes: totalMinutes % 60 };
+}
+
 export function nextDeadline(group: CountdownGroup, now: Date) {
   const today = kosovoDay(now);
   const year = new Date(today * DAY_MS).getUTCFullYear();
@@ -33,7 +47,15 @@ export function nextDeadline(group: CountdownGroup, now: Date) {
   // Include previous year's candidates because weekend deferral may cross New Year.
   const candidates = [year - 1, year, year + 1].flatMap(y => months.map(m => adjustedDay(y, m, group.day))).filter(day => day >= today);
   const due = Math.min(...candidates);
-  return { date: new Date(due * DAY_MS), daysRemaining: due - today, isoDate: new Date(due * DAY_MS).toISOString().slice(0, 10) };
+  const dueDate = new Date(due * DAY_MS);
+  // Remaining time until the end of the due date (local midnight), counted in Kosovo wall-clock time.
+  const dueEndWall = Date.UTC(dueDate.getUTCFullYear(), dueDate.getUTCMonth(), dueDate.getUTCDate() + 1);
+  return {
+    date: dueDate,
+    daysRemaining: due - today,
+    isoDate: dueDate.toISOString().slice(0, 10),
+    remaining: splitRemaining(dueEndWall - kosovoWallMs(now)),
+  };
 }
 
 // Titles may contain the "20xx" placeholder, replaced with the upcoming deadline's year.
