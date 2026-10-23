@@ -18,3 +18,4 @@
 - Visitor contribution controls override pension rates only for the current calculation, never persist them; missing new bilingual keys use their defaults so older saved configurations remain valid.
 - Payroll calculations and PDF exports run in the browser without AI or paid per-use calls; PDF generation uses the same calculated result and embedded Unicode fonts, with brand colors derived from site tokens.
 - Filing countdown groups share the existing filing_deadlines content record and admin permissions; a tested civil-date engine handles recurrence separately from bilingual display, avoiding DST errors and schema changes.
+- Homepage header links use native router scroll reset for cross-route navigation and prevent same-route navigation before smooth scrolling, avoiding timing races and interrupted animations.
