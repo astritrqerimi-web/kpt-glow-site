@@ -16,7 +16,7 @@ export function LanguageSwitcher({ variant = "desktop" }: Props) {
   const { lang, setLang } = useI18n();
 
   return (
-    <div className={`flex items-center ${variant === "mobile" ? "mt-3 px-3" : "ml-4"}`}>
+    <div className={`flex shrink-0 items-center ${variant === "mobile" ? "mt-3 px-3" : ""}`}>
       <div className="inline-flex items-center rounded-full border border-border/50 bg-background/60 p-[2px] backdrop-blur-sm shadow-soft">
         {order.map((code) => {
           const active = lang === code;
@@ -35,7 +35,7 @@ export function LanguageSwitcher({ variant = "desktop" }: Props) {
                   : "text-foreground/80 hover:text-foreground hover:bg-muted/50"
               }`}
             >
-              <Flag className="w-4 h-3 sm:w-[18px] sm:h-[13px] rounded-[1px] object-cover flex-shrink-0" />
+              <Flag className="w-[18px] h-[13px] rounded-[1px] object-contain shrink-0" />
               <span>{config.code}</span>
             </button>
           );

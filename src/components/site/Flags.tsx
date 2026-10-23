@@ -10,10 +10,10 @@ export function KosovoFlag({ className }: { className?: string }) {
       height={13}
       // Tiny decorative flag: it must never compete with the hero LCP image for
       // bandwidth, and it must not be promoted into a high-priority preload.
-      loading="lazy"
+      loading="eager"
       decoding="async"
       fetchPriority="low"
-      style={{ objectFit: "cover" }}
+      style={{ objectFit: "contain" }}
     />
   );
 }

@@ -102,10 +102,10 @@ export function Header() {
           : "bg-transparent"
       }`}
     >
-      <div className="container-page flex h-24 items-center justify-between md:h-28">
+      <div className="mx-auto grid min-h-24 w-full max-w-[1480px] grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 px-4 py-3 sm:flex sm:h-28 sm:gap-4 sm:px-6 sm:py-0 lg:px-8">
         <Link
           to="/"
-          className="flex items-center gap-3 group"
+          className="group flex min-w-0 shrink-0 items-center gap-2 sm:gap-3"
           onClick={() => {
             setOpen(false);
             if (pathname === "/") scrollToTop();
@@ -113,41 +113,46 @@ export function Header() {
           }}
           aria-label="KPT Consulting"
         >
+          <span className="block h-12 w-12 shrink-0 sm:h-14 sm:w-14 md:h-16 md:w-16">
           <BrandLogo
             alt="KPT Consulting"
             sizes="(max-width: 768px) 56px, 64px"
             eager
-            className="h-14 w-14 md:h-16 md:w-16 object-contain transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="flex flex-col leading-tight">
-            <span className="text-xl md:text-2xl text-foreground tracking-tight font-semibold" style={{ fontFamily: "'Manrope', sans-serif" }}>
+          </span>
+          <div className="flex min-w-0 flex-col leading-tight">
+            <span className="whitespace-nowrap text-lg sm:text-xl md:text-2xl text-foreground font-semibold" style={{ fontFamily: "'Manrope', sans-serif" }}>
               KPT Consulting
             </span>
-            <span className="text-[9px] md:text-[11px] uppercase tracking-[0.14em] md:tracking-[0.18em] text-muted-foreground whitespace-nowrap">
+            <span className="text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] text-muted-foreground whitespace-nowrap">
               {t("brand.tagline")}
             </span>
           </div>
         </Link>
 
-        <nav className="hidden xl:flex items-center gap-5">
+        <nav className="ml-auto hidden min-[1440px]:flex items-center gap-3">
           {NAV.map((item) => renderItem(item, false))}
-          <LanguageSwitcher variant="desktop" />
         </nav>
 
+        <div className="col-span-2 row-start-2 flex shrink-0 justify-end sm:ml-auto min-[1440px]:ml-0">
+          <LanguageSwitcher variant="desktop" />
+        </div>
+
         <button
-          className="xl:hidden inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur"
+          className="col-start-2 row-start-1 min-[1440px]:hidden inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-background/70 backdrop-blur"
           onClick={() => setOpen((v) => !v)}
           aria-label={t("nav.menu")}
+          aria-expanded={open}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       {open && (
-        <div className="xl:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-up">
+        <div className="min-[1440px]:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-up">
           <nav className="container-page py-4 flex flex-col gap-1">
             {NAV.map((item) => renderItem(item, true))}
-            <LanguageSwitcher variant="mobile" />
           </nav>
         </div>
       )}
