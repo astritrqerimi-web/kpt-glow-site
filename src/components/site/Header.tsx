@@ -16,6 +16,7 @@ const NAV: readonly NavItem[] = [
   { kind: "section", section: "sherbimet", key: "nav.services" },
   { kind: "route", to: "/lajme", key: "nav.news" },
   { kind: "route", to: "/llogarite-pagen", key: "nav.payroll" },
+  { kind: "route", to: "/afatet-e-deklarimit", key: "nav.deadlines" },
   { kind: "section", section: "kontakt", key: "nav.contact" },
 ] as const;
 

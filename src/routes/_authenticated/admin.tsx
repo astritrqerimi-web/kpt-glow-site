@@ -13,6 +13,7 @@ import { CalendarDays } from "lucide-react";
 import { ArticlesAdmin } from "@/components/admin/ArticlesAdmin";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { PayrollAdmin } from "@/components/admin/PayrollAdmin";
+import { DeadlinesAdmin } from "@/components/admin/DeadlinesAdmin";
 
 import { toast } from "sonner";
 import { BrandLogo } from "@/components/site/BrandLogo";
@@ -51,7 +52,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
 });
 
-type Tab = "services" | "articles" | "messages" | "appointments" | "content" | "settings" | "payroll";
+type Tab = "services" | "articles" | "messages" | "appointments" | "content" | "settings" | "payroll" | "deadlines";
 
 function AdminPage() {
   const navigate = useNavigate();
@@ -109,6 +110,7 @@ function AdminPage() {
           <TabBtn active={tab === "messages"} onClick={() => setTab("messages")} icon={<Mail className="h-4 w-4" />}>Mesazhet</TabBtn>
           <TabBtn active={tab === "appointments"} onClick={() => setTab("appointments")} icon={<CalendarDays className="h-4 w-4" />}>Terminet</TabBtn>
           <TabBtn active={tab === "payroll"} onClick={() => setTab("payroll")} icon={<Settings2 className="h-4 w-4" />}>Kalkulatori i pagës</TabBtn>
+          <TabBtn active={tab === "deadlines"} onClick={() => setTab("deadlines")} icon={<CalendarDays className="h-4 w-4" />}>Afatet & Normat</TabBtn>
           <TabBtn active={tab === "content"} onClick={() => setTab("content")} icon={<FileEdit className="h-4 w-4" />}>Përmbajtja</TabBtn>
           <TabBtn active={tab === "settings"} onClick={() => setTab("settings")} icon={<Settings2 className="h-4 w-4" />}>Cilësimet</TabBtn>
         </div>
@@ -118,6 +120,7 @@ function AdminPage() {
         {tab === "messages" && <MessagesAdmin />}
         {tab === "appointments" && <AppointmentsAdmin />}
         {tab === "payroll" && <PayrollAdmin />}
+        {tab === "deadlines" && <DeadlinesAdmin />}
         {tab === "content" && <ContentAdmin />}
         {tab === "settings" && <SettingsAdmin />}
       </div>
