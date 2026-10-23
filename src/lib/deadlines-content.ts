@@ -129,10 +129,10 @@ export function resolveDeadlinesContent(value: unknown): DeadlinesContent {
   const rows = Array.isArray(d?.rows) && d.rows.every(isRow) ? d.rows : DEFAULT_DEADLINES.deadlines.rows;
   const savedCountdowns = countdownGroupSchema.array().safeParse(v?.countdowns);
   const groups: { titleAl: string; titleEn: string; frequency: CountdownGroup["frequency"]; day: number; codes: string[] }[] = [
-    { titleAl: "Afati mujor deri më 15", titleEn: "Monthly deadline — 15th", frequency: "monthly", day: 15, codes: ["WM/CM", "WR"] },
-    { titleAl: "Afati mujor deri më 20", titleEn: "Monthly deadline — 20th", frequency: "monthly", day: 20, codes: ["TV"] },
-    { titleAl: "Afati tremujor deri më 15", titleEn: "Quarterly deadline — 15th after quarter end", frequency: "quarterly", day: 15, codes: ["IS", "IL", "QS", "QL"] },
-    { titleAl: "Afati vjetor — 31 mars", titleEn: "Annual deadline — 31 March", frequency: "annual", day: 31, codes: ["PD", "CD"] },
+    { titleAl: "Afati mujor deri më 15 të çdo muaji", titleEn: "Monthly deadline — 15th of every month", frequency: "monthly", day: 15, codes: ["WM/CM", "WR"] },
+    { titleAl: "Afati mujor deri më 20 të çdo muaji", titleEn: "Monthly deadline — 20th of every month", frequency: "monthly", day: 20, codes: ["TV"] },
+    { titleAl: "Afati tremujor deri më 15 të çdo tremujori", titleEn: "Quarterly deadline — 15th of every quarter", frequency: "quarterly", day: 15, codes: ["IS", "IL", "QS", "QL"] },
+    { titleAl: "Afati vjetor — 31 mars 20xx", titleEn: "Annual deadline — 31 March 20xx", frequency: "annual", day: 31, codes: ["PD", "CD"] },
   ];
   return {
     countdowns: savedCountdowns.success ? savedCountdowns.data : groups.map(g => ({

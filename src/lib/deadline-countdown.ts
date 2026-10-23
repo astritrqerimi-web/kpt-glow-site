@@ -35,3 +35,8 @@ export function nextDeadline(group: CountdownGroup, now: Date) {
   const due = Math.min(...candidates);
   return { date: new Date(due * DAY_MS), daysRemaining: due - today, isoDate: new Date(due * DAY_MS).toISOString().slice(0, 10) };
 }
+
+// Titles may contain the "20xx" placeholder, replaced with the upcoming deadline's year.
+export function formatCountdownTitle(title: string, date: Date | null): string {
+  return date ? title.replace(/20xx/g, String(date.getUTCFullYear())) : title;
+}
