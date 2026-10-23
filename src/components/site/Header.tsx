@@ -1,6 +1,6 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { BrandLogo } from "@/components/site/BrandLogo";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
@@ -38,6 +38,17 @@ export function Header() {
   const isRouteActive = (to: string) =>
     to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(to + "/");
 
+  const handleHomeClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    setOpen(false);
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (pathname === "/") {
+      // Keep the router's scroll reset from interrupting the smooth scroll.
+      event.preventDefault();
+      scrollToTop();
+    }
+    // From another page, Link resets scroll after the home route has rendered.
+  };
+
   const handleSection = async (section: string) => {
     setOpen(false);
     if (pathname !== "/") {
@@ -68,11 +79,8 @@ export function Header() {
         <Link
           key={item.key}
           to={item.to}
-          onClick={() => {
-            setOpen(false);
-            if (item.to === "/" && pathname === "/") scrollToTop();
-            else if (item.to === "/") setTimeout(() => scrollToTop(false), 80);
-          }}
+          resetScroll
+          onClick={item.to === "/" ? handleHomeClick : () => setOpen(false)}
           className={cls + activeCls}
           style={style}
         >
@@ -106,11 +114,8 @@ export function Header() {
         <Link
           to="/"
           className="group flex min-w-0 shrink-0 items-center gap-2 sm:gap-3"
-          onClick={() => {
-            setOpen(false);
-            if (pathname === "/") scrollToTop();
-            else setTimeout(() => scrollToTop(false), 80);
-          }}
+          resetScroll
+          onClick={handleHomeClick}
           aria-label="KPT Consulting"
         >
           <span className="block h-12 w-12 shrink-0 sm:h-14 sm:w-14 md:h-16 md:w-16">
@@ -131,11 +136,11 @@ export function Header() {
           </div>
         </Link>
 
-        <nav className="ml-auto hidden min-[1440px]:flex items-center gap-3">
+        <nav className="min-[1440px]:ml-2 hidden min-[1440px]:flex items-center gap-3">
           {NAV.map((item) => renderItem(item, false))}
         </nav>
 
-        <div className="col-span-2 row-start-2 flex shrink-0 justify-end sm:ml-auto min-[1440px]:ml-0">
+        <div className="col-span-2 row-start-2 flex shrink-0 justify-end sm:ml-auto">
           <LanguageSwitcher variant="desktop" />
         </div>
 
