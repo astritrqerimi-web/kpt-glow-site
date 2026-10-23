@@ -59,8 +59,8 @@ export const DEFAULT_DEADLINES: DeadlinesContent = {
   deadlines: {
     titleAl: "Afatet e Deklarimit",
     titleEn: "Filing Deadlines",
-    noteAl: "*Për çdo ndryshim të afateve të deklarimit dhe pagesës së tatimeve të aplikueshme në Kosovë, do të njoftoheni nga ATK.",
-    noteEn: "*For any change to the applicable tax declaration and payment deadlines in Kosovo, you will be notified by TAK.",
+    noteAl: "*Për çdo ndryshim të afateve të deklarimit dhe pagesës së tatimeve të aplikueshme në Kosovë, do të njoftoheni nga KPT Consulting.",
+    noteEn: "*For any change to the applicable tax declaration and payment deadlines in Kosovo, you will be notified by KPT Consulting.",
     rows: [
       row("Formulari i deklarimit dhe pagesës së TVSH", "VAT declaration and payment form", "TV", MONTH_20, EDI),
       row("Pasqyra mujore e tatimit në burim në paga dhe kontribute pensionale", "Monthly statement of tax withheld at source on wages and pension contributions", "WM/CM", MONTH_15, EDI),
@@ -82,8 +82,8 @@ export const DEFAULT_DEADLINES: DeadlinesContent = {
   rates: {
     titleAl: "Normat Tatimore",
     titleEn: "Tax Rates",
-    noteAl: "*Për çdo ndryshim të normave tatimore të aplikueshme në Kosovë, do të njoftoheni nga ATK.",
-    noteEn: "*For any change to the applicable tax rates in Kosovo, you will be notified by TAK.",
+    noteAl: "*Për çdo ndryshim të normave tatimore të aplikueshme në Kosovë, do të njoftoheni nga KPT Consulting.",
+    noteEn: "*For any change to the applicable tax rates in Kosovo, you will be notified by KPT Consulting.",
     rows: [
       { labelAl: "Tatimi mbi Vlerën e Shtuar - TVSH", labelEn: "Value Added Tax - VAT", thresholdAl: "Mbi 30,000 euro", thresholdEn: "Over €30,000", rate: "8% dhe 18%", section: false },
       { labelAl: "Tatimi në të Ardhura të Korporatave - TAK", labelEn: "Corporate Income Tax - CIT", thresholdAl: "", thresholdEn: "", rate: "", section: true },
