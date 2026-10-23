@@ -47,7 +47,15 @@ export function nextDeadline(group: CountdownGroup, now: Date) {
   // Include previous year's candidates because weekend deferral may cross New Year.
   const candidates = [year - 1, year, year + 1].flatMap(y => months.map(m => adjustedDay(y, m, group.day))).filter(day => day >= today);
   const due = Math.min(...candidates);
-  return { date: new Date(due * DAY_MS), daysRemaining: due - today, isoDate: new Date(due * DAY_MS).toISOString().slice(0, 10) };
+  const dueDate = new Date(due * DAY_MS);
+  // Remaining time until the end of the due date (local midnight), counted in Kosovo wall-clock time.
+  const dueEndWall = Date.UTC(dueDate.getUTCFullYear(), dueDate.getUTCMonth(), dueDate.getUTCDate() + 1);
+  return {
+    date: dueDate,
+    daysRemaining: due - today,
+    isoDate: dueDate.toISOString().slice(0, 10),
+    remaining: splitRemaining(dueEndWall - kosovoWallMs(now)),
+  };
 }
 
 // Titles may contain the "20xx" placeholder, replaced with the upcoming deadline's year.
