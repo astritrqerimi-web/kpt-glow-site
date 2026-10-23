@@ -8,7 +8,7 @@ export type PayrollPdfData = {
   disclaimer: string; source: string;
 };
 let assets: Promise<{font: string; logo: Uint8Array}> | undefined;
-const clean = (text: string) => text.replace(/Confidential/gi, "KPT Consulting L.L.C.");
+const clean = (text: string) => text.replace(/Confidential/gi, "KPT Consulting L.L.C.").replace(/→/g, " > ");
 async function loadAssets() {
   assets ??= Promise.all([fetch(fontAsset.url),fetch(logoAsset.url)]).then(async ([font,logo]) => {
     if (!font.ok || !logo.ok) throw new Error("PDF assets unavailable");
