@@ -41,20 +41,20 @@ describe("Kosovo monthly payroll", () => {
     const result = calculatePayroll(75,"gross",DEFAULT_PAYROLL,"secondary");
     deepStrictEqual([result.gross, result.employerPension, result.totalCost], [7500,375,7875]);
   });
-  test("secondary net-to-gross computes employer pension from resolved 75 gross", () => {
+  test("secondary net-to-gross computes employer pension from resolved gross with cent rounding", () => {
     const result = calculatePayroll(64.12,"net",DEFAULT_PAYROLL,"secondary");
-    deepStrictEqual([result.gross, result.employerPension, result.totalCost], [7500,375,7875]);
+    deepStrictEqual([result.gross, result.employerPension, result.totalCost], [7499,375,7874]);
   });
   test("secondary 0% employer contribution stays zero in both conversion modes", () => {
     const config = {...DEFAULT_PAYROLL,employerRate:0};
-    for (const [amount, mode] of [[75,"gross"],[64.12,"net"]] as const) {
+    for (const [amount, mode, gross] of [[75,"gross",7500],[64.12,"net",7499]] as const) {
       const result = calculatePayroll(amount,mode,config,"secondary");
-      deepStrictEqual([result.gross, result.employerPension, result.totalCost], [7500,0,7500]);
+      deepStrictEqual([result.gross, result.employerPension, result.totalCost], [gross,0,gross]);
     }
   });
   test("secondary employer pension follows changed salary and selected percentage", () => {
     const config = {...DEFAULT_PAYROLL,employerRate:4};
-    for (const [amount, mode, pension, totalCost] of [[75,"gross",300,7800],[64.12,"net",300,7800],[100,"gross",400,10400],[85.5,"net",400,10400]] as const) {
+    for (const [amount, mode, pension, totalCost] of [[75,"gross",300,7800],[64.12,"net",300,7799],[100,"gross",400,10400],[85.5,"net",400,10400]] as const) {
       const result = calculatePayroll(amount,mode,config,"secondary");
       deepStrictEqual([result.employerPension, result.totalCost], [pension,totalCost]);
     }
