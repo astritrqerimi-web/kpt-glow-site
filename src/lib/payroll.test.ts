@@ -37,6 +37,35 @@ describe("Kosovo monthly payroll", () => {
   });
   test("full-time employer contribution floor uses 350 minimum wage", () => strictEqual(calculatePayroll(100,"gross",DEFAULT_PAYROLL,"primary").employerPension,1750));
   test("part-time does not apply full-time employer minimum base", () => strictEqual(calculatePayroll(100,"gross",DEFAULT_PAYROLL,"primary",false).employerPension,500));
+  test("secondary 75 gross at 5% has 3.75 employer pension and 78.75 total cost", () => {
+    const result = calculatePayroll(75,"gross",DEFAULT_PAYROLL,"secondary");
+    deepStrictEqual([result.gross, result.employerPension, result.totalCost], [7500,375,7875]);
+  });
+  test("secondary net-to-gross computes employer pension from resolved gross with cent rounding", () => {
+    const result = calculatePayroll(64.12,"net",DEFAULT_PAYROLL,"secondary");
+    deepStrictEqual([result.gross, result.employerPension, result.totalCost], [7499,375,7874]);
+  });
+  test("secondary 0% employer contribution stays zero in both conversion modes", () => {
+    const config = {...DEFAULT_PAYROLL,employerRate:0};
+    for (const [amount, mode, gross] of [[75,"gross",7500],[64.12,"net",7499]] as const) {
+      const result = calculatePayroll(amount,mode,config,"secondary");
+      deepStrictEqual([result.gross, result.employerPension, result.totalCost], [gross,0,gross]);
+    }
+  });
+  test("secondary employer pension follows changed salary and selected percentage", () => {
+    const config = {...DEFAULT_PAYROLL,employerRate:4};
+    for (const [amount, mode, pension, totalCost] of [[75,"gross",300,7800],[64.12,"net",300,7799],[100,"gross",400,10400],[85.5,"net",400,10400]] as const) {
+      const result = calculatePayroll(amount,mode,config,"secondary");
+      deepStrictEqual([result.employerPension, result.totalCost], [pension,totalCost]);
+    }
+  });
+  test("switching primary and secondary preserves only the primary full-time floor", () => {
+    for (const [amount, mode] of [[75,"gross"],[71.25,"net"]] as const) {
+      strictEqual(calculatePayroll(amount,mode,DEFAULT_PAYROLL,"primary").employerPension,1750);
+    }
+    strictEqual(calculatePayroll(75,"gross",DEFAULT_PAYROLL,"secondary").employerPension,375);
+    strictEqual(calculatePayroll(64.12,"net",DEFAULT_PAYROLL,"secondary").employerPension,375);
+  });
   test("zero salary produces zero contributions", () => strictEqual(calculatePayroll(0,"gross",DEFAULT_PAYROLL,"primary").totalCost,0));
   test("admin parameters immediately affect calculation", () => strictEqual(calculatePayroll(1000,"gross",{...DEFAULT_PAYROLL,secondaryRate:12},"secondary").tax,11400));
   test("invalid and decreasing brackets rejected", () => strictEqual(payrollConfigSchema.safeParse({...DEFAULT_PAYROLL,brackets:[{upTo:450,rate:0},{upTo:250,rate:8},{upTo:null,rate:10}]}).success,false));
